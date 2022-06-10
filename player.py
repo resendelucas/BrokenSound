@@ -1,5 +1,5 @@
 from PPlayTeste.gameimage import *
-from PPlayTeste.window import *
+# from PPlayTeste.window import *
 
 
 class Player:
@@ -43,6 +43,7 @@ class Player:
 
         elif self.teclado.key_pressed("z"):
             self.playing_count += 1
+            self.playing_count %= 36*4
             self.walking_left = False
             self.walking_right = False
             self.is_playing = True
@@ -55,17 +56,9 @@ class Player:
             self.walk_count = 0
             self.playing_count = 0
 
-        if self.walking_left:
+        if self.walking_left or self.walking_right:
             self.walk_count += 1
-
-        if self.walking_right:
-            self.walk_count += 1
-
-        if self.walk_count >= 45*6:
-            self.walk_count = 0
-
-        if self.playing_count >= 36*4:
-            self.playing_count = 0
+            self.walk_count %= 45*6
 
         self.player_y = 608 - self.player_still.height
         # Atualiza posição do jogador
@@ -85,7 +78,6 @@ class Player:
         self.player_still.y = self.player_y
 
     def draw_player(self):
-
         if self.walking_left:
             self.player_walk_left[self.walk_count//45].draw()
             
