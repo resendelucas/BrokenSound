@@ -1,5 +1,3 @@
-from random import gammavariate
-from PPlayTeste import gameimage
 from PPlayTeste.gameimage import *
 from PPlayTeste.window import *
 
