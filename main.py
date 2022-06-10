@@ -4,7 +4,7 @@ from player import Player
 
 
 # janela = Window(1366, 768)
-janela = Window(800,700)
+janela = Window(800, 700)
 mapa = Mapa(janela)
 player = Player(janela, mapa)
 

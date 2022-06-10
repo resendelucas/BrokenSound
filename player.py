@@ -2,67 +2,63 @@ from PPlayTeste.gameimage import *
 from PPlayTeste.window import *
 
 
-class Player():
+class Player:
+    walk_right_filepath = 'Assets/character/walking/big_walk'
+    walk_left_filepath = 'Assets/character/walking/big_walk_back'
+    playing_filepath = 'Assets/character/parado/player_'
+
     def __init__(self, janela, mapa):
         self.janela = janela
         self.mapa = mapa
         self.teclado = janela.get_keyboard()
         self.vPlayer = 200
-        self.walk_right, self.walk_left, self.is_playing = False, False, False
+        self.walking_right, self.walking_left, self.is_playing = False, False, False
         self.walk_count, self.playing_count = 0, 0
         self.player_x, self.player_y = 688, 608
         self.player_walk_right = []
         self.player_walk_left = []
         self.player_playing = []
-        self.get_player()
-
-    def get_player(self):
         self.player_still = GameImage("Assets/character/parado/player_0.png")
-        
-        walk_right = 'Assets/character/walking/big_walk'
-        walk_left = 'Assets/character/walking/big_walk_back'
-        playing = 'Assets/character/parado/player_'
-
         for i in range(6):
-            self.player_walk_right.append(GameImage(f"{walk_right}{i}.png"))
-            self.player_walk_left.append(GameImage(f"{walk_left}{i}.png"))
+            self.player_walk_right.append(GameImage(f"{self.walk_right_filepath}{i}.png"))
+            self.player_walk_left.append(GameImage(f"{self.walk_left_filepath}{i}.png"))
             if i < 4:
-                self.player_playing.append(GameImage(f"{playing}{i}.png"))
+                self.player_playing.append(GameImage(f"{self.playing_filepath}{i}.png"))
 
-    def check_events(self):
-
+    def check_events(self) -> None:
+        """Checa inputs do player e muda as variáveis de estado de acordo."""
         if self.teclado.key_pressed("RIGHT"):
 
-            self.player_x +=self.vPlayer * self.janela.delta_time()
-            self.walk_right = True
-            self.walk_left = False
+            self.player_x += self.vPlayer * self.janela.delta_time()
+            self.walking_right = True
+            self.walking_left = False
             self.is_playing = False
 
         elif self.teclado.key_pressed("LEFT"):
 
-            self.player_x -=self.vPlayer * self.janela.delta_time()
-            self.walk_left = True
-            self.walk_right = False
+            self.player_x -= self.vPlayer * self.janela.delta_time()
+            self.walking_left = True
+            self.walking_right = False
             self.is_playing = False
 
         elif self.teclado.key_pressed("z"):
             self.playing_count += 1
-            self.walk_left = False
-            self.walk_right = False
+            self.walking_left = False
+            self.walking_right = False
             self.is_playing = True
             self.walk_count = 0
         
         else:
-            self.walk_left = False
-            self.walk_right = False
+            self.walking_left = False
+            self.walking_right = False
             self.is_playing = False
             self.walk_count = 0
             self.playing_count = 0
 
-        if self.walk_left:
+        if self.walking_left:
             self.walk_count += 1
 
-        if self.walk_right:
+        if self.walking_right:
             self.walk_count += 1
 
         if self.walk_count >= 45*6:
@@ -90,10 +86,10 @@ class Player():
 
     def draw_player(self):
 
-        if self.walk_left:
+        if self.walking_left:
             self.player_walk_left[self.walk_count//45].draw()
             
-        elif self.walk_right:
+        elif self.walking_right:
             self.player_walk_right[self.walk_count//45].draw()
 
         elif self.is_playing:
@@ -101,4 +97,3 @@ class Player():
         
         else:
             self.player_still.draw()
-    
