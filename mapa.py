@@ -1,4 +1,4 @@
-from PPlayTeste.gameimage import *
+from PPlay.gameimage import *
 
 
 class Mapa:
