@@ -1,29 +1,21 @@
 from PPlayTeste.gameimage import *
-# from PPlayTeste.window import *
-
+from PPlayTeste.sound import *
+from PPlayTeste.sprite import *
 
 class Player:
-    walk_right_filepath = 'Assets/character/walking/big_walk'
-    walk_left_filepath = 'Assets/character/walking/big_walk_back'
-    playing_filepath = 'Assets/character/parado/player_'
-
     def __init__(self, janela, mapa):
         self.janela = janela
         self.mapa = mapa
         self.teclado = janela.get_keyboard()
         self.vPlayer = 200
         self.walking_right, self.walking_left, self.is_playing = False, False, False
-        self.walk_count, self.playing_count = 0, 0
+        self.player_walk_right = Sprite("Assets/character/walking/walk_right.png",6)
+        self.player_walk_left = Sprite("Assets/character/walking/walk_left.png",6)
+        self.player_walk_attack_right = Sprite("Assets/character/walking/walk_attack_right.png",6)
+        self.player_walk_attack_left = Sprite("Assets/character/walking/walk_attack_left.png",6)
+        self.player_playing = Sprite("Assets/character/parado/attack_right.png",4)
+        self.player_still = Sprite("Assets/character/parado/player_2.png")
         self.player_x, self.player_y = 688, 608
-        self.player_walk_right = []
-        self.player_walk_left = []
-        self.player_playing = []
-        self.player_still = GameImage("Assets/character/parado/player_0.png")
-        for i in range(6):
-            self.player_walk_right.append(GameImage(f"{self.walk_right_filepath}{i}.png"))
-            self.player_walk_left.append(GameImage(f"{self.walk_left_filepath}{i}.png"))
-            if i < 4:
-                self.player_playing.append(GameImage(f"{self.playing_filepath}{i}.png"))
 
     def check_events(self) -> None:
         """Checa inputs do player e muda as variáveis de estado de acordo."""
@@ -32,60 +24,69 @@ class Player:
             self.player_x += self.vPlayer * self.janela.delta_time()
             self.walking_right = True
             self.walking_left = False
-            self.is_playing = False
+            if self.teclado.key_pressed("z"):
+                self.is_playing = True
+            else:
+                self.is_playing = False
 
         elif self.teclado.key_pressed("LEFT"):
 
             self.player_x -= self.vPlayer * self.janela.delta_time()
             self.walking_left = True
             self.walking_right = False
-            self.is_playing = False
+            if self.teclado.key_pressed("z"):
+                self.is_playing = True
+            else:
+                self.is_playing = False
 
         elif self.teclado.key_pressed("z"):
-            self.playing_count += 1
-            self.playing_count %= 36*4
+
             self.walking_left = False
             self.walking_right = False
             self.is_playing = True
-            self.walk_count = 0
-        
+
         else:
+
             self.walking_left = False
             self.walking_right = False
             self.is_playing = False
-            self.walk_count = 0
-            self.playing_count = 0
 
-        if self.walking_left or self.walking_right:
-            self.walk_count += 1
-            self.walk_count %= 45*6
-
-        self.player_y = 608 - self.player_still.height
+        
         # Atualiza posição do jogador
-        for player_left in self.player_walk_left:
-            player_left.x = self.player_x
-            player_left.y = self.player_y
+        self.player_y = 608 - self.player_still.height
+        
+    def update_pos(self, sprite, x, y):
+        sprite.x = x
+        sprite.y = y
 
-        for player_right in self.player_walk_right:
-            player_right.x = self.player_x
-            player_right.y = self.player_y
-
-        for playing in self.player_playing:
-            playing.x = self.player_x
-            playing.y = self.player_y
-
-        self.player_still.x = self.player_x
-        self.player_still.y = self.player_y
+    def update_frame(self, sprite, ms):
+        sprite.set_total_duration(ms)
+        sprite.draw()
+        sprite.update()
 
     def draw_player(self):
         if self.walking_left:
-            self.player_walk_left[self.walk_count//45].draw()
-            
+
+            if self.is_playing:
+                self.update_pos(self.player_walk_attack_left, self.player_x, self.player_y)
+                self.update_frame(self.player_walk_attack_left, 800)
+            else:
+                self.update_pos(self.player_walk_left, self.player_x, self.player_y)
+                self.update_frame(self.player_walk_left, 800)
+        
         elif self.walking_right:
-            self.player_walk_right[self.walk_count//45].draw()
+            if self.is_playing:
+                self.update_pos(self.player_walk_attack_right, self.player_x, self.player_y)
+                self.update_frame(self.player_walk_attack_right, 800)
+            else:
+                self.update_pos(self.player_walk_right, self.player_x, self.player_y)
+                self.update_frame(self.player_walk_right, 800)
+
 
         elif self.is_playing:
-            self.player_playing[self.playing_count//36].draw()
-        
+            self.update_pos(self.player_playing, self.player_x, self.player_y)
+            self.update_frame(self.player_playing, 300)
+
         else:
+            self.update_pos(self.player_still, self.player_x, self.player_y)
             self.player_still.draw()
