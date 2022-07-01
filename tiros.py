@@ -70,4 +70,6 @@ class Tiro(Sprite):
     def draw_tiros(cls, janela: Window):
         for tipo_tiro in cls.tipo_tiros:
             for i, tiro in enumerate(cls.tiros[tipo_tiro]):
+                tiro.set_total_duration(400)
                 tiro.draw()
+                tiro.update()
