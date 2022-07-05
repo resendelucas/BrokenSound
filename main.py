@@ -1,8 +1,10 @@
+from PPlay import gameimage
 from PPlay.window import *
 from mapa import Mapa
 from player import Player
 from tiros import Tiro
 from plataforma import Plataforma
+from chao import Chao
 # janela = Window(1366, 768)
 janela = Window(800, 700)
 mapa = Mapa(janela)
@@ -14,13 +16,14 @@ while True:
     # inputs
     Plataforma.colisao(player)
     player.check_events()
-    if janela.keyboard.key_pressed("up"):
-        player.hitbox.y -= 150 * janela.delta_time()
-    if janela.keyboard.key_pressed("down"):
-        player.hitbox.y += 150 * janela.delta_time() 
-    player.hitbox.y += 0.05
     # updates
+    player.apply_motion()
     Tiro.update_tiros(janela)
+    player.feel_gravity()
+    player.check_camera([mapa.background, mapa.floor])
+    player.check_camera(Plataforma.lista)
+    mapa.floor.try_landing(player)
+    # player.check_camera()
     # draws
     mapa.draw_elements()
     player.draw_player()
