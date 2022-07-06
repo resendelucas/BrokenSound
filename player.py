@@ -40,7 +40,8 @@ class Player:
         self.vely = self.velx = 0
         self.jumpspeed = 1200
         self.last_position = [0, 0]
-        self.v_camera = self.walkspeed
+        self.v_camera = 200
+        self.can_move = True
     def feel_gravity(self):
         if self.is_falling is True:
             self.vely -= self.gravity * self.janela.delta_time()
@@ -121,13 +122,18 @@ class Player:
         if not self.is_playing:
             self.update_frame(self.sprite_atual, 800)
         else:
-            self.update_frame(self.sprite_atual, 300)
+            self.update_frame(self.sprite_atual, 600)
 
 
     def check_camera(self, lista_gameobjects: list):
+        self.v_camera = 200
         if self.hitbox.x + self.hitbox.width >= self.janela.width/2:
+            self.walkspeed = 0
             for gameobject in lista_gameobjects:
-                if self.teclado.key_pressed("RIGHT"):
-                    gameobject.x -= self.v_camera * self.janela.delta_time()
-                if self.teclado.key_pressed("LEFT"):
-                    gameobject.x += self.v_camera * self.janela.delta_time()
+                if self.can_move:
+                    if self.teclado.key_pressed("RIGHT"):
+                        gameobject.x -= self.v_camera * self.janela.delta_time()
+                    if self.teclado.key_pressed("LEFT"):
+                        gameobject.x += self.v_camera * self.janela.delta_time()
+        else:
+            self.walkspeed = 200

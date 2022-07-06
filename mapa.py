@@ -3,7 +3,7 @@ from chao import Chao
 class Mapa:
     def __init__(self, janela):
         self.janela = janela
-        self.background = GameImage("Assets/imagens/Skies/sky.png")
+        self.background = GameImage("Assets/imagens/Skies/background-2.png")
         self.floor = Chao("floor.png", 608)
 
 

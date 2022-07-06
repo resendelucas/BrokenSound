@@ -10,16 +10,20 @@ janela = Window(800, 700)
 mapa = Mapa(janela)
 player = Player(janela, mapa)
 Plataforma(32*7, 32*15, '1x4')
+Plataforma(32*20, 32*15, '1x4')
+Plataforma(32*27, 32*11, '1x4')
 player.hitbox.vely = 0
 while True:
     janela.update()
     # inputs
-    Plataforma.colisao(player)
+    Plataforma.colisao_horizontal(player)
+    Plataforma.colisao_vertical(player)
     player.check_events()
     # updates
     player.apply_motion()
     Tiro.update_tiros(janela)
     player.feel_gravity()
+
     player.check_camera([mapa.background, mapa.floor])
     player.check_camera(Plataforma.lista)
     mapa.floor.try_landing(player)
