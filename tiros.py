@@ -1,7 +1,6 @@
 from os import getcwd
 from PPlay.sprite import Sprite
 from PPlay.window import Window
-from math import sqrt
 
 
 class Tiro(Sprite):

@@ -6,15 +6,16 @@ from tiros import Tiro
 class Player:
     # sprites visuais:
     Window(800,700)
+    instrumento = 'violao'
     sprites = {
-            "walk_right": Sprite("Assets/character/walking/walk_right.png", 6),
-            'walk_left' : Sprite("Assets/character/walking/walk_left.png", 6),
-            'walk_attack_right' : Sprite("Assets/character/walking/walk_attack_right.png", 6),
-            'walk_attack_left' : Sprite("Assets/character/walking/walk_attack_left.png", 6),
-            'playing_right' : Sprite("Assets/character/parado/attack_right.png", 4),
-            'playing_left' : Sprite("Assets/character/parado/attack_left.png", 4),
-            'still_right' : Sprite("Assets/character/parado/player_still_right.png"),
-            'still_left' : Sprite("Assets/character/parado/player_still_left.png")
+            "walk_right": Sprite(f"Assets/character/{instrumento}/walking/walk_right.png", 6),
+            'walk_left' : Sprite(f"Assets/character/{instrumento}/walking/walk_left.png", 6),
+            'walk_attack_right' : Sprite(f"Assets/character/{instrumento}/walking/walk_attack_right.png", 6),
+            'walk_attack_left' : Sprite(f"Assets/character/{instrumento}/walking/walk_attack_left.png", 6),
+            'playing_right' : Sprite(f"Assets/character/{instrumento}/parado/attack_right.png", 4),
+            'playing_left' : Sprite(f"Assets/character/{instrumento}/parado/attack_left.png", 4),
+            'still_right' : Sprite(f"Assets/character/{instrumento}/parado/player_still_right.png"),
+            'still_left' : Sprite(f"Assets/character/{instrumento}/parado/player_still_left.png")
     }
     # sprites usadas no backend:
     hitbox = Sprite("Assets/character/player_hitbox.png")  # sprite deve ser sempre atualizada
@@ -28,7 +29,6 @@ class Player:
         self.mapa = mapa
         self.teclado = janela.get_keyboard()
         self.walkspeed = 200
-        self.instrumento = 'violao'
         self.last_direction = 'right'
         self.delay = 0
         self.ready = True  # se pode atirar (não está em cooldown)

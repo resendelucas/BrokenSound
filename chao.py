@@ -1,6 +1,4 @@
-from PPlay import gameobject
 from PPlay.gameimage import GameImage
-from PPlay.gameobject import GameObject
 from player import Player
 from os import getcwd
 class Chao(GameImage):
