@@ -26,9 +26,7 @@ while True:
     player.apply_motion()
     Tiro.update_tiros(janela)
     player.feel_gravity()
-
-    player.check_camera([mapa.background, mapa.floor])
-    player.check_camera(Plataforma.lista)
+    player.check_camera([mapa.background, mapa.floor] + Plataforma.lista, mapa)
     mapa.floor.try_landing(player)
     # player.check_camera()
     # draws

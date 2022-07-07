@@ -218,7 +218,7 @@ class Player:
         if self.changing_character and self.sprites['changing'].get_curr_frame() != 9:
             self.update_frame(self.sprites['changing'], 350)
 
-    def check_camera(self, lista_gameobjects: list):
+    def check_camera(self, lista_gameobjects: list, mapa):
         self.v_camera = 200
         if self.hitbox.x + self.hitbox.width >= self.janela.width / 2:
             self.walkspeed = 0
@@ -227,6 +227,9 @@ class Player:
                     if self.teclado.key_pressed("RIGHT"):
                         gameobject.x -= self.v_camera * self.janela.delta_time()
                     if self.teclado.key_pressed("LEFT"):
-                        gameobject.x += self.v_camera * self.janela.delta_time()
+                        if not mapa.floor.x > 0:
+                            gameobject.x += self.v_camera * self.janela.delta_time()
+                        else:
+                            self.walkspeed = 200
         else:
             self.walkspeed = 200
