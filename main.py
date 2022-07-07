@@ -20,7 +20,7 @@ while True:
     if teclado.key_pressed("c"):
         player.vely = 50
     Plataforma.colisao_horizontal(player)
-    # Plataforma.colisao_vertical(player)
+    Plataforma.colisao_vertical(player)
     player.check_events()
     # updates
     player.apply_motion()

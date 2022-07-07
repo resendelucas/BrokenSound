@@ -10,13 +10,24 @@ class Player:
     sprites = {
             "walk_right": Sprite(f"Assets/character/{instrumento}/walking/walk_right.png", 6),
             'walk_left' : Sprite(f"Assets/character/{instrumento}/walking/walk_left.png", 6),
-            'walk_attack_right' : Sprite(f"Assets/character/{instrumento}/walking/walk_attack_right.png", 6),
-            'walk_attack_left' : Sprite(f"Assets/character/{instrumento}/walking/walk_attack_left.png", 6),
+            'walk_attack_right' : Sprite(f"Assets/character/violao/walking/walk_attack_right.png", 6),
+            'walk_attack_left' : Sprite(f"Assets/character/violao/walking/walk_attack_left.png", 6),
             'playing_right' : Sprite(f"Assets/character/{instrumento}/parado/attack_right.png", 4),
             'playing_left' : Sprite(f"Assets/character/{instrumento}/parado/attack_left.png", 4),
             'still_right' : Sprite(f"Assets/character/{instrumento}/parado/player_still_right.png"),
             'still_left' : Sprite(f"Assets/character/{instrumento}/parado/player_still_left.png")
     }
+    if instrumento == 'piano':
+        sprites["charging_left"] = Sprite(f"Assets/character/piano/parado/charging_left.png", 6)
+        sprites["charging_right"] = Sprite(f"Assets/character/piano/parado/charging_right.png", 6)
+        sprites["playing_left"] = Sprite(f"Assets/character/piano/parado/attack_left.png", 2)
+        sprites["playing_right"] = Sprite(f"Assets/character/piano/parado/attack_right.png", 2)
+        sprites["piano_left"] = Sprite(f"Assets/character/piano/piano_left.png")
+        sprites["piano_right"] = Sprite(f"Assets/character/piano/piano_right.png")
+        sprites['still_left'] = Sprite(f"Assets/character/piano/parado/player_still_left.png",4)
+        sprites['still_right'] = Sprite(f"Assets/character/piano/parado/player_still_right.png",4)
+        del sprites["walk_attack_right"]
+        del sprites["walk_attack_left"]
     # sprites usadas no backend:
     hitbox = Sprite("Assets/character/player_hitbox.png")  # sprite deve ser sempre atualizada
     sprite_atual = sprites["walk_right"]
@@ -42,8 +53,12 @@ class Player:
         self.last_position = [0, 0]
         self.v_camera = 200
         self.can_move = True
+        self.charge_piano = self.delay_piano = 1
+        self.show_piano, self.playing_piano = False, False
+
     def feel_gravity(self):
         if self.is_falling is True:
+            self.can_jump = False
             self.vely -= self.gravity * self.janela.delta_time()
     
     def apply_motion(self):
@@ -60,8 +75,44 @@ class Player:
         # checar se está tocando música
         self.last_position[0], self.last_position[1] = self.hitbox.x, self.hitbox.y
         self.is_playing = self.teclado.key_pressed("z")
+
+
         if self.is_playing:
-            self.sprite_atual = self.sprites[f'playing_{self.last_direction}']
+            # Se for piano, o personagem carrega o piano na tela
+            if self.instrumento == 'piano':
+                self.can_move = False
+                self.sprite_atual = self.sprites[f'charging_{self.last_direction}']
+                self.charge_piano += 1
+                if self.charge_piano >= 800 and not self.show_piano:
+                    self.show_piano = True
+                    self.sprites["piano_left"].set_position(self.hitbox.x - 110, self.hitbox.y)
+                    self.sprites["piano_right"].set_position(self.hitbox.x + 70, self.hitbox.y)
+                    self.charge_piano = 0
+                    self.is_playing = False
+            else:
+                self.can_move = True
+                self.sprite_atual = self.sprites[f'playing_{self.last_direction}']
+        
+        # Se o piano estiver na tela, terá um tempo de recarga para o personagem tocar
+        if self.show_piano:
+            self.delay_piano += 1
+            if self.delay_piano >= 100:
+                self.sprite_atual = self.sprites[f"playing_{self.last_direction}"]
+                self.delay_piano = 0
+                self.show_piano = False
+                self.playing_piano = True
+
+        # Enquanto estiver tocando piano, o player não poderá se mover
+        if self.playing_piano:
+            self.can_jump = False
+            self.can_move = False
+        else:
+            self.can_move = True
+
+        # O jogador sai do piano
+        if self.teclado.key_pressed('x'):
+            self.playing_piano = False
+
         # checar pulo 
         if self.teclado.key_pressed("UP"):
             if self.can_jump:
@@ -71,24 +122,32 @@ class Player:
                 self.vely *= 0.07
                 self.is_falling = True
         # checar se está apertando pra direita
-        if self.teclado.key_pressed("RIGHT"):
+        if self.teclado.key_pressed("RIGHT") and self.can_move:
             self.last_direction = 'right'
             self.hitbox.x += self.walkspeed * self.janela.delta_time()
             if not self.is_playing:
                 self.sprite_atual = self.sprites["walk_right"]
             else:
-                self.sprite_atual = self.sprites[f'walk_attack_{self.last_direction}']
+                if self.instrumento == 'violao':
+                    self.sprite_atual = self.sprites[f'walk_attack_{self.last_direction}']
 
         # checar se está apertando pra esquerda
-        elif self.teclado.key_pressed("LEFT"):
+        elif self.teclado.key_pressed("LEFT") and self.can_move:
             self.last_direction = 'left'
             self.hitbox.x -= self.walkspeed * self.janela.delta_time()
             if not self.is_playing:
                 self.sprite_atual = self.sprites["walk_left"]
             else:
-                self.sprite_atual = self.sprites[f'walk_attack_{self.last_direction}']
+                if self.instrumento == 'violao':
+                    self.sprite_atual = self.sprites[f'walk_attack_{self.last_direction}']
         else:  # se nenhuma tecla de movimento estiver sendo apertada
-            self.sprite_atual = self.sprites[f'still_{self.last_direction}']
+            if not self.is_playing and not self.playing_piano:
+                self.sprite_atual = self.sprites[f'still_{self.last_direction}']
+            else:
+                if self.instrumento == 'violao':
+                    self.sprite_atual = self.sprites[f'playing_{self.last_direction}']
+
+
             
 
 
@@ -97,15 +156,15 @@ class Player:
         if self.delay >= self.cooldown:
             self.delay = 0
             # Atualiza os tiros
-            if self.is_playing:
-                if self.teclado.key_pressed("up"):
-                    self.shoot(self.instrumento, (0, 1), self.hitbox)
-                elif self.teclado.key_pressed("down"):
-                    self.shoot(self.instrumento, (0, -1), self.hitbox)
-                elif self.last_direction == 'right':
-                    self.shoot(self.instrumento, (1, 0), self.hitbox)
-                elif self.last_direction == 'left':
-                    self.shoot(self.instrumento, (-1, 0), self.hitbox)
+            # if self.is_playing:
+            #     if self.teclado.key_pressed("up"):
+            #         self.shoot(self.instrumento, (0, 1), self.hitbox)
+            #     elif self.teclado.key_pressed("down"):
+            #         self.shoot(self.instrumento, (0, -1), self.hitbox)
+            #     elif self.last_direction == 'right':
+            #         self.shoot(self.instrumento, (1, 0), self.hitbox)
+            #     elif self.last_direction == 'left':
+            #         self.shoot(self.instrumento, (-1, 0), self.hitbox)
 
     @staticmethod
     def update_frame(sprite, ms):
@@ -119,10 +178,19 @@ class Player:
 
     def draw_player(self):
         self.sprite_atual.set_position(self.hitbox.x, self.hitbox.y)
-        if not self.is_playing:
-            self.update_frame(self.sprite_atual, 800)
-        else:
+        # if not self.is_playing:
+        #     if self.show_piano:
+        #         self.sprites[f'piano_{self.last_direction}'].draw()
+        #     else:
+        #         self.update_frame(self.sprite_atual, 800)
+        # else:
+        #     self.update_frame(self.sprite_atual, 600)
+        if self.show_piano:
+            self.sprites[f'piano_{self.last_direction}'].draw()
+        if self.is_playing:
             self.update_frame(self.sprite_atual, 600)
+        else:
+            self.update_frame(self.sprite_atual, 800)
 
 
     def check_camera(self, lista_gameobjects: list):
