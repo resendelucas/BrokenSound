@@ -43,7 +43,7 @@ class Plataforma(Sprite):
         for i, plataforma in enumerate(cls.lista):
             if player.hitbox.collided(plataforma):
                 # Colisão com a parte de baixo da plataforma
-                if player.vely > 0 and abs(player.hitbox.y - plataforma.y + plataforma.height) >= 5:
+                if player.vely > 0 and abs(player.hitbox.y - plataforma.y + plataforma.height) >= 10:
                     if player.hitbox.x < plataforma.x + plataforma.width - 3\
                         and player.hitbox.x + player.hitbox.width > plataforma.x + 3:
                         player.hitbox.y = plataforma.y + plataforma.height
@@ -52,7 +52,7 @@ class Plataforma(Sprite):
                         player.is_falling = True
                 
                 # Colisão com a parte de cima da plataforma
-                elif player.vely < 0 and abs(player.hitbox.y + player.hitbox.height - plataforma.y) <= 4:
+                elif player.vely < 0 and abs(player.hitbox.y + player.hitbox.height - plataforma.y) <= 10:
                     player.hitbox.y = plataforma.y - player.hitbox.height
                     player.vely = 0
                     player.can_jump = True
