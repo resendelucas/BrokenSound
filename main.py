@@ -8,7 +8,7 @@ from chao import Chao
 # janela = Window(1366, 768)
 janela = Window(800, 700)
 mapa = Mapa(janela)
-player = Player(janela, mapa)
+player = Player(janela, mapa, 'piano')
 Plataforma(32*7, 32*15, '1x4')
 Plataforma(32*20, 32*15, '1x4')
 Plataforma(32*27, 32*11, '1x4')
@@ -17,7 +17,7 @@ teclado = janela.get_keyboard()
 while True:
     janela.update()
     # inputs
-    if teclado.key_pressed("c"):
+    if teclado.key_pressed("f"):
         player.vely = 50
     Plataforma.colisao_horizontal(player)
     Plataforma.colisao_vertical(player)
@@ -36,5 +36,6 @@ while True:
     player.draw_player()
     Plataforma.draw_plataformas(janela)
     Tiro.draw_tiros(janela)
+    # player.hitbox.draw()
     # print(player.hitbox.x, player.hitbox.y)
     # print(Plataforma.lista[0].y)

@@ -1,2 +1,0 @@
-
-from plataforma import Plataforma
