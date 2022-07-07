@@ -30,7 +30,7 @@ class Plataforma(Sprite):
     def colisao_horizontal(cls, player):
         for i, plataforma in enumerate(cls.lista):
             if player.hitbox.collided(plataforma):
-                if player.hitbox.y + player.hitbox.height > plataforma.y + 5 and player.hitbox.y < plataforma.y + plataforma.height - 10:
+                if player.hitbox.y + player.hitbox.height > plataforma.y + 4 and player.hitbox.y < plataforma.y + plataforma.height - 10:
                     player.can_move = False
                     if player.last_direction == 'right':
                         player.hitbox.x = plataforma.x - player.hitbox.width

@@ -13,11 +13,14 @@ Plataforma(32*7, 32*15, '1x4')
 Plataforma(32*20, 32*15, '1x4')
 Plataforma(32*27, 32*11, '1x4')
 player.hitbox.vely = 0
+teclado = janela.get_keyboard()
 while True:
     janela.update()
     # inputs
+    if teclado.key_pressed("c"):
+        player.vely = 50
     Plataforma.colisao_horizontal(player)
-    Plataforma.colisao_vertical(player)
+    # Plataforma.colisao_vertical(player)
     player.check_events()
     # updates
     player.apply_motion()
