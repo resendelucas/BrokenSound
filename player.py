@@ -196,10 +196,7 @@ class Player:
         self.can_move = True
 
     def shoot(self, tipo, direcao, player):
-        velocidade_player = 0
-        if self.teclado.key_pressed("right") or self.teclado.key_pressed("left"):
-            velocidade_player = self.walkspeed_padrao
-        Tiro(tipo, direcao, player, velocidade_player)
+        Tiro(tipo, direcao, player)
 
     def draw_player(self):
         self.sprite_atual.set_position(self.hitbox.x, self.hitbox.y)
