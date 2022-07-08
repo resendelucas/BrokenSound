@@ -1,5 +1,3 @@
-# coding= utf-8
-
 import pygame
 import pygame.mixer
 
@@ -63,6 +61,6 @@ class Sound():
         self.loop = repeat
 
     def fadeout(self, time_ms):
-       self.sound.fadeout(time_ms)
+       self.sound.fadeout(time)
 
 

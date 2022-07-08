@@ -1,10 +1,6 @@
-# coding= utf-8
-
 import pygame
 from pygame.locals import *
 from .point import *
-
-# -*- coding: utf-8 -*-
 
 # Initializes pygame's modules
 pygame.init()

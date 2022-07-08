@@ -1,5 +1,3 @@
-# coding= utf-8
-
 import pygame
 from pygame.locals import *
 
@@ -24,7 +22,7 @@ class Keyboard():
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.KEYDOWN:
-                return event.key
+                print(event.key)
                 
     def to_pattern(self, key):
         if((key=="LEFT") or (key=="left")):

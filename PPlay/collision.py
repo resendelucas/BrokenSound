@@ -1,10 +1,6 @@
-# coding= utf-8
-
 # Modules import
 from . import point
 import pygame
-
-# -*- coding: utf-8 -*-
 
 """A simple class to deal with basic collision methods"""
 """

@@ -1,5 +1,3 @@
-# coding= utf-8
-
 # Modules
 import sys
 import time
