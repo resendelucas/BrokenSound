@@ -50,7 +50,7 @@ class BossGuitarra:
         self.is_started = True
         self.vely = 0
         self.cronometro_animacao = 0
-        self.sprites["arriving_left"].set_total_duration(100)
+        self.sprites["arriving_left"].set_total_duration(0.1)
 
     def feel_gravity(self):
         if self.is_falling is True:

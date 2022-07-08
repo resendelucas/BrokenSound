@@ -40,12 +40,15 @@ while True:
         if teclado.key_pressed("f"):
             player.vely = 50
             boss_atual.start_arrive()
+        if teclado.key_pressed("v"):
+            boss_atual.vely = 0
+            boss_atual.hitbox.x += 1000 * janela.delta_time()
         Plataforma.colisao_horizontal(player)
         Plataforma.colisao_vertical(player)
         player.check_events()
         # updates
         listaobjetos = [mapa_atual.background, mapa_atual.floor] + Plataforma.lista \
-            + Tiro.tiros["violao"] + Tiro.tiros["piano"] + Tiro.tiros["flauta"]
+            + Tiro.tiros["violao"] + Tiro.tiros["piano"] + Tiro.tiros["flauta"] + [boss_atual.hitbox]
         player.apply_motion()
         Tiro.update_tiros(janela)
         player.feel_gravity()
@@ -60,7 +63,7 @@ while True:
         Plataforma.draw_plataformas(janela)
         boss_atual.draw_boss()
         Tiro.draw_tiros(janela)
-        boss_atual.hitbox.draw()
+        # boss_atual.hitbox.draw()
         # player.hitbox.draw()
         # print(player.hitbox.x, player.hitbox.y)
         # print(Plataforma.lista[0].y)
