@@ -5,7 +5,8 @@ from tiros import Tiro
 
 class Player:
     # sprites visuais:
-    Window(800, 700)
+    Window(1200, 700)
+    gravity = 4500
     instrumento = 'violao'
     proximo_instrumento = {'violao': 'piano',
                            'piano': 'violao'}
@@ -33,8 +34,8 @@ class Player:
                 'montado': Sprite("Assets/character/player_hitbox_piano.png")}
     sprite_atual = sprites["violao"]["walk_right"]
     # cooldown tiros:  
-    cooldown = 0
-    gravity = 4500
+    cooldown_value = 0.3
+    walkspeed_padrao = 200
 
     def __init__(self, janela: Window, mapa, instrumento: str):
         self.janela = janela
@@ -43,7 +44,7 @@ class Player:
         self.walkspeed = 200
         self.instrumento = instrumento
         self.last_direction = 'right'
-        self.delay = 0
+        self.cooldown_passado = 0
         self.hitbox = self.hitboxes['desmontado']
         self.ready = True  # se pode atirar (não está em cooldown)
         self.hitbox.set_position(50, 608)
@@ -163,21 +164,20 @@ class Player:
                     self.sprite_atual = self.sprites[self.instrumento][f'playing_{self.last_direction}']
 
         # Atualiza o tempo de recarga
-        self.delay += self.janela.delta_time()
-        if self.delay >= self.cooldown:
-            self.delay = 0
+        self.cooldown_passado += self.janela.delta_time()
+        if self.cooldown_passado >= self.cooldown_value and self.is_playing:
+            self.cooldown_passado = 0
             # Atualiza os tiros
-            if self.is_playing:
-                if self.instrumento == 'piano' and self.playing_piano \
-                        or self.instrumento == 'violao':
-                    if self.teclado.key_pressed("up"):
-                        self.shoot(self.instrumento, (0, 1), self.hitbox)
-                    elif self.teclado.key_pressed("down"):
-                        self.shoot(self.instrumento, (0, -1), self.hitbox)
-                    elif self.last_direction == 'right':
-                        self.shoot(self.instrumento, (1, 0), self.hitbox)
-                    elif self.last_direction == 'left':
-                        self.shoot(self.instrumento, (-1, 0), self.hitbox)
+            if self.instrumento == 'piano' and self.playing_piano \
+                    or self.instrumento == 'violao':
+                if self.teclado.key_pressed("up"):
+                    self.shoot(self.instrumento, (0, 1), self.hitbox)
+                elif self.teclado.key_pressed("down"):
+                    self.shoot(self.instrumento, (0, -1), self.hitbox)
+                elif self.last_direction == 'right':
+                    self.shoot(self.instrumento, (1, 0), self.hitbox)
+                elif self.last_direction == 'left':
+                    self.shoot(self.instrumento, (-1, 0), self.hitbox)
 
     def update_frame(self, sprite, ms):
         sprite.set_total_duration(ms)
@@ -195,9 +195,11 @@ class Player:
         self.playing_piano = False
         self.can_move = True
 
-    @staticmethod
-    def shoot(tipo, direcao, player):
-        Tiro(tipo, direcao, player)
+    def shoot(self, tipo, direcao, player):
+        velocidade_player = 0
+        if self.teclado.key_pressed("right") or self.teclado.key_pressed("left"):
+            velocidade_player = self.walkspeed_padrao
+        Tiro(tipo, direcao, player, velocidade_player)
 
     def draw_player(self):
         self.sprite_atual.set_position(self.hitbox.x, self.hitbox.y)
@@ -220,16 +222,20 @@ class Player:
 
     def check_camera(self, lista_gameobjects: list, mapa):
         self.v_camera = 200
-        if self.hitbox.x + self.hitbox.width >= self.janela.width / 2:
+        if self.hitbox.x + self.hitbox.width >= self.janela.width / 2 \
+                and mapa.floor.x > mapa.boss_x_start:
             self.walkspeed = 0
             for gameobject in lista_gameobjects:
                 if self.can_move:
                     if self.teclado.key_pressed("RIGHT"):
                         gameobject.x -= self.v_camera * self.janela.delta_time()
-                    if self.teclado.key_pressed("LEFT"):
+                    elif self.teclado.key_pressed("LEFT"):
                         if not mapa.floor.x > 0:
                             gameobject.x += self.v_camera * self.janela.delta_time()
                         else:
                             self.walkspeed = 200
         else:
             self.walkspeed = 200
+            if mapa.floor.x < mapa.boss_x_start:
+                mapa.floor.x = mapa.boss_x_start
+                mapa.boss.start_arrive()

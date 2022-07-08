@@ -1,5 +1,6 @@
-from PPlay.sprite import *
 from PPlay.gameimage import *
+from PPlay.sprite import *
+
 
 class Menu:
     def __init__(self, janela) -> None:
@@ -13,13 +14,13 @@ class Menu:
         self.player_selection = False
         self.options_menu = False
         self.play_button = Sprite("Assets/menu/jogar.png", 2)
-        self.play_button.set_position(300,240)
+        self.play_button.set_position(300, 240)
         self.player_button = Sprite("Assets/menu/jogador.png", 2)
-        self.player_button.set_position(300,340)
+        self.player_button.set_position(300, 340)
         self.options_button = Sprite("Assets/menu/opções.png", 2)
-        self.options_button.set_position(300,440)
+        self.options_button.set_position(300, 440)
         self.leave_button = Sprite("Assets/menu/sair.png", 2)
-        self.leave_button.set_position(320,540)
+        self.leave_button.set_position(320, 540)
         self.background = GameImage("Assets/menu/menu_bg.png")
 
     def check_click(self):
@@ -61,7 +62,7 @@ class Menu:
                     self.janela.close()
             else:
                 self.leave_button.set_curr_frame(0)
-                
+
         if self.keyboard.key_pressed("ESC"):
             self.playing = False
             self.options_menu = False

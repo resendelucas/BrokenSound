@@ -1,4 +1,5 @@
 from os import getcwd
+
 from PPlay.sprite import Sprite
 from PPlay.window import Window
 
@@ -12,14 +13,13 @@ class Tiro(Sprite):
              "flauta": [],
              "piano": []
              }
-
     velocidades = {"violao": 600,
-                   "flauta": 300,
-                   "piano": 300
+                   "flauta": 600,
+                   "piano": 600
                    }
-    max_lifetimes = {"violao": 0.5,
-                     "flauta": 0.5,
-                     "piano": 0.5
+    max_lifetimes = {"violao": 0.8,
+                     "flauta": 0.8,
+                     "piano": 0.8
                      }
     direcoes = {(1, 0): "right",
                 (-1, 0): "left",
@@ -27,7 +27,7 @@ class Tiro(Sprite):
                 (0, -1): "down"
                 }
 
-    def __init__(self, tipo_tiro: str, direcao: tuple, player: Sprite):
+    def __init__(self, tipo_tiro: str, direcao: tuple, player: Sprite, velocidade_extra: float):
         """
         Direção: uma tupla que indica o sinal da velocidade X e velocidade Y que o tiro terá. Idealmente -1, 0 ou 1.
         
@@ -36,7 +36,7 @@ class Tiro(Sprite):
         super().__init__(f'{self.path_tiros}\\{tipo_tiro}_{self.direcoes[direcao]}.png', 5)
         self.direcao = direcao
         self.tiros[tipo_tiro].append(self)
-
+        self.velocidade_extra = velocidade_extra
         if self.direcao[0] > 0:  # se for pra direita
             self.x = player.x + player.width  # na direita do player  (x)
             self.y = player.y + player.height / 2 - self.height / 2  # no meio do player (y)
@@ -52,17 +52,17 @@ class Tiro(Sprite):
 
         self.x0 = self.x
         self.y0 = self.y
-        
-        self.lifetime = 0
+
+        self.time_lived = 0
 
     @classmethod
-    def update_tiros(cls, janela: Window):
+    def update_tiros(cls, janela: Window, player=None):
         for tipo_tiro in cls.tipo_tiros:
             for i, tiro in enumerate(cls.tiros[tipo_tiro]):
-                tiro.x += cls.velocidades[tipo_tiro] * tiro.direcao[0] * janela.delta_time()
+                tiro.x += (cls.velocidades[tipo_tiro] + tiro.velocidade_extra) * tiro.direcao[0] * janela.delta_time()
                 tiro.y -= cls.velocidades[tipo_tiro] * tiro.direcao[1] * janela.delta_time()
-                tiro.lifetime += janela.delta_time()
-                if tiro.lifetime >= cls.max_lifetimes[tipo_tiro]:
+                tiro.time_lived += janela.delta_time()
+                if tiro.time_lived >= cls.max_lifetimes[tipo_tiro]:
                     cls.tiros[tipo_tiro].pop(i)
 
     @classmethod
