@@ -5,6 +5,7 @@ from menu import Menu
 from plataforma import Plataforma
 from player import Player
 from tiros import Tiro
+from mini_game import MiniGame
 
 frames_acumulados = 0
 tempo_acumulado = 0
@@ -22,6 +23,8 @@ menu = Menu(janela)
 menu.playing = False
 teclado = janela.get_keyboard()
 janela.update()
+mini_game = MiniGame(janela, player, boss_atual)
+
 while True:
     frames_acumulados += 1
     tempo_acumulado += janela.delta_time()
@@ -29,9 +32,9 @@ while True:
         fps = frames_acumulados / tempo_acumulado
         tempo_acumulado = frames_acumulados = 0
     janela.update()
-    if janela.delta_time() > 0.005:
-        # evita bugs de física
-        continue
+    # if janela.delta_time() > 0.005:
+    #     # evita bugs de física
+    #     continue
     if not menu.playing:
         menu.check_events()
         menu.draw_menu()
@@ -43,6 +46,9 @@ while True:
         if teclado.key_pressed("v"):
             boss_atual.vely = 0
             boss_atual.hitbox.x += 1000 * janela.delta_time()
+        if teclado.key_pressed("b"):
+            boss_atual.vely = 0
+            boss_atual.hitbox.x -= 1000 * janela.delta_time()
         Plataforma.colisao_horizontal(player)
         Plataforma.colisao_vertical(player)
         player.check_events()
@@ -67,4 +73,9 @@ while True:
         # player.hitbox.draw()
         # print(player.hitbox.x, player.hitbox.y)
         # print(Plataforma.lista[0].y)
+        if boss_atual.mini_game:
+            print("aaaaa")
+            mini_game.config()
+            mini_game.draw_elements()
+            mini_game.check_events()
     janela.draw_text(f'{fps:.2f}', janela.width * 1 / 10, janela.height * 1 / 12, 30, (255, 255, 0))

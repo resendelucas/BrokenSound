@@ -62,6 +62,8 @@ class Player:
         self.show_piano, self.playing_piano = False, False
         self.c_pressed_past = False
         self.changing_character = False
+        self.imune = False
+        self.imune_cooldown = 0
 
     def feel_gravity(self):
         if self.is_falling is True:
@@ -178,6 +180,12 @@ class Player:
                     self.shoot(self.instrumento, (1, 0), self.hitbox)
                 elif self.last_direction == 'left':
                     self.shoot(self.instrumento, (-1, 0), self.hitbox)
+
+        # Imunidade player
+        if self.imune:
+            self.imune_cooldown += self.janela.delta_time()
+            if self.imune_cooldown > 0.5:
+                self.imune = False
 
     def update_frame(self, sprite, ms):
         sprite.set_total_duration(ms)

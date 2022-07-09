@@ -23,6 +23,7 @@ class Chao(GameImage):
             if boss.is_arriving:
                 boss.is_arriving = False
                 boss.is_imune = False
+                boss.idle = True
                 boss.sprite_atual = boss.sprites["idle_left"]
                 boss.cronometro_animacao = 0
                 boss.sprite_atual.set_total_duration(1.7)
