@@ -2,22 +2,20 @@ from PPlay.window import *
 from fase1 import Fase1
 from guitar_boss import BossGuitarra
 from menu import Menu
+from mini_game import MiniGame
 from plataforma import Plataforma
 from player import Player
 from tiros import Tiro
-from mini_game import MiniGame
 
 frames_acumulados = 0
 tempo_acumulado = 0
 fps = None
-# janela = Window(1366, 768)
-janela = Window(1200, 700)
+# janela = Window(1365, 768)
+janela = Window(1365, 768)
 boss_atual = BossGuitarra(janela)
 mapa_atual = Fase1(janela, boss_atual)
+mapa_atual.inicializar_plataformas()
 player = Player(janela, mapa_atual, 'piano')
-Plataforma(32*7, 32*15, '1x4')
-Plataforma(32*20, 32*15, '1x4')
-Plataforma(32*27, 32*11, '1x4')
 player.hitbox.vely = 0
 menu = Menu(janela)
 menu.playing = False
@@ -42,7 +40,8 @@ while True:
         # inputs
         if teclado.key_pressed("f"):
             player.vely = 50
-            boss_atual.start_arrive()
+            boss_atual.spawn()
+            boss_atual.velx = 0
         if teclado.key_pressed("v"):
             boss_atual.vely = 0
             boss_atual.hitbox.x += 1000 * janela.delta_time()
@@ -54,9 +53,9 @@ while True:
         player.check_events()
         # updates
         listaobjetos = [mapa_atual.background, mapa_atual.floor] + Plataforma.lista \
-            + Tiro.tiros["violao"] + Tiro.tiros["piano"] + Tiro.tiros["flauta"] + [boss_atual.hitbox]
+                       + Tiro.tiros["violao"] + Tiro.tiros["piano"] + Tiro.tiros["flauta"] + [boss_atual.hitbox]
         player.apply_motion()
-        Tiro.update_tiros(janela)
+        Tiro.update_tiros(janela, [boss_atual])
         player.feel_gravity()
         player.check_camera(listaobjetos, mapa_atual)
         mapa_atual.floor.try_landing_player(player)
@@ -69,12 +68,12 @@ while True:
         Plataforma.draw_plataformas(janela)
         boss_atual.draw_boss()
         Tiro.draw_tiros(janela)
-        # boss_atual.hitbox.draw()
+        boss_atual.hitbox.draw()
         # player.hitbox.draw()
         # print(player.hitbox.x, player.hitbox.y)
         # print(Plataforma.lista[0].y)
-        if boss_atual.mini_game:
-            print("aaaaa")
+
+        if boss_atual.is_mini_game_on:
             mini_game.config()
             mini_game.draw_elements()
             mini_game.check_events()

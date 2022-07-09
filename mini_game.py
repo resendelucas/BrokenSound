@@ -1,23 +1,21 @@
-from PPlay.window import *
 from PPlay.sprite import *
 from mini_songs import song1
 
+
 class MiniGame:
     sprites = {
-        'button-green' : Sprite("Assets/mini-game/q-green.png"),
-        'button-red' : Sprite("Assets/mini-game/w-red.png"),
-        'button-yellow' : Sprite("Assets/mini-game/e-yellow.png"),
-        'button-blue' : Sprite("Assets/mini-game/r-blue.png")
+        'button-green': Sprite("Assets/mini-game/q-green.png"),
+        'button-red': Sprite("Assets/mini-game/w-red.png"),
+        'button-yellow': Sprite("Assets/mini-game/e-yellow.png"),
+        'button-blue': Sprite("Assets/mini-game/r-blue.png")
     }
     notes = {
-        'green' : [],
-        'red' : [],
-        'yellow' : [],
-        'blue' : [],
+        'green': [],
+        'red': [],
+        'yellow': [],
+        'blue': [],
     }
     background = Sprite("Assets/mini-game/linhas.png")
-    
-
 
     def __init__(self, janela, player, boss):
         self.janela = janela
@@ -25,7 +23,7 @@ class MiniGame:
         self.boss = boss
         self.teclado = janela.get_keyboard()
         self.vel_notes = 150
-        self.background.set_position(self.janela.width/2 - self.background.width/2, 0)
+        self.background.set_position(self.janela.width / 2 - self.background.width / 2, 0)
         self.sprites['button-green'].set_position(511, 355)
         self.sprites['button-red'].set_position(556, 355)
         self.sprites['button-yellow'].set_position(602, 355)
@@ -35,7 +33,7 @@ class MiniGame:
     def config(self):
         # Falta mover o player e o boss para os cantos da tela
         self.player.can_move = False
-    
+
     def check_events(self):
         for key, values in self.notes.items():
             for note in values:

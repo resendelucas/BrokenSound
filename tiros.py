@@ -17,15 +17,19 @@ class Tiro(Sprite):
                    "flauta": 600,
                    "piano": 600
                    }
-    max_lifetimes = {"violao": 0.8,
-                     "flauta": 0.8,
-                     "piano": 0.8
+    max_lifetimes = {"violao": 1.5,
+                     "flauta": 1.5,
+                     "piano": 1.5
                      }
     direcoes = {(1, 0): "right",
                 (-1, 0): "left",
                 (0, 1): "up",
                 (0, -1): "down"
                 }
+    danos = {"violao": 50,
+             "piano": 25,
+             "flauta": 50
+             }
 
     def __init__(self, tipo_tiro: str, direcao: tuple, player: Sprite):
         """
@@ -55,14 +59,17 @@ class Tiro(Sprite):
         self.time_lived = 0
 
     @classmethod
-    def update_tiros(cls, janela: Window, player=None):
-        for tipo_tiro in cls.tipo_tiros:
-            for i, tiro in enumerate(cls.tiros[tipo_tiro]):
-                tiro.x += cls.velocidades[tipo_tiro] * tiro.direcao[0] * janela.delta_time()
-                tiro.y -= cls.velocidades[tipo_tiro] * tiro.direcao[1] * janela.delta_time()
-                tiro.time_lived += janela.delta_time()
-                if tiro.time_lived >= cls.max_lifetimes[tipo_tiro]:
-                    cls.tiros[tipo_tiro].pop(i)
+    def update_tiros(cls, janela: Window, lista_inimigos=None, player=None):
+        for instrumento in cls.tipo_tiros:
+            for inimigo in lista_inimigos:
+                for i, tiro in enumerate(cls.tiros[instrumento]):
+                    tiro.x += cls.velocidades[instrumento] * tiro.direcao[0] * janela.delta_time()
+                    tiro.y -= cls.velocidades[instrumento] * tiro.direcao[1] * janela.delta_time()
+                    tiro.time_lived += janela.delta_time()
+                    if tiro.collided(inimigo.hitbox):
+                        inimigo.levar_dano(cls.danos[instrumento])
+                    if tiro.time_lived >= cls.max_lifetimes[instrumento] or tiro.collided(inimigo.hitbox):
+                        cls.tiros[instrumento].pop(i)
 
     @classmethod
     def draw_tiros(cls, janela: Window):

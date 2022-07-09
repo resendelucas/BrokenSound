@@ -5,7 +5,7 @@ from tiros import Tiro
 
 class Player:
     # sprites visuais:
-    Window(1200, 700)
+    Window(1365, 768)
     gravity = 4500
     instrumento = 'violao'
     proximo_instrumento = {'violao': 'piano',
@@ -172,14 +172,14 @@ class Player:
             # Atualiza os tiros
             if self.instrumento == 'piano' and self.playing_piano \
                     or self.instrumento == 'violao':
-                if self.teclado.key_pressed("up"):
-                    self.shoot(self.instrumento, (0, 1), self.hitbox)
-                elif self.teclado.key_pressed("down"):
+                if self.teclado.key_pressed("down"):
                     self.shoot(self.instrumento, (0, -1), self.hitbox)
                 elif self.last_direction == 'right':
                     self.shoot(self.instrumento, (1, 0), self.hitbox)
                 elif self.last_direction == 'left':
                     self.shoot(self.instrumento, (-1, 0), self.hitbox)
+                elif self.teclado.key_pressed("up"):
+                    self.shoot(self.instrumento, (0, 1), self.hitbox)
 
         # Imunidade player
         if self.imune:
@@ -243,4 +243,4 @@ class Player:
             self.walkspeed = 200
             if mapa.floor.x < mapa.boss_x_start:
                 mapa.floor.x = mapa.boss_x_start
-                mapa.boss.start_arrive()
+                mapa.boss.spawn()

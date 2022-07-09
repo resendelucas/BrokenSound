@@ -6,12 +6,11 @@ from PPlay.gameimage import GameImage
 class Chao(GameImage):
     path = f'{getcwd()}\\assets\\imagens\\Floors'
 
-    def __init__(self, image_filename: str, y: float, buracos: list = None):
+    def __init__(self, image_filename: str, buracos: list = None):
         """ Buracos será uma lista de tuplas com distancia iniciais e finais do
         inicio do chão onde o player pode cair e morrer"""
         super().__init__(f'{self.path}\\{image_filename}')
         self.x = 0
-        self.y = y
         self.buracos = buracos
 
     def try_landing_boss(self, boss):
@@ -23,7 +22,7 @@ class Chao(GameImage):
             if boss.is_arriving:
                 boss.is_arriving = False
                 boss.is_imune = False
-                boss.idle = True
+                boss.is_idle = True
                 boss.sprite_atual = boss.sprites["idle_left"]
                 boss.cronometro_animacao = 0
                 boss.sprite_atual.set_total_duration(1.7)
