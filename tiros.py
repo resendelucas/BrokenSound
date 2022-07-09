@@ -66,9 +66,10 @@ class Tiro(Sprite):
                     tiro.x += cls.velocidades[instrumento] * tiro.direcao[0] * janela.delta_time()
                     tiro.y -= cls.velocidades[instrumento] * tiro.direcao[1] * janela.delta_time()
                     tiro.time_lived += janela.delta_time()
-                    if tiro.collided(inimigo.hitbox):
+                    colisao = tiro.collided_perfect(inimigo.sprite_atual)
+                    if colisao:
                         inimigo.levar_dano(cls.danos[instrumento])
-                    if tiro.time_lived >= cls.max_lifetimes[instrumento] or tiro.collided(inimigo.hitbox):
+                    if tiro.time_lived >= cls.max_lifetimes[instrumento] or colisao:
                         cls.tiros[instrumento].pop(i)
 
     @classmethod

@@ -63,13 +63,14 @@ while True:
         boss_atual.update()
         # player.check_camera()
         # draws
+        player.hitbox.draw()  # draw visualmente inútil, já que é antes do mapa, mas importante pro c. perfect funcionar
         mapa_atual.draw_elements()
         player.draw_player()
         Plataforma.draw_plataformas(janela)
         boss_atual.draw_boss()
+        player.check_hit_boss(boss_atual)
         Tiro.draw_tiros(janela)
-        boss_atual.hitbox.draw()
-        # player.hitbox.draw()
+        # boss_atual.hitbox.draw()
         # print(player.hitbox.x, player.hitbox.y)
         # print(Plataforma.lista[0].y)
 

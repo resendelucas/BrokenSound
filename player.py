@@ -1,7 +1,7 @@
 from PPlay.sprite import *
 from PPlay.window import *
 from tiros import Tiro
-
+from playerhealthbar import PlayerHealthBar
 
 class Player:
     # sprites visuais:
@@ -63,7 +63,18 @@ class Player:
         self.c_pressed_past = False
         self.changing_character = False
         self.imune = False
-        self.imune_cooldown = 0
+        self.imune_duracao = 3
+        self.imune_cronometro = 0
+        self.healthbar = PlayerHealthBar(5, 5)
+
+    def check_hit_boss(self, boss):
+        if not self.imune:
+            if boss.sprite_atual.collided_perfect(self.hitbox):
+                self.levar_dano(1)
+
+    def levar_dano(self, qtd_dano):
+        self.imune = True
+        self.healthbar.levar_dano(qtd_dano)
 
     def feel_gravity(self):
         if self.is_falling is True:
@@ -183,9 +194,12 @@ class Player:
 
         # Imunidade player
         if self.imune:
-            self.imune_cooldown += self.janela.delta_time()
-            if self.imune_cooldown > 0.5:
+            self.imune_cronometro += self.janela.delta_time()
+            if self.imune_cronometro > self.imune_duracao:
                 self.imune = False
+                self.imune_cronometro = 0
+        else:
+            self.imune_cronometro = 0
 
     def update_frame(self, sprite, ms):
         sprite.set_total_duration(ms)
@@ -221,6 +235,7 @@ class Player:
             self.update_frame(self.sprite_atual, 600)
         else:
             self.update_frame(self.sprite_atual, 800)
+        self.healthbar.draw()
 
         if self.changing_character and self.sprites['changing'].get_curr_frame() != 9:
             self.update_frame(self.sprites['changing'], 350)

@@ -67,7 +67,9 @@ class Collision():
     """
     @classmethod
     def collided_perfect(cls, gameimage1, gameimage2):
-        return (Collision.perfect_collision(gameimage1, gameimage2))
+        if cls.collided(gameimage1, gameimage2):
+            return (Collision.perfect_collision(gameimage1, gameimage2))
+        return False
                       
             
         
