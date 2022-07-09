@@ -1,9 +1,10 @@
 from PPlay.gameimage import *
 from PPlay.sprite import *
+from PPlay.window import Window
 
 
 class Menu:
-    def __init__(self, janela) -> None:
+    def __init__(self, janela: Window) -> None:
         self.janela = janela
         self.mouse = janela.get_mouse()
         self.keyboard = janela.get_keyboard()
@@ -76,3 +77,9 @@ class Menu:
             self.player_button.draw()
             self.options_button.draw()
             self.leave_button.draw()
+
+    def you_died_screen(self):
+        from os import getcwd
+        self.janela.draw_text("A música está se esvaindo...", self.janela.width / 2, self.janela.height / 2, 40,
+                              (255, 0, 0),
+                              font_name=f"{getcwd()}Assets/FreePixel.ttf")

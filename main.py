@@ -51,10 +51,14 @@ while True:
             boss_atual.hitbox.x -= 1000 * janela.delta_time()
         Plataforma.colisao_horizontal(player)
         Plataforma.colisao_vertical(player)
-        player.check_events()
+        if player.healthbar.health_atual > 0:
+            player.check_events()
+        else:
+            if player.healthbar.old_health_ratio == 0:
+                menu.playing = False
         # updates
         listaobjetos = [mapa_atual.background, mapa_atual.floor] + Plataforma.lista \
-                       + Tiro.tiros["violao"] + Tiro.tiros["piano"] + Tiro.tiros["flauta"] + [boss_atual.hitbox]
+                    + Tiro.tiros["violao"] + Tiro.tiros["piano"] + Tiro.tiros["flauta"] + [boss_atual.hitbox]
         player.apply_motion()
         Tiro.update_tiros(janela, [boss_atual])
         player.feel_gravity()
@@ -79,4 +83,6 @@ while True:
             mini_game.config()
             mini_game.draw_elements()
             mini_game.check_events()
+        if player.healthbar.health_atual <= 0:
+            menu.you_died_screen()
     janela.draw_text(f'{fps:.2f}', janela.width * 1 / 10, janela.height * 1 / 12, 30, (255, 255, 0))

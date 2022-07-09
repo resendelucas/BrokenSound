@@ -65,16 +65,21 @@ class Player:
         self.imune = False
         self.imune_duracao = 3
         self.imune_cronometro = 0
-        self.healthbar = PlayerHealthBar(5, 5)
+        self.healthbar = PlayerHealthBar(5, 5, self.janela)
 
     def check_hit_boss(self, boss):
         if not self.imune:
-            if boss.sprite_atual.collided_perfect(self.hitbox):
+            if boss.sprite_atual.collided_perfect(self.sprite_atual):
                 self.levar_dano(1)
-
+                return
+            for tiro in boss.lista_tiros:
+                if self.sprite_atual.collided_perfect(tiro):
+                    self.levar_dano(1)
+                    return
     def levar_dano(self, qtd_dano):
-        self.imune = True
         self.healthbar.levar_dano(qtd_dano)
+        self.imune = True
+
 
     def feel_gravity(self):
         if self.is_falling is True:
