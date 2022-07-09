@@ -1,6 +1,6 @@
 from PPlay.sprite import *
 from PPlay.window import *
-from tiros import Tiro
+from tiros_player import Tiro
 from playerhealthbar import PlayerHealthBar
 
 class Player:

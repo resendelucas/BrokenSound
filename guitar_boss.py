@@ -1,5 +1,6 @@
 from PPlay.sprite import Sprite
 from boss_mae import BossClasseMae
+from tiros_teleguiados import TiroTeleguiado
 
 
 class BossGuitarra(BossClasseMae):
@@ -29,16 +30,17 @@ class BossGuitarra(BossClasseMae):
     sprites['playing_left'].set_total_duration(0.4)
     sprites['swing_summon_left'].set_total_duration(2)
     sprites['swing_summon_left'].loop = False
-    sprites['swinging_left'].set_total_duration(0.3)
-    sprites['swinging_right'].set_total_duration(0.3)
+    sprites['swinging_left'].set_total_duration(0.7)
+    sprites['swinging_right'].set_total_duration(0.7)
     sprites['meteoro_left'].set_total_duration(0.3)
 
     hitbox = Sprite("Assets/boss_guitar/hitbox.png")
     # hitbox_microfone = Sprite("Assets/boss_guitar/hitbox_microfone.png")
     hitbox.set_position(-9999, -9999)
     gravity = 4500
+    cooldown_tiro = 3
 
-    def __init__(self, janela):
+    def __init__(self, janela, player=None):
         super().__init__(10000, 10000)
         self.sprite_atual = self.sprites["arriving_left"]
         self.janela = janela
@@ -50,6 +52,7 @@ class BossGuitarra(BossClasseMae):
         self.aceleracao_x = 0
         self.direction = -1
         self.is_falling = False
+        self.player = player
         self.cronometro_animacao = 0
         self.is_idle = False
         self.is_playing = False
@@ -62,6 +65,7 @@ class BossGuitarra(BossClasseMae):
         self.last_position = (self.hitbox.x, self.hitbox.y)
         self.m_pressed_past = False
         self.is_finished = False
+        self.cronometro_tiro = 2
 
     def spawn(self):
         self.reset()
@@ -129,12 +133,19 @@ class BossGuitarra(BossClasseMae):
 
         # Começa a tocar 
         elif self.is_playing:
+            self.cronometro_tiro += self.janela.delta_time()
+            if self.cronometro_tiro > self.cooldown_tiro:
+                TiroTeleguiado(self.sprite_atual, self.player)
+                print('a')
+                self.cronometro_tiro = 0
+            TiroTeleguiado.update_tiros()
             if self.health_atual < 0.8 * self.max_health:
                 self.is_imune = True
                 self.is_summoning = True
                 self.is_playing = False
                 self.cronometro_animacao = 0
                 self.sprite_atual = self.sprites['swing_summon_left']
+
 
         # Invoca o microfone
         elif self.is_summoning:
@@ -178,9 +189,9 @@ class BossGuitarra(BossClasseMae):
             self.sprite_atual.set_curr_frame((self.cronometro_animacao // intervalo) % qtdframes)
             if self.sprite_atual == self.sprites["meteoro_left"]:
                 print(f'sprite: meteoro_left, duracao: {duracao:.2f}, qtdframes: {qtdframes}')
-            if self.sprite_atual.loop is False and\
+            if self.sprite_atual.loop is False and \
                     self.cronometro_animacao // intervalo >= self.sprite_atual.get_final_frame():
-                self.sprite_atual.set_curr_frame(self.sprite_atual.get_final_frame()-1)
+                self.sprite_atual.set_curr_frame(self.sprite_atual.get_final_frame() - 1)
                 print('b')
 
     def calibrar_posicao_sprite(self):

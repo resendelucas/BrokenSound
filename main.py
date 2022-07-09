@@ -5,8 +5,8 @@ from menu import Menu
 from mini_game import MiniGame
 from plataforma import Plataforma
 from player import Player
-from tiros import Tiro
-
+from tiros_player import Tiro
+from tiros_teleguiados import TiroTeleguiado
 frames_acumulados = 0
 tempo_acumulado = 0
 fps = None
@@ -16,6 +16,7 @@ boss_atual = BossGuitarra(janela)
 mapa_atual = Fase1(janela, boss_atual)
 mapa_atual.inicializar_plataformas()
 player = Player(janela, mapa_atual, 'piano')
+boss_atual.player = player
 player.hitbox.vely = 0
 menu = Menu(janela)
 menu.playing = False
@@ -73,7 +74,7 @@ while True:
         # boss_atual.hitbox.draw()
         # print(player.hitbox.x, player.hitbox.y)
         # print(Plataforma.lista[0].y)
-
+        TiroTeleguiado.draw_tiros_teleguiados()
         if boss_atual.is_mini_game_on:
             mini_game.config()
             mini_game.draw_elements()
