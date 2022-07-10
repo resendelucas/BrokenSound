@@ -37,6 +37,13 @@ class Player:
     cooldown_value = 0.3
     walkspeed_padrao = 200
 
+    hud_instrumento_frame = Sprite("Assets/hud/hud-instrumento-frame.png")
+    hud_instrumento_frame.set_position(40,40)
+    hud_instrumento_violao = Sprite("Assets/hud/hud-instrumento-violao.png")
+    hud_instrumento_violao.set_position(72,60)
+    hud_instrumento_piano = Sprite("Assets/hud/hud-instrumento-piano.png")
+    hud_instrumento_piano.set_position(72,60)
+
     def __init__(self, janela: Window, mapa, instrumento: str):
         self.janela = janela
         self.mapa = mapa
@@ -264,3 +271,10 @@ class Player:
             if mapa.floor.x < mapa.boss_x_start:
                 mapa.floor.x = mapa.boss_x_start
                 mapa.boss.spawn()
+
+    def draw_hud(self):
+        if self.instrumento == 'violao':
+            self.hud_instrumento_violao.draw()
+        elif self.instrumento == 'piano':
+            self.hud_instrumento_piano.draw()
+        self.hud_instrumento_frame.draw()

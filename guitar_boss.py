@@ -152,6 +152,7 @@ class BossGuitarra(BossClasseMae):
 
             if self.health_atual <= 0:
                 self.sprite_atual = self.sprites['dying_left']
+                self.is_playing = False
 
         # Invoca o microfone
         elif self.is_summoning:

@@ -85,4 +85,6 @@ while True:
             mini_game.check_events()
         if player.healthbar.health_atual <= 0:
             menu.you_died_screen()
+        
+        player.draw_hud()
     janela.draw_text(f'{fps:.2f}', janela.width * 1 / 10, janela.height * 1 / 12, 30, (255, 255, 0))

@@ -3,9 +3,12 @@ from PPlay.sprite import Sprite
 from pygame.draw import rect as drawrect
 class PlayerHealthBar:
     janela = Window(1365, 768)
-    healthbar_sprite = Sprite("Assets/player_healthbar.png")
-    healthbar_sprite.x = janela.width/2 - healthbar_sprite.width / 2
-    healthbar_sprite.y = janela.height - healthbar_sprite.height - 30
+    # healthbar_sprite = Sprite("Assets/player_healthbar.png")
+    # healthbar_sprite.x = janela.width/2 - healthbar_sprite.width / 2
+    # healthbar_sprite.y = janela.height - healthbar_sprite.height - 30
+    healthbar_sprite = Sprite("Assets/hud/healthbar.png")
+    healthbar_sprite.x = 158
+    healthbar_sprite.y = 60
 
     def __init__(self, max_health, starting_health, janela):
         self.max_health = max_health
