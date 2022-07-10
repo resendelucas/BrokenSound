@@ -25,6 +25,7 @@ class BossGuitarra(BossClasseMae):
         # morte
         "dying_right": Sprite("Assets/boss_guitar/dying_right.png", 2),
         "dying_left": Sprite("Assets/boss_guitar/dying_left.png", 2),
+        "explosion" : Sprite("Assets/boss_guitar/explosion.png", 19)
     }
     sprites["arriving_left"].set_total_duration(0.05)
     sprites['playing_left'].set_total_duration(0.4)
@@ -34,7 +35,8 @@ class BossGuitarra(BossClasseMae):
     sprites['swinging_right'].set_total_duration(0.7)
     sprites['meteoro_left'].set_total_duration(0.3)
     sprites['dying_left'].set_total_duration(0.3)
-
+    sprites['explosion'].set_total_duration(1000)
+    sprites['explosion'].loop = False
     hitbox = Sprite("Assets/boss_guitar/hitbox.png")
     # hitbox_microfone = Sprite("Assets/boss_guitar/hitbox_microfone.png")
     hitbox.set_position(-9999, -9999)
@@ -60,6 +62,7 @@ class BossGuitarra(BossClasseMae):
         self.is_summoning = False
         self.is_swinging = False
         self.is_raining = False
+        self.is_dying = False
         self.is_mini_game_on = False
         self.is_mini_game_done = False
         self.mini_game_finished = False
@@ -104,6 +107,7 @@ class BossGuitarra(BossClasseMae):
         self.is_swinging = False
         self.is_raining = False
         self.is_mini_game_on = False
+        self.is_dying = False
         self.looking_direction = 'left'
         self.cronometro_still = 0
         self.last_position = (self.hitbox.x, self.hitbox.y)
@@ -138,21 +142,25 @@ class BossGuitarra(BossClasseMae):
         # Começa a tocar 
         elif self.is_playing:
             self.cronometro_tiro += self.janela.delta_time()
-            if self.cronometro_tiro > self.cooldown_tiro and len(TiroTeleguiado.lista_pequenas) < 6:
+            if self.cronometro_tiro > self.cooldown_tiro and len(TiroTeleguiado.lista_pequenas) < 5:
                 TiroTeleguiado(self.sprite_atual, self.player)
-                self.lista_tiros = TiroTeleguiado.lista_pequenas
                 self.cronometro_tiro = 0
             TiroTeleguiado.update_tiros()
             if self.health_atual < 0.8 * self.max_health and not self.mini_game_finished:
                 self.is_imune = True
                 self.is_summoning = True
+                TiroTeleguiado.lista_pequenas = []
                 self.is_playing = False
                 self.cronometro_animacao = 0
                 self.sprite_atual = self.sprites['swing_summon_left']
 
             if self.health_atual <= 0:
                 self.sprite_atual = self.sprites['dying_left']
+                TiroTeleguiado.lista_pequenas = []
                 self.is_playing = False
+                self.is_dying = True
+                self.cronometro_animacao = 0
+            self.lista_tiros = TiroTeleguiado.lista_pequenas
 
         # Invoca o microfone
         elif self.is_summoning:
@@ -196,7 +204,7 @@ class BossGuitarra(BossClasseMae):
             self.cooldown_tiro = 1.5
             self.is_mini_game_done = False
             self.mini_game_finished = True
-
+       
     def update_frame(self):
         if self.is_started:
             duracao = self.sprite_atual.get_total_duration()
@@ -210,7 +218,7 @@ class BossGuitarra(BossClasseMae):
             if self.sprite_atual.loop is False and \
                     self.cronometro_animacao // intervalo >= self.sprite_atual.get_final_frame():
                 self.sprite_atual.set_curr_frame(self.sprite_atual.get_final_frame() - 1)
-
+            
     def calibrar_posicao_sprite(self):
         if not self.is_swinging:
             diferenca_hitbox_y = abs(self.hitbox.height - self.sprite_atual.height)
@@ -233,6 +241,20 @@ class BossGuitarra(BossClasseMae):
             self.update_frame()
             self.sprite_atual.draw()
             self.draw_healthbar()
+
+        if self.is_dying:
+            if self.hitbox.y > 200:
+                self.hitbox.y -= 50 * self.janela.delta_time()
+            else:
+                if self.is_started:
+                    self.sprites['explosion'].set_position(self.sprite_atual.x - 80 , self.sprite_atual.y - 80)
+                    self.sprites['explosion'].update()
+                    self.sprites['explosion'].draw()
+                    if self.sprites['explosion'].get_curr_frame() == 4:
+                        self.is_finished = True
+                    elif self.sprites['explosion'].get_final_frame() - 1\
+                            == self.sprites['explosion'].get_curr_frame():
+                            self.is_started = False
 
     def check_hit(self):
         if not self.teclado.key_pressed('m') and self.m_pressed_past and not self.is_imune:
