@@ -36,6 +36,21 @@ class Plataforma(Sprite):
                 player.can_jump = True
                 return True
         return False
+    
+    @classmethod
+    def colisao_cima_sprite(cls, sprite):
+        sprite.is_falling = True
+        for i, plataforma in enumerate(cls.lista):
+            # se a hitbox estava acima da plataforma, mas agora está abaixo, e a hitbox está colidindo
+            if sprite.last_position[1] + \
+                    sprite.height <= plataforma.y < sprite.y + sprite.height and\
+                    sprite.collided(plataforma):
+                sprite.y = plataforma.y - sprite.height
+                sprite.vely = 0
+                sprite.is_falling = False
+                sprite.can_jump = True
+                return True
+        return False
 
     # @classmethod
     # def colisao(cls, player:Player):

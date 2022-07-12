@@ -41,3 +41,18 @@ class Chao(GameImage):
                 player.vely = 0
                 player.can_jump = True
                 player.is_falling = False
+                
+    def try_landing_sprite(self, sprite):
+        if sprite.y + sprite.height >= self.y:
+            entity_no_buraco = False
+            ''' # A ser implementado
+            if self.buracos:
+                for buraco in self.buracos:
+                    x_inicial, x_final = buraco[0], buraco[1]
+                    if player.hitbox.x > x_inicial and player.hitbox.x + player.hitbox.width < x_final:
+                        entity_no_buraco = True'''
+            if entity_no_buraco is False:
+                sprite.y = self.y - sprite.height
+                sprite.vely = 0
+                sprite.can_jump = True
+                sprite.is_falling = False

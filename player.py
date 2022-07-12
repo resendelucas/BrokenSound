@@ -1,12 +1,14 @@
 from PPlay.sprite import *
 from PPlay.window import *
-from tiros_player import Tiro
 from playerhealthbar import PlayerHealthBar
+from tiros_player import Tiro
+from caixadesom import CaixaDeSom
 
 class Player:
     # sprites visuais:
     Window(1365, 768)
     gravity = 4500
+    key_pressed_past = {"x": False}
     instrumento = 'violao'
     proximo_instrumento = {'violao': 'piano',
                            'piano': 'violao'}
@@ -38,11 +40,11 @@ class Player:
     walkspeed_padrao = 200
 
     hud_instrumento_frame = Sprite("Assets/hud/hud-instrumento-frame.png")
-    hud_instrumento_frame.set_position(40,40)
+    hud_instrumento_frame.set_position(40, 40)
     hud_instrumento_violao = Sprite("Assets/hud/hud-instrumento-violao.png")
-    hud_instrumento_violao.set_position(72,60)
+    hud_instrumento_violao.set_position(72, 60)
     hud_instrumento_piano = Sprite("Assets/hud/hud-instrumento-piano.png")
-    hud_instrumento_piano.set_position(72,60)
+    hud_instrumento_piano.set_position(72, 60)
 
     def __init__(self, janela: Window, mapa, instrumento: str):
         self.janela = janela
@@ -73,6 +75,7 @@ class Player:
         self.imune_duracao = 3
         self.imune_cronometro = 0
         self.healthbar = PlayerHealthBar(5, 5, self.janela)
+        self.caixa_de_som = None
 
     def check_hit_boss(self, boss):
         if not self.imune:
@@ -83,10 +86,13 @@ class Player:
                 if self.sprite_atual.collided_perfect(tiro):
                     self.levar_dano(1)
                     return
+
     def levar_dano(self, qtd_dano):
         self.healthbar.levar_dano(qtd_dano)
         self.imune = True
 
+    def spawn_caixa_de_som(self):
+        self.caixa_de_som = CaixaDeSom(self.last_direction, self.hitbox, self.janela)
 
     def feel_gravity(self):
         if self.is_falling is True:
@@ -102,16 +108,31 @@ class Player:
         self.can_jump = False
         self.is_falling = True
 
+    def update_caixa_de_som(self, mapa):
+        if self.caixa_de_som:
+            self.caixa_de_som.feel_gravity(self.gravity)
+            self.caixa_de_som.apply_motion()
+            self.caixa_de_som.tick_time()
+            mapa.floor.try_landing_sprite(self.caixa_de_som)
+            mapa.Plataforma_classe.colisao_cima_sprite(self.caixa_de_som)
+            if self.caixa_de_som.health_ratio == 0:
+                print('a')
+                self.caixa_de_som = None
+    
     def check_events(self) -> None:
         """Checa inputs do player e muda as variáveis de estado de acordo."""
         # checar se está tocando música
         self.last_position[0], self.last_position[1] = self.hitbox.x, self.hitbox.y
         self.is_playing = self.teclado.key_pressed("z")
-
         hitbox_anterior = self.hitbox
+
         self.hitbox = self.hitboxes['desmontado' if not self.playing_piano else 'montado']
         self.hitbox.set_position(hitbox_anterior.x, hitbox_anterior.y)
-
+        
+        if self.key_pressed_past["x"] and not self.teclado.key_pressed("x"):
+            self.spawn_caixa_de_som()
+        self.key_pressed_past["x"] = self.teclado.key_pressed("x")
+                
         if self.is_playing:
             # Se tocar piano, o personagem carrega o piano na tela
             if self.instrumento == 'piano':

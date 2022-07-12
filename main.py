@@ -6,7 +6,7 @@ from mini_game import MiniGame
 from plataforma import Plataforma
 from player import Player
 from tiros_player import Tiro
-from tiros_teleguiados import TiroTeleguiado
+from teleguiados import TiroTeleguiado
 frames_acumulados = 0
 tempo_acumulado = 0
 fps = None
@@ -49,6 +49,8 @@ while True:
         if teclado.key_pressed("b"):
             boss_atual.vely = 0
             boss_atual.hitbox.x -= 1000 * janela.delta_time()
+        if teclado.key_pressed("x"):
+            player.spawn_caixa_de_som()
         Plataforma.colisao_cima(player)
         if player.healthbar.health_atual > 0:
             player.check_events()
@@ -58,11 +60,14 @@ while True:
         # updates
         listaobjetos = [mapa_atual.background, mapa_atual.floor] + Plataforma.lista \
                     + Tiro.tiros["violao"] + Tiro.tiros["piano"] + Tiro.tiros["flauta"] + [boss_atual.hitbox]
+        if player.caixa_de_som:
+            listaobjetos.append(player.caixa_de_som)
         player.apply_motion()
         Tiro.update_tiros(janela, [boss_atual])
         player.feel_gravity()
         player.check_camera(listaobjetos, mapa_atual)
         mapa_atual.floor.try_landing_player(player)
+        player.update_caixa_de_som(mapa_atual)
         mapa_atual.floor.try_landing_boss(boss_atual)
         boss_atual.update()
         # player.check_camera()
@@ -70,6 +75,8 @@ while True:
         player.hitbox.draw()  # draw visualmente inútil, já que é antes do mapa, mas importante pro c. perfect funcionar
         mapa_atual.draw_elements()
         player.draw_player()
+        if player.caixa_de_som:
+            player.caixa_de_som.draw_sprite_and_healthbar()
         Plataforma.draw_plataformas(janela)
         boss_atual.draw_boss()
         player.check_hit_boss(boss_atual)

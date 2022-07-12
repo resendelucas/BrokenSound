@@ -8,7 +8,7 @@ class TiroTeleguiado(Sprite):
 
     velocidade_max_pequena = 700
     maxlifetime_pequena = 1000
-    aceleracao = 1
+    aceleracao = 200
     lista_pequenas = []
 
     def __init__(self, sprite_boss, player):
@@ -38,8 +38,8 @@ class TiroTeleguiado(Sprite):
         self.vely += self.aceleracao * ratio_y * self.player.janela.delta_time()
 
     def apply_motion(self):
-        self.x += self.velx
-        self.y += self.vely
+        self.x += self.velx * self.janela.delta_time()
+        self.y += self.vely * self.janela.delta_time()
 
     @classmethod
     def draw_tiros_teleguiados(cls):

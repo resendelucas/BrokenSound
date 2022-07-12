@@ -16,14 +16,16 @@ class MiniGame:
         'blue': [],
     }
     background = Sprite("Assets/mini-game/linhas.png")
-
+    
     def __init__(self, janela, player, boss):
         self.janela = janela
         self.player = player
         self.boss = boss
         self.teclado = janela.get_keyboard()
         self.vel_notes = 150
-        self.tam = 90
+        self.tam = 84
+        self.total = 0
+        self.key_missed = 0
         self.background.set_position(self.janela.width / 2 - self.background.width / 2, 0)
         self.sprites['button-green'].set_position(511+self.tam, 355)
         self.sprites['button-red'].set_position(556+self.tam, 355)
@@ -55,14 +57,16 @@ class MiniGame:
                     if self.teclado.key_pressed("r") and note.collided(self.sprites['button-blue']):
                         values.remove(note)
 
-                # remove a bolinha se passar da tela
-                if note.y > self.janela.height:
+                if note.y > self.sprites['button-green'].y + self.sprites['button-green'].height + 5:
+                    self.player.levar_dano(0.5)
+                    self.key_missed += 1
                     values.remove(note)
+
         if (len(self.notes['green']) + len(self.notes['yellow']) + \
             len(self.notes['blue']) + len(self.notes['red'])) == 0:
             self.boss.is_mini_game_on = False
             self.boss.is_mini_game_done = True
-            self.boss.levar_dano(self.boss.max_health * 0.2)
+            self.boss.levar_dano(self.boss.max_health * (0.2 * (self.total-self.key_missed))/self.total)
 
     def draw_elements(self):
         self.background.draw()
@@ -96,3 +100,5 @@ class MiniGame:
                         blue.set_position(651+self.tam, padding_y)
                         self.notes['blue'].append(blue)
             padding_y -= 50
+        self.total = len(self.notes['green']) + len(self.notes['yellow']) + \
+            len(self.notes['blue']) + len(self.notes['red'])

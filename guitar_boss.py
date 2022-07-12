@@ -1,6 +1,6 @@
 from PPlay.sprite import Sprite
 from boss_mae import BossClasseMae
-from tiros_teleguiados import TiroTeleguiado
+from teleguiados import TiroTeleguiado
 
 
 class BossGuitarra(BossClasseMae):
