@@ -8,7 +8,11 @@ class Player:
     # sprites visuais:
     Window(1365, 768)
     gravity = 4500
-    key_pressed_past = {"x": False}
+    key_pressed_past = {"x": False,
+                        "q": False,
+                        "w": False,
+                        "e": False,
+                        "r": False,}
     instrumento = 'violao'
     proximo_instrumento = {'violao': 'piano',
                            'piano': 'violao'}
@@ -102,6 +106,7 @@ class Player:
     def apply_motion(self):
         self.hitbox.y -= self.vely * self.janela.delta_time()
         self.hitbox.x += self.velx * self.janela.delta_time()
+        
 
     def jump(self):
         self.vely = self.jumpspeed
@@ -139,7 +144,10 @@ class Player:
         self.hitbox.set_position(hitbox_anterior.x, hitbox_anterior.y)
         
         if self.key_pressed_past["x"] and not self.teclado.key_pressed("x"):
-            self.spawn_caixa_de_som()
+            if self.caixa_de_som:
+                self.caixa_de_som = None
+            else:
+                self.spawn_caixa_de_som()
         self.key_pressed_past["x"] = self.teclado.key_pressed("x")
                 
         if self.is_playing:
@@ -217,7 +225,12 @@ class Player:
             else:
                 if self.instrumento == 'violao':
                     self.sprite_atual = self.sprites[self.instrumento][f'playing_{self.last_direction}']
-
+        # se, após os movimentos, o player estiver fora da tela, volta pra dentro:
+        if self.hitbox.x < 0:
+            self.hitbox.x = 0
+        elif self.hitbox.x + self.hitbox.width > self.janela.width:
+            self.hitbox.x = self.janela.width - self.hitbox.width
+            
         # Atualiza o tempo de recarga
         self.cooldown_passado += self.janela.delta_time()
         if self.cooldown_passado >= self.cooldown_value and self.is_playing:
@@ -226,7 +239,7 @@ class Player:
             if self.instrumento == 'piano' and self.playing_piano \
                     or self.instrumento == 'violao':
                 if self.caixa_de_som and self.instrumento == 'violao':
-                    self.shoot(self.instrumento, Tiro.direcoes_string[self.caixa_de_som.direction],
+                    self.shoot('caixa_de_som', Tiro.direcoes_string[self.caixa_de_som.direction],
                                self.caixa_de_som)
                     
                 elif self.teclado.key_pressed("down"):

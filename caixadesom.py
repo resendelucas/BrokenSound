@@ -9,7 +9,6 @@ class CaixaDeSom(Sprite):
     caminho_sprites = dict()
     caminho_sprites["right"] = 'Assets/caixadesom/sprite_right.png'
     caminho_sprites["left"] = 'Assets/caixadesom/sprite_left.png'
-    damage_multiplier = 0.3
 
     def __init__(self, direction: str, player_hitbox: Sprite, janela: Window, lifetime: int = 6, max_lifetime: int = 6):
         super().__init__(self.caminho_sprites[direction], 3)

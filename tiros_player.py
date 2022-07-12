@@ -7,17 +7,18 @@ from PPlay.window import Window
 class Tiro(Sprite):
     path_tiros = f'{getcwd()}\\Assets\\projeteis'
 
-    tipo_tiros = ("violao", "flauta", "piano")
-
     tiros = {"violao": [],
+             "caixa_de_som": [],
              "flauta": [],
              "piano": []
              }
     velocidades = {"violao": 600,
+                   "caixa_de_som":300,
                    "flauta": 600,
                    "piano": 600
                    }
     max_lifetimes = {"violao": 1.5,
+                     "caixa_de_som":3,
                      "flauta": 1.5,
                      "piano": 1.5
                      }
@@ -32,6 +33,7 @@ class Tiro(Sprite):
                  "down": (0, -1)
                 }
     danos = {"violao": 50,
+             "caixa_de_som":35,
              "piano": 25,
              "flauta": 50
              }
@@ -65,9 +67,9 @@ class Tiro(Sprite):
 
     @classmethod
     def update_tiros(cls, janela: Window, lista_inimigos=None, player=None):
-        for instrumento in cls.tipo_tiros:
+        for instrumento, lista_tiros in cls.tiros.items():
             for inimigo in lista_inimigos:
-                for i, tiro in enumerate(cls.tiros[instrumento]):
+                for i, tiro in enumerate(lista_tiros):
                     tiro.x += cls.velocidades[instrumento] * tiro.direcao[0] * janela.delta_time()
                     tiro.y -= cls.velocidades[instrumento] * tiro.direcao[1] * janela.delta_time()
                     tiro.time_lived += janela.delta_time()
@@ -79,8 +81,8 @@ class Tiro(Sprite):
 
     @classmethod
     def draw_tiros(cls, janela: Window):
-        for tipo_tiro in cls.tipo_tiros:
-            for i, tiro in enumerate(cls.tiros[tipo_tiro]):
+        for lista_tiros in cls.tiros.values():
+            for i, tiro in enumerate(lista_tiros):
                 tiro.set_total_duration(400)
                 tiro.draw()
                 tiro.update()
