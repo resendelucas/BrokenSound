@@ -115,7 +115,7 @@ class Player:
             self.caixa_de_som.tick_time()
             mapa.floor.try_landing_sprite(self.caixa_de_som)
             mapa.Plataforma_classe.colisao_cima_sprite(self.caixa_de_som)
-            if self.is_playing:
+            if self.is_playing and self.instrumento == 'violao':
                 duracao = self.caixa_de_som.get_total_duration()
                 qtdframes = self.caixa_de_som.get_final_frame()
                 intervalo = duracao / qtdframes
