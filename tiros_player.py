@@ -13,12 +13,12 @@ class Tiro(Sprite):
              "piano": []
              }
     velocidades = {"violao": 600,
-                   "caixa_de_som":300,
+                   "caixa_de_som": 300,
                    "flauta": 600,
                    "piano": 600
                    }
     max_lifetimes = {"violao": 1.5,
-                     "caixa_de_som":3,
+                     "caixa_de_som": 3,
                      "flauta": 1.5,
                      "piano": 1.5
                      }
@@ -27,13 +27,13 @@ class Tiro(Sprite):
                 (0, 1): "up",
                 (0, -1): "down"
                 }
-    direcoes_string = {"right":(1, 0),
-                "left":(-1, 0),
-                 "up":(0, 1),
-                 "down": (0, -1)
-                }
+    direcoes_string = {"right": (1, 0),
+                       "left": (-1, 0),
+                       "up": (0, 1),
+                       "down": (0, -1)
+                       }
     danos = {"violao": 50,
-             "caixa_de_som":35,
+             "caixa_de_som": 35,
              "piano": 25,
              "flauta": 50
              }
@@ -74,7 +74,7 @@ class Tiro(Sprite):
                     tiro.y -= cls.velocidades[instrumento] * tiro.direcao[1] * janela.delta_time()
                     tiro.time_lived += janela.delta_time()
                     colisao = tiro.collided_perfect(inimigo.sprite_atual)
-                    if colisao:
+                    if colisao and not inimigo.is_imune:
                         inimigo.levar_dano(cls.danos[instrumento])
                     if tiro.time_lived >= cls.max_lifetimes[instrumento] or colisao:
                         cls.tiros[instrumento].pop(i)
@@ -86,3 +86,10 @@ class Tiro(Sprite):
                 tiro.set_total_duration(400)
                 tiro.draw()
                 tiro.update()
+
+    @classmethod
+    def get_every_tiro(cls):
+        lista = []
+        for lista_tiros in cls.tiros.values():
+            lista += lista_tiros
+        return lista

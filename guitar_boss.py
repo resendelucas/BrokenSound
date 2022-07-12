@@ -73,6 +73,7 @@ class BossGuitarra(BossClasseMae):
         self.is_finished = False
         self.cronometro_tiro = 2
         self.lista_tiros = []
+        self.max_teleguiados = 5
 
     def spawn(self):
         self.reset()
@@ -122,7 +123,7 @@ class BossGuitarra(BossClasseMae):
         self.hitbox.x += self.velx * self.direction * self.janela.delta_time()
 
     def update(self):
-        self.check_hit()
+        self.cheat_hit()
         # print(f"{self.vely}")
         if self.is_arriving:
             self.hitbox.x -= 1000 * self.janela.delta_time()
@@ -142,11 +143,11 @@ class BossGuitarra(BossClasseMae):
         # Começa a tocar 
         elif self.is_playing:
             self.cronometro_tiro += self.janela.delta_time()
-            if self.cronometro_tiro > self.cooldown_tiro and len(TiroTeleguiado.lista_pequenas) < 5:
+            if self.cronometro_tiro > self.cooldown_tiro and len(TiroTeleguiado.lista_pequenas) < self.max_teleguiados:
                 TiroTeleguiado(self.sprite_atual, self.player)
                 self.cronometro_tiro = 0
             TiroTeleguiado.update_tiros()
-            if self.health_atual < 0.8 * self.max_health and not self.mini_game_finished:
+            if self.health_atual < 0.75 * self.max_health and not self.mini_game_finished:
                 self.is_imune = True
                 self.is_summoning = True
                 TiroTeleguiado.lista_pequenas = []
@@ -198,6 +199,7 @@ class BossGuitarra(BossClasseMae):
         if self.is_mini_game_done:
             self.is_imune = False
             self.is_playing = True
+            self.max_teleguiados = 8
             self.cronometro_animacao = 0
             self.sprite_atual = self.sprites['playing_left']
             self.sprites['playing_left'].set_total_duration(0.2)
@@ -213,8 +215,8 @@ class BossGuitarra(BossClasseMae):
             # print(f'Duracao: {duracao:.2f}, qtdframes: {qtdframes}, cronometro: {self.cronometro_animacao:.2f}')
             self.cronometro_animacao += self.janela.delta_time()
             self.sprite_atual.set_curr_frame((self.cronometro_animacao // intervalo) % qtdframes)
-            '''if self.sprite_atual == self.sprites["meteoro_left"]:
-                print(f'sprite: meteoro_left, duracao: {duracao:.2f}, qtdframes: {qtdframes}')'''
+            if self.sprite_atual == self.sprites["meteoro_left"]:
+                print(f'sprite: meteoro_left, duracao: {duracao:.2f}, qtdframes: {qtdframes}')
             if self.sprite_atual.loop is False and \
                     self.cronometro_animacao // intervalo >= self.sprite_atual.get_final_frame():
                 self.sprite_atual.set_curr_frame(self.sprite_atual.get_final_frame() - 1)
@@ -256,7 +258,7 @@ class BossGuitarra(BossClasseMae):
                             == self.sprites['explosion'].get_curr_frame():
                             self.is_started = False
 
-    def check_hit(self):
+    def cheat_hit(self):
         if not self.teclado.key_pressed('m') and self.m_pressed_past and not self.is_imune:
             self.levar_dano(self.max_health * 0.05)
         self.m_pressed_past = self.teclado.key_pressed('m')

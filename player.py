@@ -82,7 +82,7 @@ class Player:
         self.caixa_de_som = None
 
     def check_hit_boss(self, boss):
-        if not self.imune:
+        if not self.imune and not boss.is_dying:
             if boss.sprite_atual.collided_perfect(self.sprite_atual):
                 self.levar_dano(1)
                 return

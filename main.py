@@ -5,8 +5,8 @@ from menu import Menu
 from mini_game import MiniGame
 from plataforma import Plataforma
 from player import Player
-from tiros_player import Tiro
 from teleguiados import TiroTeleguiado
+from tiros_player import Tiro
 frames_acumulados = 0
 tempo_acumulado = 0
 fps = None
@@ -57,7 +57,7 @@ while True:
                 menu.playing = False
         # updates
         listaobjetos = [mapa_atual.background, mapa_atual.floor] + Plataforma.lista \
-                    + Tiro.tiros["violao"] + Tiro.tiros["piano"] + Tiro.tiros["flauta"] + [boss_atual.hitbox]
+                       + Tiro.get_every_tiro() + [boss_atual.hitbox]
         if player.caixa_de_som:
             listaobjetos.append(player.caixa_de_som)
         player.apply_motion()
