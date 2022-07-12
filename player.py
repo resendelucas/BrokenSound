@@ -71,7 +71,7 @@ class Player:
         self.v_camera = 200
         self.can_move = True
         self.piano_charge = self.delay_piano_atual = 0
-        self.piano_charge_time, self.delay_piano_valor = 3, 0.15
+        self.piano_charge_time, self.delay_piano_valor = 0.2, 0.15
         self.show_piano, self.playing_piano = False, False
         self.c_pressed_past = False
         self.changing_character = False
@@ -144,6 +144,7 @@ class Player:
         self.hitbox.set_position(hitbox_anterior.x, hitbox_anterior.y)
         
         if self.key_pressed_past["x"] and not self.teclado.key_pressed("x"):
+            self.playing_piano = False
             if self.caixa_de_som:
                 self.caixa_de_som = None
             else:
@@ -184,11 +185,14 @@ class Player:
         else:
             self.can_move = True
 
-        # O jogador sai do piano
-        if self.teclado.key_pressed('x'):
-            self.playing_piano = False
-        if self.c_pressed_past and not self.teclado.key_pressed('c'):
-            self.changecharacter(self.proximo_instrumento[self.instrumento])
+        # Usar especial do piano
+        if self.c_pressed_past and not self.teclado.key_pressed('c') and self.healthbar.mana_ratio == 1:
+            self.changecharacter('piano')
+            self.healthbar.perder_mana(100)
+            self.imune = True
+        elif self.instrumento == 'piano' and not self.imune:
+            self.changecharacter('violao')
+
         self.c_pressed_past = self.teclado.key_pressed('c')
         # checar pulo 
         if self.teclado.key_pressed("UP"):
@@ -296,7 +300,6 @@ class Player:
         else:
             self.update_frame(self.sprite_atual, 800)
         self.healthbar.draw()
-
         if self.changing_character and self.sprites['changing'].get_curr_frame() != 9:
             self.update_frame(self.sprites['changing'], 350)
 
