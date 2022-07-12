@@ -93,7 +93,7 @@ class Player:
 
     def spawn_caixa_de_som(self):
         self.caixa_de_som = CaixaDeSom(self.last_direction, self.hitbox, self.janela)
-
+        self.caixa_de_som.set_total_duration(self.cooldown_value)
     def feel_gravity(self):
         if self.is_falling is True:
             self.can_jump = False
@@ -115,9 +115,18 @@ class Player:
             self.caixa_de_som.tick_time()
             mapa.floor.try_landing_sprite(self.caixa_de_som)
             mapa.Plataforma_classe.colisao_cima_sprite(self.caixa_de_som)
+            if self.is_playing:
+                duracao = self.caixa_de_som.get_total_duration()
+                qtdframes = self.caixa_de_som.get_final_frame()
+                intervalo = duracao / qtdframes
+                self.caixa_de_som.set_curr_frame((self.caixa_de_som.cronometro // intervalo) % qtdframes)
+            else:
+                self.caixa_de_som.set_curr_frame(0) 
+                self.caixa_de_som.cronometro = 0
             if self.caixa_de_som.health_ratio == 0:
-                print('a')
                 self.caixa_de_som = None
+                
+                
     
     def check_events(self) -> None:
         """Checa inputs do player e muda as variáveis de estado de acordo."""
@@ -216,7 +225,11 @@ class Player:
             # Atualiza os tiros
             if self.instrumento == 'piano' and self.playing_piano \
                     or self.instrumento == 'violao':
-                if self.teclado.key_pressed("down"):
+                if self.caixa_de_som and self.instrumento == 'violao':
+                    self.shoot(self.instrumento, Tiro.direcoes_string[self.caixa_de_som.direction],
+                               self.caixa_de_som)
+                    
+                elif self.teclado.key_pressed("down"):
                     self.shoot(self.instrumento, (0, -1), self.hitbox)
                 elif self.last_direction == 'right':
                     self.shoot(self.instrumento, (1, 0), self.hitbox)
@@ -234,8 +247,9 @@ class Player:
         else:
             self.imune_cronometro = 0
 
-    def update_frame(self, sprite, ms):
-        sprite.set_total_duration(ms)
+    def update_frame(self, sprite, ms:float = None):
+        if ms:
+            sprite.set_total_duration(ms)
         sprite.draw()
         sprite.set_position(self.hitbox.x, self.hitbox.y)
         sprite.update()
@@ -250,8 +264,8 @@ class Player:
         self.playing_piano = False
         self.can_move = True
 
-    def shoot(self, tipo, direcao, player):
-        Tiro(tipo, direcao, player)
+    def shoot(self, tipo, direcao, sprite):
+        Tiro(tipo, direcao, sprite)
 
     def draw_player(self):
         self.sprite_atual.set_position(self.hitbox.x, self.hitbox.y)

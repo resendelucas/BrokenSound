@@ -26,6 +26,11 @@ class Tiro(Sprite):
                 (0, 1): "up",
                 (0, -1): "down"
                 }
+    direcoes_string = {"right":(1, 0),
+                "left":(-1, 0),
+                 "up":(0, 1),
+                 "down": (0, -1)
+                }
     danos = {"violao": 50,
              "piano": 25,
              "flauta": 50

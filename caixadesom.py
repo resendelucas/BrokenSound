@@ -8,12 +8,13 @@ class CaixaDeSom(Sprite):
     Window(1365, 768)
     caminho_sprites = dict()
     caminho_sprites["right"] = 'Assets/caixadesom/sprite_right.png'
-    # caminho_sprites["left"] = Sprite('Assets/caixadesom/sprite_left.png')
-    damage_multiplier = 0.77
+    caminho_sprites["left"] = 'Assets/caixadesom/sprite_left.png'
+    damage_multiplier = 0.3
 
     def __init__(self, direction: str, player_hitbox: Sprite, janela: Window, lifetime: int = 6, max_lifetime: int = 6):
-        super().__init__(self.caminho_sprites[direction])
+        super().__init__(self.caminho_sprites[direction], 3)
         self.set_position(player_hitbox.x, player_hitbox.y)
+        self.direction = direction
         self.lifetime = lifetime
         self.max_lifetime = max_lifetime
         self.janela = janela
@@ -23,6 +24,7 @@ class CaixaDeSom(Sprite):
         self.vely = 0
         self.is_falling = False
         self.last_position = (self.x, self.y)
+        self.cronometro = 0
 
     def feel_gravity(self, gravidade):
         self.vely -= gravidade * self.janela.delta_time()
@@ -38,6 +40,7 @@ class CaixaDeSom(Sprite):
         if self.lifetime < 0:
             self.lifetime = 0
         self.health_ratio = self.lifetime / self.max_lifetime
+        self.cronometro += self.janela.delta_time()
         
     def draw_healthbar(self):
         drawrect(self.janela.screen, (0, 0, 0), (self.x - self.width / 2 - 2, self.y - 6 - self.health_height + 2,

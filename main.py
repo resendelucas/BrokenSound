@@ -49,8 +49,6 @@ while True:
         if teclado.key_pressed("b"):
             boss_atual.vely = 0
             boss_atual.hitbox.x -= 1000 * janela.delta_time()
-        if teclado.key_pressed("x"):
-            player.spawn_caixa_de_som()
         Plataforma.colisao_cima(player)
         if player.healthbar.health_atual > 0:
             player.check_events()
