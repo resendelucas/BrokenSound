@@ -215,8 +215,8 @@ class BossGuitarra(BossClasseMae):
             # print(f'Duracao: {duracao:.2f}, qtdframes: {qtdframes}, cronometro: {self.cronometro_animacao:.2f}')
             self.cronometro_animacao += self.janela.delta_time()
             self.sprite_atual.set_curr_frame((self.cronometro_animacao // intervalo) % qtdframes)
-            if self.sprite_atual == self.sprites["meteoro_left"]:
-                print(f'sprite: meteoro_left, duracao: {duracao:.2f}, qtdframes: {qtdframes}')
+            # if self.sprite_atual == self.sprites["meteoro_left"]:
+                # print(f'sprite: meteoro_left, duracao: {duracao:.2f}, qtdframes: {qtdframes}')
             if self.sprite_atual.loop is False and \
                     self.cronometro_animacao // intervalo >= self.sprite_atual.get_final_frame():
                 self.sprite_atual.set_curr_frame(self.sprite_atual.get_final_frame() - 1)

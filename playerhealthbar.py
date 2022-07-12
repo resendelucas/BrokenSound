@@ -60,7 +60,7 @@ class PlayerHealthBar:
 
     def draw_mana(self):
         self.mana_ratio = self.mana_atual / self.max_mana
-        print(self.mana_ratio)
+        # print(self.mana_ratio)
         drawrect(self.janela.screen, (0, 255, 255), (self.manabar_sprite.x, self.manabar_sprite.y,
                                                      self.manabar_sprite.width * self.mana_ratio,
                                                      self.manabar_sprite.height))
@@ -69,7 +69,7 @@ class PlayerHealthBar:
         self.old_mana_ratio = self.mana_ratio
         self.mana_atual -= qtd_mana
         self.mana_ratio = self.mana_atual / self.max_mana
-        print(self.mana_ratio)
+        # print(self.mana_ratio)
         if self.mana_ratio < 0:
             self.mana_ratio = 0
 

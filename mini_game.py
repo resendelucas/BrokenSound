@@ -39,10 +39,12 @@ class MiniGame:
 
     def check_events(self):
         for key, values in self.notes.items():
+            for notes in values:
+                notes.y += self.vel_notes * self.janela.delta_time()
+        for key, values in self.notes.items():
             if values:
                 note = values[0]
             # Faz as bolinhas descerem
-                note.y += self.vel_notes * self.janela.delta_time()
 
                 # Verifica se colidiu e o player apertou a tecla certa
                 if key == 'green':
