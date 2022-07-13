@@ -22,24 +22,30 @@ class BossPiano(BossClasseMae):
         "dying_left": Sprite("Assets/boss_piano/skeletons/dying_left.png", 14),
         # Boss
         "summoner_playing": Sprite("Assets/boss_piano/boss_summoner.png", 41),
-        "basic_playing": Sprite("Assets/boss_piano/boss_basic.png", 41)
+        "basic_playing": Sprite("Assets/boss_piano/boss_basic.png", 41),
+        "summoner_arriving": Sprite("Assets/boss_piano/summoner_arriving.png", 2)
     }
-    sprite_atual = sprites["summoner_playing"]
+    sprite_atual = sprites["summoner_arriving"]
     hitbox = Sprite("Assets/boss_piano/hitbox.png")
+    sprites['summoner_arriving'].set_total_duration(0.2)
     
     
     def __init__(self, janela):
         super().__init__(janela, 10000, 10000)
-        self.is_started = True
+        self.is_started = False
         self.is_falling = False
+        self.lista_tiros = []
         
     def spawn(self):
+        self.is_started = True
         self.hitbox.x = self.janela.width/2 - self.hitbox.width/2
-        self.hibox.y = 0
+        self.hitbox.y = self.janela.height
         self.is_arriving = True
+        
     def update(self):
         self.last_position = self.hitbox.x, self.hitbox.y
         if self.is_arriving:
+            print("alou")
             self.hitbox.y -= 50 * self.janela.delta_time()
             return
         self.feel_gravity()

@@ -23,6 +23,7 @@ class BossClasseMae:
         self.old_health_ratio = self.health_atual / self.max_health
         self.is_started = False
         self.is_imune = False
+        self.is_dying = False
         self.vely = self.velx = 0
         self.aceleracao_x = 0
         self.is_finished = False
