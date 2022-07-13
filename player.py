@@ -193,12 +193,16 @@ class Player:
             self.can_move = True
 
         # Usar especial do piano
-        if self.c_pressed_past and not self.teclado.key_pressed('c') and self.healthbar.mana_ratio == 1:
-            self.changecharacter('piano')
-            self.healthbar.perder_mana(100)
-            self.imune = True
-            self.cooldown_value = 0.05
-        elif self.instrumento == 'piano' and not self.imune:
+        if self.c_pressed_past and not self.teclado.key_pressed('c'):
+            if self.healthbar.mana_ratio == 1:
+                self.changecharacter('piano')
+                self.healthbar.perder_mana(100)
+                self.imune = True
+                self.cooldown_value = 0.05
+            elif self.instrumento != 'violao':
+                self.changecharacter('violao')
+                self.cooldown_value = 0.3
+        if self.instrumento == 'piano' and not self.imune:
             self.changecharacter('violao')
             self.cooldown_value = 0.3
 
