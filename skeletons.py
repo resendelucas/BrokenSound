@@ -146,6 +146,11 @@ class Skeleton:
             lista_hitboxes.append(esqueleto.hitbox)
         return lista_hitboxes
 
+    @classmethod
+    def kill_all(cls):
+        for esqueleto in cls.lista_inimigos:
+            esqueleto.levar_dano(1)
+
     def levar_dano(self, _):
         if not self.is_dying:
             self.sprite_atual = self.sprites['dying_right']

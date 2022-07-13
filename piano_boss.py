@@ -52,16 +52,27 @@ class BossPiano(BossClasseMae):
                     self.is_arriving = False
             return
 
-        if self.is_playing and self.cooldown_atual >= self.cooldown_value and len(Skeleton.lista_inimigos) < 8:
-            esqueleto = Skeleton()
-            esqueleto.hitbox.x = 0
-            esqueleto = Skeleton()
-            esqueleto.hitbox.x = self.janela.width - esqueleto.hitbox.width
-            Skeleton()
-            self.cooldown_atual = 0
+        if self.is_playing and self.sprite_atual is self.sprites['basic_playing']:
+            if self.cooldown_atual >= self.cooldown_value and len(Skeleton.lista_inimigos) < 8:
+                esqueleto = Skeleton()
+                esqueleto.hitbox.x = 0
+                esqueleto = Skeleton()
+                esqueleto.hitbox.x = self.janela.width - esqueleto.hitbox.width
+                Skeleton()
+                self.cooldown_atual = 0
+
+            if self.health_ratio <= 0.66:
+                Skeleton.kill_all()
+                self.sprite_atual = self.sprites['summoner_playing']
+
+        elif self.is_playing and self.sprite_atual is self.sprites['summoner_playing']:
+            self.engaiolar_player()
         self.feel_gravity()
         self.apply_motion()
 
     def calibrar_posicao_sprite(self):
         self.sprite_atual.x = self.hitbox.x
         self.sprite_atual.y = self.hitbox.y
+
+    def engaiolar_player(self):
+        pass
