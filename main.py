@@ -1,6 +1,8 @@
 from PPlay.window import *
 from fase1 import Fase1
+from fase2 import Fase2
 from guitar_boss import BossGuitarra
+from piano_boss import BossPiano
 from menu import Menu
 from mini_game import MiniGame
 from plataforma import Plataforma
@@ -12,11 +14,12 @@ tempo_acumulado = 0
 fps = None
 # janela = Window(1365, 768)
 janela = Window(1365, 768)
-boss_atual = BossGuitarra(janela)
-mapa_atual = Fase1(janela, boss_atual)
+boss_atual = BossPiano(janela)
+# mapa_atual = Fase1x(janela, boss_atual)
+mapa_atual = Fase2(janela, boss_atual)
 mapa_atual.inicializar_plataformas()
 player = Player(janela, mapa_atual, 'piano')
-boss_atual.player = player
+boss_atual.set_player(player)
 player.hitbox.vely = 0
 menu = Menu(janela)
 menu.playing = False

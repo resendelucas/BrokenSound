@@ -1,6 +1,7 @@
 from PPlay.sprite import Sprite
 from boss_mae import BossClasseMae
 
+
 class BossPiano(BossClasseMae):
     sprites = {
         # Skeletons
@@ -9,7 +10,7 @@ class BossPiano(BossClasseMae):
         "idle_left": Sprite('Assets/boss_piano/skeletons/idle_right.png', 4),
         # aparecendo
         "spawning_right": Sprite("Assets/boss_piano/skeletons/spawning_right.png", 8),
-        "spawning_left": Sprite("Assets/boss_piano/skeletons/spawing_left.png", 8),
+        "spawning_left": Sprite("Assets/boss_piano/skeletons/spawning_left.png", 8),
         # andando
         "walking_left": Sprite("Assets/boss_piano/skeletons/walking_left.png", 8),
         "walking_right": Sprite("Assets/boss_piano/skeletons/walking_right.png", 8),
@@ -19,9 +20,35 @@ class BossPiano(BossClasseMae):
         # morrendo
         "dying_right": Sprite("Assets/boss_piano/skeletons/dying_right.png", 14),
         "dying_left": Sprite("Assets/boss_piano/skeletons/dying_left.png", 14),
-
         # Boss
-
         "summoner_playing": Sprite("Assets/boss_piano/boss_summoner.png", 41),
-        "basic_playing": Sprite("Assets/boss_piano/boss_basic.png", 41),
+        "basic_playing": Sprite("Assets/boss_piano/boss_basic.png", 41)
     }
+    sprite_atual = sprites["summoner_playing"]
+    hitbox = Sprite("Assets/boss_piano/hitbox.png")
+    
+    
+    def __init__(self, janela):
+        super().__init__(janela, 10000, 10000)
+        self.is_started = True
+        self.is_falling = False
+        
+    def spawn(self):
+        self.hitbox.x = self.janela.width/2 - self.hitbox.width/2
+        self.hibox.y = 0
+        self.is_arriving = True
+    def update(self):
+        self.last_position = self.hitbox.x, self.hitbox.y
+        if self.is_arriving:
+            self.hitbox.y -= 50 * self.janela.delta_time()
+            return
+        self.feel_gravity()
+        self.apply_motion()
+        
+    def calibrar_posicao_sprite(self):
+        self.sprite_atual.x = self.hitbox.x
+        self.sprite_atual.y = self.hitbox.y
+        
+        
+        
+    

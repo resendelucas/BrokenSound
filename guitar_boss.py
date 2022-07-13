@@ -44,19 +44,14 @@ class BossGuitarra(BossClasseMae):
     cooldown_tiro = 3
 
     def __init__(self, janela, player=None):
-        super().__init__(10000, 10000)
+        super().__init__(janela, player)
         self.sprite_atual = self.sprites["arriving_left"]
-        self.janela = janela
-        self.teclado = janela.get_keyboard()
         self.is_imune = True
         self.is_arriving = False
         self.sprite_atual.play()
-        self.vely = self.velx = 0
-        self.aceleracao_x = 0
         self.direction = -1
         self.is_falling = False
-        self.player = player
-        self.cronometro_animacao = 0
+        
         self.is_idle = False
         self.is_playing = False
         self.is_summoning = False
@@ -66,11 +61,11 @@ class BossGuitarra(BossClasseMae):
         self.is_mini_game_on = False
         self.is_mini_game_done = False
         self.mini_game_finished = False
+        
         self.looking_direction = 'left'
         self.cronometro_still = 0
         self.last_position = (self.hitbox.x, self.hitbox.y)
         self.m_pressed_past = False
-        self.is_finished = False
         self.cronometro_tiro = 2
         self.lista_tiros = []
         self.max_teleguiados = 5
@@ -92,7 +87,7 @@ class BossGuitarra(BossClasseMae):
         self.is_finished = False
 
     def reset(self):
-        super().__init__(10000, 10000)
+        super().__init__(self.janela, self.player)
         self.sprite_atual = self.sprites["arriving_left"]
         self.is_imune = True
         self.is_arriving = False
@@ -113,14 +108,7 @@ class BossGuitarra(BossClasseMae):
         self.cronometro_still = 0
         self.last_position = (self.hitbox.x, self.hitbox.y)
 
-    def feel_gravity(self):
-        if self.is_falling is True:
-            self.vely -= self.gravity * self.janela.delta_time()
 
-    def apply_motion(self):
-        self.last_position = (self.hitbox.x, self.hitbox.y)
-        self.hitbox.y -= self.vely * self.janela.delta_time()
-        self.hitbox.x += self.velx * self.direction * self.janela.delta_time()
 
     def update(self):
         self.cheat_hit()
@@ -206,20 +194,6 @@ class BossGuitarra(BossClasseMae):
             self.cooldown_tiro = 1.5
             self.is_mini_game_done = False
             self.mini_game_finished = True
-       
-    def update_frame(self):
-        if self.is_started:
-            duracao = self.sprite_atual.get_total_duration()
-            qtdframes = self.sprite_atual.get_final_frame()
-            intervalo = duracao / qtdframes
-            # print(f'Duracao: {duracao:.2f}, qtdframes: {qtdframes}, cronometro: {self.cronometro_animacao:.2f}')
-            self.cronometro_animacao += self.janela.delta_time()
-            self.sprite_atual.set_curr_frame((self.cronometro_animacao // intervalo) % qtdframes)
-            # if self.sprite_atual == self.sprites["meteoro_left"]:
-                # print(f'sprite: meteoro_left, duracao: {duracao:.2f}, qtdframes: {qtdframes}')
-            if self.sprite_atual.loop is False and \
-                    self.cronometro_animacao // intervalo >= self.sprite_atual.get_final_frame():
-                self.sprite_atual.set_curr_frame(self.sprite_atual.get_final_frame() - 1)
             
     def calibrar_posicao_sprite(self):
         if not self.is_swinging:
@@ -234,31 +208,3 @@ class BossGuitarra(BossClasseMae):
                 self.sprite_atual.x = self.hitbox.x - 180
             self.sprite_atual.y = self.hitbox.y - 120
 
-    def draw_boss(self):
-        # print(self.hitbox.x, self.hitbox.y, self.vely)
-        if self.is_started and not self.is_finished:
-            self.janela.draw_text(f'{self.health_atual}', self.janela.width * 5 / 10, self.janela.height * 1 / 12, 30,
-                                  (255, 255, 80))
-            self.calibrar_posicao_sprite()
-            self.update_frame()
-            self.sprite_atual.draw()
-            self.draw_healthbar()
-
-        if self.is_dying:
-            if self.hitbox.y > 200:
-                self.hitbox.y -= 50 * self.janela.delta_time()
-            else:
-                if self.is_started:
-                    self.sprites['explosion'].set_position(self.sprite_atual.x - 80 , self.sprite_atual.y - 80)
-                    self.sprites['explosion'].update()
-                    self.sprites['explosion'].draw()
-                    if self.sprites['explosion'].get_curr_frame() == 4:
-                        self.is_finished = True
-                    elif self.sprites['explosion'].get_final_frame() - 1\
-                            == self.sprites['explosion'].get_curr_frame():
-                            self.is_started = False
-
-    def cheat_hit(self):
-        if not self.teclado.key_pressed('m') and self.m_pressed_past and not self.is_imune:
-            self.levar_dano(self.max_health * 0.05)
-        self.m_pressed_past = self.teclado.key_pressed('m')
