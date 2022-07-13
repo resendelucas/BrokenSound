@@ -59,8 +59,6 @@ class BossGuitarra(BossClasseMae):
         self.is_swinging = False
         self.is_raining = False
         self.is_dying = False
-        self.is_mini_game_on = False
-        self.is_mini_game_done = False
         self.mini_game_finished = False
 
         self.looking_direction = 'left'

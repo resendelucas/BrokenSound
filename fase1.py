@@ -20,19 +20,19 @@ class Fase1:
         self.background.draw()
         self.floor.draw()
 
-    def try_landing_boss(self, boss):
-        if boss.hitbox.y + boss.hitbox.height > self.y and boss.is_falling:
-            boss.hitbox.y = self.y - boss.hitbox.height
-            boss.vely = 0
-            boss.is_falling = False
+    def try_landing_boss(self):
+        if self.boss.hitbox.y + self.boss.hitbox.height > self.floor.y and self.boss.is_falling:
+            self.boss.hitbox.y = self.floor.y - self.boss.hitbox.height
+            self.boss.vely = 0
+            self.boss.is_falling = False
 
-            if boss.is_arriving:
-                boss.is_arriving = False
-                boss.is_imune = False
-                boss.is_idle = True
-                boss.sprite_atual = boss.sprites["idle_left"]
-                boss.cronometro_animacao = 0
-                boss.sprite_atual.set_total_duration(1.7)
+            if self.boss.is_arriving:
+                self.boss.is_arriving = False
+                self.boss.is_imune = False
+                self.boss.is_idle = True
+                self.boss.sprite_atual = self.boss.sprites["idle_left"]
+                self.boss.cronometro_animacao = 0
+                self.boss.sprite_atual.set_total_duration(1.7)
 
     def inicializar_plataformas(self):
         for i in range(1, int(self.janela.width // (Plataforma.width1x4 * 1.5))):

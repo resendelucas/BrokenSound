@@ -76,14 +76,14 @@ class Player:
         self.show_piano, self.playing_piano = False, False
         self.c_pressed_past = False
         self.changing_character = False
-        self.imune = False
+        self.is_imune = False
         self.imune_duracao = 3
         self.imune_cronometro = 0
         self.healthbar = PlayerHealthBar(5, 5, self.janela)
         self.caixa_de_som = None
 
     def check_hit_boss(self, boss, inimigos):
-        if not self.imune and not boss.is_dying:
+        if not self.is_imune and not boss.is_dying:
             if boss.sprite_atual.collided_perfect(self.sprite_atual):
                 self.levar_dano(1)
                 return
@@ -99,7 +99,7 @@ class Player:
 
     def levar_dano(self, qtd_dano):
         self.healthbar.levar_dano(qtd_dano)
-        self.imune = True
+        self.is_imune = True
 
     def spawn_caixa_de_som(self):
         self.caixa_de_som = CaixaDeSom(self.last_direction, self.hitbox, self.janela)
@@ -147,7 +147,7 @@ class Player:
         self.hitbox = self.hitboxes['desmontado' if not self.playing_piano else 'montado']
         self.hitbox.set_position(hitbox_anterior.x, hitbox_anterior.y)
 
-        if self.key_pressed_past["x"] and not self.teclado.key_pressed("x") and self.instrumento == 'violao':
+        if not self.key_pressed_past["x"] and self.teclado.key_pressed("x") and self.instrumento == 'violao':
             self.playing_piano = False
             if self.caixa_de_som:
                 self.caixa_de_som = None
@@ -197,12 +197,12 @@ class Player:
             if self.healthbar.mana_ratio == 1:
                 self.changecharacter('piano')
                 self.healthbar.perder_mana(100)
-                self.imune = True
+                self.is_imune = True
                 self.cooldown_value = 0.05
             elif self.instrumento != 'violao':
                 self.changecharacter('violao')
                 self.cooldown_value = 0.3
-        if self.instrumento == 'piano' and not self.imune:
+        if self.instrumento == 'piano' and not self.is_imune:
             self.changecharacter('violao')
             self.cooldown_value = 0.3
 
@@ -269,10 +269,10 @@ class Player:
                     self.shoot(self.instrumento, (0, 1), self.hitbox)
 
         # Imunidade player
-        if self.imune:
+        if self.is_imune:
             self.imune_cronometro += self.janela.delta_time()
             if self.imune_cronometro > self.imune_duracao:
-                self.imune = False
+                self.is_imune = False
                 self.imune_cronometro = 0
         else:
             self.imune_cronometro = 0

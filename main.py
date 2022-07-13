@@ -1,7 +1,9 @@
 from PPlay.window import *
 from fase2 import Fase2
+from fase1 import Fase1
 from menu import Menu
 from piano_boss import BossPiano
+from guitar_boss import BossGuitarra
 from plataforma import Plataforma
 from player import Player
 from skeletons import Skeleton
@@ -41,10 +43,12 @@ while True:
         menu.draw_menu()
     else:
         # inputs
+        boss_atual.cheat_hit()
         if teclado.key_pressed("f"):
             player.vely = 50
             boss_atual.spawn()
             boss_atual.velx = 0
+            boss_atual.y = 0
         if teclado.key_pressed("v"):
             boss_atual.vely = 0
             boss_atual.hitbox.x += 1000 * janela.delta_time()
@@ -86,6 +90,8 @@ while True:
         # print(player.hitbox.x, player.hitbox.y)
         # print(Plataforma.lista[0].y)
         TiroTeleguiado.draw_tiros_teleguiados()
+        if boss_atual.is_mini_game_on and not boss_atual.is_mini_game_done:
+            boss_atual.mini_game.draw_elements()
 
         if player.healthbar.health_atual <= 0:
             menu.you_died_screen()

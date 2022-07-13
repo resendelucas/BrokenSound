@@ -31,6 +31,8 @@ class BossClasseMae:
         self.cronometro_animacao = 0
         self.is_underground = False
         self.m_pressed_past = False
+        self.is_mini_game_on = False
+        self.is_mini_game_done = False
 
     def cheat_hit(self):
         if not self.teclado.key_pressed('m') and self.m_pressed_past and not self.is_imune:

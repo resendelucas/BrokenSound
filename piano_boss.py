@@ -1,6 +1,8 @@
 from PPlay.sprite import Sprite
 from boss_mae import BossClasseMae
 from skeletons import Skeleton
+from gaiola import Gaiola
+from minigame_teclas import MiniGameTeclas
 
 
 class BossPiano(BossClasseMae):
@@ -27,6 +29,8 @@ class BossPiano(BossClasseMae):
         self.lista_tiros = []
         self.cronometro_still = 0
         self.is_playing = False
+        self.gaiola = None
+        self.mini_game = None
 
     def spawn(self):
         self.is_started = True
@@ -61,12 +65,18 @@ class BossPiano(BossClasseMae):
                 Skeleton()
                 self.cooldown_atual = 0
 
-            if self.health_ratio <= 0.66:
+            if self.health_ratio <= 0.66 and not self.is_mini_game_on and not self.is_mini_game_done:
                 Skeleton.kill_all()
+                self.hitbox.y = -9999
                 self.sprite_atual = self.sprites['summoner_playing']
+                self.is_mini_game_on = True
+                self.gaiola = Gaiola(self.player)
+                self.mini_game = MiniGameTeclas(self.gaiola)
 
-        elif self.is_playing and self.sprite_atual is self.sprites['summoner_playing']:
+        elif self.is_playing and self.is_mini_game_on and not self.is_mini_game_done:
+            self.gaiola.cronometro_cair = 4
             self.engaiolar_player()
+            self.mini_game.colisao_player_teclas()
         self.feel_gravity()
         self.apply_motion()
 
@@ -75,4 +85,5 @@ class BossPiano(BossClasseMae):
         self.sprite_atual.y = self.hitbox.y
 
     def engaiolar_player(self):
-        pass
+        self.gaiola.set_minigame(self.mini_game)
+        self.mini_game.update()
