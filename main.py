@@ -4,7 +4,6 @@ from fase2 import Fase2
 from guitar_boss import BossGuitarra
 from piano_boss import BossPiano
 from menu import Menu
-from mini_game import MiniGame
 from plataforma import Plataforma
 from player import Player
 from teleguiados import TiroTeleguiado
@@ -25,9 +24,9 @@ menu = Menu(janela)
 menu.playing = False
 teclado = janela.get_keyboard()
 janela.update()
-mini_game = MiniGame(janela, player, boss_atual)
 
 while True:
+    # print(boss_atual.sprites["summoner_arriving"] == boss_atual.sprite_atual)
     frames_acumulados += 1
     tempo_acumulado += janela.delta_time()
     if tempo_acumulado > 0.3:
@@ -69,7 +68,7 @@ while True:
         player.check_camera(listaobjetos, mapa_atual)
         mapa_atual.floor.try_landing_player(player)
         player.update_caixa_de_som(mapa_atual)
-        mapa_atual.floor.try_landing_boss(boss_atual)
+        mapa_atual.try_landing_boss()
         boss_atual.update()
         # player.check_camera()
         # draws
@@ -86,10 +85,7 @@ while True:
         # print(player.hitbox.x, player.hitbox.y)
         # print(Plataforma.lista[0].y)
         TiroTeleguiado.draw_tiros_teleguiados()
-        if boss_atual.is_mini_game_on:
-            mini_game.config()
-            mini_game.draw_elements()
-            mini_game.check_events()
+
         if player.healthbar.health_atual <= 0:
             menu.you_died_screen()
         player.draw_hud()

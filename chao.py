@@ -14,7 +14,7 @@ class Chao(GameImage):
         self.buracos = buracos
 
     def try_landing_boss(self, boss):
-        if boss.hitbox.y + boss.hitbox.height > self.y:
+        if boss.hitbox.y + boss.hitbox.height > self.y and boss.is_falling:
             boss.hitbox.y = self.y - boss.hitbox.height
             boss.vely = 0
             boss.is_falling = False

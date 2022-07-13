@@ -1,7 +1,7 @@
 from PPlay.sprite import Sprite
 from boss_mae import BossClasseMae
 from teleguiados import TiroTeleguiado
-
+from mini_game import MiniGame
 
 class BossGuitarra(BossClasseMae):
     sprites = {
@@ -69,6 +69,8 @@ class BossGuitarra(BossClasseMae):
         self.cronometro_tiro = 2
         self.lista_tiros = []
         self.max_teleguiados = 5
+        
+        self.mini_game = None
 
     def spawn(self):
         self.reset()
@@ -117,7 +119,12 @@ class BossGuitarra(BossClasseMae):
             self.hitbox.x -= 1000 * self.janela.delta_time()
         self.feel_gravity()
         self.apply_motion()
-
+        if not self.mini_game and self.player:
+            self.mini_game = MiniGame(self.janela, self.player, self)
+        if self.is_mini_game_on:
+            self.mini_game.config()
+            self.mini_game.draw_elements()
+            self.mini_game.check_events()
         # Parada
         if self.is_idle:
             self.cronometro_still += self.janela.delta_time()
@@ -208,3 +215,4 @@ class BossGuitarra(BossClasseMae):
                 self.sprite_atual.x = self.hitbox.x - 180
             self.sprite_atual.y = self.hitbox.y - 120
 
+    

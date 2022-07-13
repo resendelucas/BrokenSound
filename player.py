@@ -71,7 +71,7 @@ class Player:
         self.v_camera = 200
         self.can_move = True
         self.piano_charge = self.delay_piano_atual = 0
-        self.piano_charge_time, self.delay_piano_valor = 0.2, 0.15
+        self.piano_charge_time, self.delay_piano_valor = 0.2, 0.05
         self.show_piano, self.playing_piano = False, False
         self.c_pressed_past = False
         self.changing_character = False
@@ -143,7 +143,7 @@ class Player:
         self.hitbox = self.hitboxes['desmontado' if not self.playing_piano else 'montado']
         self.hitbox.set_position(hitbox_anterior.x, hitbox_anterior.y)
         
-        if self.key_pressed_past["x"] and not self.teclado.key_pressed("x"):
+        if self.key_pressed_past["x"] and not self.teclado.key_pressed("x") and self.instrumento == 'violao':
             self.playing_piano = False
             if self.caixa_de_som:
                 self.caixa_de_som = None
@@ -179,8 +179,11 @@ class Player:
 
         # Enquanto estiver tocando piano, o player não poderá se mover
         if self.playing_piano:
+            self.vely = 0
+            self.is_falling = False
             self.can_jump = False
             self.can_move = False
+            self.y = self.last_position[1]
             self.sprite_atual = self.sprites[self.instrumento][f"playing_{self.last_direction}"]
         else:
             self.can_move = True
@@ -190,8 +193,10 @@ class Player:
             self.changecharacter('piano')
             self.healthbar.perder_mana(100)
             self.imune = True
+            self.cooldown_value = 0.05
         elif self.instrumento == 'piano' and not self.imune:
             self.changecharacter('violao')
+            self.cooldown_value = 0.3
 
         self.c_pressed_past = self.teclado.key_pressed('c')
         # checar pulo 
@@ -294,7 +299,7 @@ class Player:
         # else:
         #     self.update_frame(self.sprite_atual, 600)
         if self.show_piano:
-            self.sprites[self.instrumento][f'piano_{self.last_direction}'].draw()
+            self.sprites['piano'][f'piano_{self.last_direction}'].draw()
         if self.is_playing:
             self.update_frame(self.sprite_atual, 600)
         else:

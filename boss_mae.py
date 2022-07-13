@@ -29,6 +29,7 @@ class BossClasseMae:
         self.is_finished = False
         self.is_arriving = False
         self.cronometro_animacao = 0
+        self.is_underground = False
         
     def cheat_hit(self):
         if not self.teclado.key_pressed('m') and self.m_pressed_past and not self.is_imune:
@@ -37,15 +38,13 @@ class BossClasseMae:
         
     def update_frame(self):
         
-        if self.is_started and self.hitbox.y + self.hitbox.height <= 676:
+        if self.is_started:
             duracao = self.sprite_atual.get_total_duration()
             qtdframes = self.sprite_atual.get_final_frame()
             intervalo = duracao / qtdframes
             # print(f'Duracao: {duracao:.2f}, qtdframes: {qtdframes}, cronometro: {self.cronometro_animacao:.2f}')
             self.cronometro_animacao += self.janela.delta_time()
             self.sprite_atual.set_curr_frame((self.cronometro_animacao // intervalo) % qtdframes)
-            # if self.sprite_atual == self.sprites["meteoro_left"]:
-                # print(f'sprite: meteoro_left, duracao: {duracao:.2f}, qtdframes: {qtdframes}')
             if self.sprite_atual.loop is False and \
                     self.cronometro_animacao // intervalo >= self.sprite_atual.get_final_frame():
                 self.sprite_atual.set_curr_frame(self.sprite_atual.get_final_frame() - 1)
@@ -58,7 +57,7 @@ class BossClasseMae:
             self.calibrar_posicao_sprite()
             self.update_frame()
             self.draw_healthbar()
-            if self.hitbox.y + self.hitbox.height <= 676:
+            if not self.is_underground:
                 self.sprite_atual.draw()
 
         if self.is_dying:
