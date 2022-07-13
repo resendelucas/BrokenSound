@@ -1,8 +1,9 @@
 from PPlay.sprite import *
 from PPlay.window import *
+from caixadesom import CaixaDeSom
 from playerhealthbar import PlayerHealthBar
 from tiros_player import Tiro
-from caixadesom import CaixaDeSom
+
 
 class Player:
     # sprites visuais:
@@ -12,7 +13,7 @@ class Player:
                         "q": False,
                         "w": False,
                         "e": False,
-                        "r": False,}
+                        "r": False, }
     instrumento = 'violao'
     proximo_instrumento = {'violao': 'piano',
                            'piano': 'violao'}
@@ -81,13 +82,18 @@ class Player:
         self.healthbar = PlayerHealthBar(5, 5, self.janela)
         self.caixa_de_som = None
 
-    def check_hit_boss(self, boss):
+    def check_hit_boss(self, boss, inimigos):
         if not self.imune and not boss.is_dying:
             if boss.sprite_atual.collided_perfect(self.sprite_atual):
                 self.levar_dano(1)
                 return
             for tiro in boss.lista_tiros:
                 if self.sprite_atual.collided_perfect(tiro):
+                    self.levar_dano(1)
+                    return
+            for inimigo in inimigos:
+                if inimigo.sprite_atual.collided(self.sprite_atual) and not inimigo.is_dying and not\
+                        inimigo.is_spawning:
                     self.levar_dano(1)
                     return
 
@@ -98,6 +104,7 @@ class Player:
     def spawn_caixa_de_som(self):
         self.caixa_de_som = CaixaDeSom(self.last_direction, self.hitbox, self.janela)
         self.caixa_de_som.set_total_duration(self.cooldown_value)
+
     def feel_gravity(self):
         if self.is_falling is True:
             self.can_jump = False
@@ -106,7 +113,6 @@ class Player:
     def apply_motion(self):
         self.hitbox.y -= self.vely * self.janela.delta_time()
         self.hitbox.x += self.velx * self.janela.delta_time()
-        
 
     def jump(self):
         self.vely = self.jumpspeed
@@ -126,13 +132,11 @@ class Player:
                 intervalo = duracao / qtdframes
                 self.caixa_de_som.set_curr_frame((self.caixa_de_som.cronometro // intervalo) % qtdframes)
             else:
-                self.caixa_de_som.set_curr_frame(0) 
+                self.caixa_de_som.set_curr_frame(0)
                 self.caixa_de_som.cronometro = 0
             if self.caixa_de_som.health_ratio == 0:
                 self.caixa_de_som = None
-                
-                
-    
+
     def check_events(self) -> None:
         """Checa inputs do player e muda as variáveis de estado de acordo."""
         # checar se está tocando música
@@ -142,7 +146,7 @@ class Player:
 
         self.hitbox = self.hitboxes['desmontado' if not self.playing_piano else 'montado']
         self.hitbox.set_position(hitbox_anterior.x, hitbox_anterior.y)
-        
+
         if self.key_pressed_past["x"] and not self.teclado.key_pressed("x") and self.instrumento == 'violao':
             self.playing_piano = False
             if self.caixa_de_som:
@@ -150,7 +154,7 @@ class Player:
             else:
                 self.spawn_caixa_de_som()
         self.key_pressed_past["x"] = self.teclado.key_pressed("x")
-                
+
         if self.is_playing:
             # Se tocar piano, o personagem carrega o piano na tela
             if self.instrumento == 'piano':
@@ -239,7 +243,7 @@ class Player:
             self.hitbox.x = 0
         elif self.hitbox.x + self.hitbox.width > self.janela.width:
             self.hitbox.x = self.janela.width - self.hitbox.width
-            
+
         # Atualiza o tempo de recarga
         self.cooldown_passado += self.janela.delta_time()
         if self.cooldown_passado >= self.cooldown_value and self.is_playing:
@@ -250,7 +254,7 @@ class Player:
                 if self.caixa_de_som and self.instrumento == 'violao':
                     self.shoot('caixa_de_som', Tiro.direcoes_string[self.caixa_de_som.direction],
                                self.caixa_de_som)
-                    
+
                 elif self.teclado.key_pressed("down"):
                     self.shoot(self.instrumento, (0, -1), self.hitbox)
                 elif self.last_direction == 'right':
@@ -269,7 +273,7 @@ class Player:
         else:
             self.imune_cronometro = 0
 
-    def update_frame(self, sprite, ms:float = None):
+    def update_frame(self, sprite, ms: float = None):
         if ms:
             sprite.set_total_duration(ms)
         sprite.draw()

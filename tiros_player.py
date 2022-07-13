@@ -68,16 +68,19 @@ class Tiro(Sprite):
     @classmethod
     def update_tiros(cls, janela: Window, lista_inimigos=None, player=None):
         for instrumento, lista_tiros in cls.tiros.items():
-            for inimigo in lista_inimigos:
-                for i, tiro in enumerate(lista_tiros):
-                    tiro.x += cls.velocidades[instrumento] * tiro.direcao[0] * janela.delta_time()
-                    tiro.y -= cls.velocidades[instrumento] * tiro.direcao[1] * janela.delta_time()
-                    tiro.time_lived += janela.delta_time()
+            for i, tiro in enumerate(lista_tiros):
+                tiro.x += cls.velocidades[instrumento] * tiro.direcao[0] * janela.delta_time()
+                tiro.y -= cls.velocidades[instrumento] * tiro.direcao[1] * janela.delta_time()
+                tiro.time_lived += janela.delta_time()
+                for inimigo in lista_inimigos:
                     colisao = tiro.collided_perfect(inimigo.sprite_atual)
                     if colisao and not inimigo.is_imune:
                         inimigo.levar_dano(cls.danos[instrumento])
-                    if tiro.time_lived >= cls.max_lifetimes[instrumento] or colisao:
                         cls.tiros[instrumento].pop(i)
+                        break
+                    if tiro.time_lived >= cls.max_lifetimes[instrumento] or colisao and not inimigo.is_dying:
+                        cls.tiros[instrumento].pop(i)
+                        break
 
     @classmethod
     def draw_tiros(cls, janela: Window):

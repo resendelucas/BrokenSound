@@ -2,6 +2,7 @@ from PPlay.gameimage import *
 from chao import Chao
 from plataforma import Plataforma
 from player import Player
+from skeletons import Skeleton
 
 
 class Fase2:
@@ -28,11 +29,11 @@ class Fase2:
             y_relativo_a_chao *= 4 if i % 2 == 0 else 2
             Plataforma(i * Plataforma.width1x4 * 1.5 + abs(self.boss_x_start), self.floor.y - y_relativo_a_chao, "1x4")
         self.plataformas = Plataforma.lista
-        
+
     def try_landing_boss(self):
         if self.boss.hitbox.y + self.boss.sprite_atual.height <= self.floor.y:
             self.boss.hitbox.y = self.floor.y - self.boss.sprite_atual.height
-            print(self.boss.hitbox.y)
             self.boss.vely = 0
             self.boss.is_falling = False
             self.boss.is_underground = False
+        Skeleton.try_landing_esqueletos(self.floor, self.plataformas)

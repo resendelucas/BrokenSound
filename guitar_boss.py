@@ -1,7 +1,8 @@
 from PPlay.sprite import Sprite
 from boss_mae import BossClasseMae
-from teleguiados import TiroTeleguiado
 from mini_game import MiniGame
+from teleguiados import TiroTeleguiado
+
 
 class BossGuitarra(BossClasseMae):
     sprites = {
@@ -25,7 +26,7 @@ class BossGuitarra(BossClasseMae):
         # morte
         "dying_right": Sprite("Assets/boss_guitar/dying_right.png", 2),
         "dying_left": Sprite("Assets/boss_guitar/dying_left.png", 2),
-        "explosion" : Sprite("Assets/boss_guitar/explosion.png", 19)
+        "explosion": Sprite("Assets/boss_guitar/explosion.png", 19)
     }
     sprites["arriving_left"].set_total_duration(0.05)
     sprites['playing_left'].set_total_duration(0.4)
@@ -51,7 +52,7 @@ class BossGuitarra(BossClasseMae):
         self.sprite_atual.play()
         self.direction = -1
         self.is_falling = False
-        
+
         self.is_idle = False
         self.is_playing = False
         self.is_summoning = False
@@ -61,7 +62,7 @@ class BossGuitarra(BossClasseMae):
         self.is_mini_game_on = False
         self.is_mini_game_done = False
         self.mini_game_finished = False
-        
+
         self.looking_direction = 'left'
         self.cronometro_still = 0
         self.last_position = (self.hitbox.x, self.hitbox.y)
@@ -69,7 +70,7 @@ class BossGuitarra(BossClasseMae):
         self.cronometro_tiro = 2
         self.lista_tiros = []
         self.max_teleguiados = 5
-        
+
         self.mini_game = None
 
     def spawn(self):
@@ -109,8 +110,6 @@ class BossGuitarra(BossClasseMae):
         self.looking_direction = 'left'
         self.cronometro_still = 0
         self.last_position = (self.hitbox.x, self.hitbox.y)
-
-
 
     def update(self):
         self.cheat_hit()
@@ -201,7 +200,7 @@ class BossGuitarra(BossClasseMae):
             self.cooldown_tiro = 1.5
             self.is_mini_game_done = False
             self.mini_game_finished = True
-            
+
     def calibrar_posicao_sprite(self):
         if not self.is_swinging:
             diferenca_hitbox_y = abs(self.hitbox.height - self.sprite_atual.height)
@@ -214,5 +213,3 @@ class BossGuitarra(BossClasseMae):
             else:
                 self.sprite_atual.x = self.hitbox.x - 180
             self.sprite_atual.y = self.hitbox.y - 120
-
-    

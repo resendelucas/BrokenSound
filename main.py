@@ -1,13 +1,13 @@
 from PPlay.window import *
-from fase1 import Fase1
 from fase2 import Fase2
-from guitar_boss import BossGuitarra
-from piano_boss import BossPiano
 from menu import Menu
+from piano_boss import BossPiano
 from plataforma import Plataforma
 from player import Player
+from skeletons import Skeleton
 from teleguiados import TiroTeleguiado
 from tiros_player import Tiro
+
 frames_acumulados = 0
 tempo_acumulado = 0
 fps = None
@@ -59,11 +59,11 @@ while True:
                 menu.playing = False
         # updates
         listaobjetos = [mapa_atual.background, mapa_atual.floor] + Plataforma.lista \
-                       + Tiro.get_every_tiro() + [boss_atual.hitbox]
+                       + Tiro.get_every_tiro() + [boss_atual.hitbox] + Skeleton.get_hitboxes()
         if player.caixa_de_som:
             listaobjetos.append(player.caixa_de_som)
         player.apply_motion()
-        Tiro.update_tiros(janela, [boss_atual])
+        Tiro.update_tiros(janela, [boss_atual] + Skeleton.lista_inimigos)
         player.feel_gravity()
         player.check_camera(listaobjetos, mapa_atual)
         mapa_atual.floor.try_landing_player(player)
@@ -79,8 +79,9 @@ while True:
             player.caixa_de_som.draw_sprite_and_healthbar()
         Plataforma.draw_plataformas(janela)
         boss_atual.draw_boss()
-        player.check_hit_boss(boss_atual)
+        player.check_hit_boss(boss_atual, Skeleton.lista_inimigos)
         Tiro.draw_tiros(janela)
+        Skeleton.draw_esqueletos()
         # boss_atual.hitbox.draw()
         # print(player.hitbox.x, player.hitbox.y)
         # print(Plataforma.lista[0].y)

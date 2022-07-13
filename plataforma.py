@@ -28,22 +28,23 @@ class Plataforma(Sprite):
         for i, plataforma in enumerate(cls.lista):
             # se a hitbox estava acima da plataforma, mas agora está abaixo, e a hitbox está colidindo
             if player.last_position[1] + \
-                    player.hitbox.height <= plataforma.y < player.hitbox.y + player.hitbox.height and\
+                    player.hitbox.height <= plataforma.y < player.hitbox.y + player.hitbox.height and \
                     player.hitbox.collided(plataforma):
                 player.hitbox.y = plataforma.y - player.hitbox.height
                 player.vely = 0
                 player.is_falling = False
                 player.can_jump = True
+                player.cronometro_pulo = 0
                 return True
         return False
-    
+
     @classmethod
     def colisao_cima_sprite(cls, sprite):
         sprite.is_falling = True
         for i, plataforma in enumerate(cls.lista):
             # se a hitbox estava acima da plataforma, mas agora está abaixo, e a hitbox está colidindo
             if sprite.last_position[1] + \
-                    sprite.height <= plataforma.y < sprite.y + sprite.height and\
+                    sprite.height <= plataforma.y < sprite.y + sprite.height and \
                     sprite.collided(plataforma):
                 sprite.y = plataforma.y - sprite.height
                 sprite.vely = 0

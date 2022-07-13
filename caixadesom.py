@@ -40,7 +40,7 @@ class CaixaDeSom(Sprite):
             self.lifetime = 0
         self.health_ratio = self.lifetime / self.max_lifetime
         self.cronometro += self.janela.delta_time()
-        
+
     def draw_healthbar(self):
         drawrect(self.janela.screen, (0, 0, 0), (self.x - self.width / 2 - 2, self.y - 6 - self.health_height + 2,
                                                  self.width * 2 + 4, self.health_height - 4))
