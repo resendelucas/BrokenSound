@@ -53,6 +53,10 @@ class BossPiano(BossClasseMae):
             return
 
         if self.is_playing and self.cooldown_atual >= self.cooldown_value and len(Skeleton.lista_inimigos) < 8:
+            esqueleto = Skeleton()
+            esqueleto.hitbox.x = 0
+            esqueleto = Skeleton()
+            esqueleto.hitbox.x = self.janela.width - esqueleto.hitbox.width
             Skeleton()
             self.cooldown_atual = 0
         self.feel_gravity()
