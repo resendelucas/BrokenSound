@@ -37,14 +37,16 @@ class Fase2:
         self.plataformas = Plataforma.lista
 
     def try_landing_boss(self):
-        compensacao = 0 if self.boss.sprite_atual is self.boss.sprites['summoner_playing'] else 0
-        if self.boss.hitbox.y + self.boss.sprite_atual.height <= self.floor.y:
-            self.boss.hitbox.y = self.floor.y - self.boss.sprite_atual.height - compensacao
-            self.boss.vely = 0
-            self.boss.is_falling = False
-            self.boss.is_underground = False
+        if not self.boss.is_dying and not self.boss.is_finished:
+            compensacao = 0 if self.boss.sprite_atual is self.boss.sprites['summoner_playing'] else 0
+            if self.boss.hitbox.y + self.boss.sprite_atual.height <= self.floor.y:
+                self.boss.hitbox.y = self.floor.y - self.boss.sprite_atual.height - compensacao
+                self.boss.vely = 0
+                self.boss.is_falling = False
+                self.boss.is_underground = False
 
         Skeleton.try_landing_esqueletos(self.floor, self.plataformas)
 
     def limpar_plataformas(self):
-        self.plataformas = []
+        self.plataformas.clear()
+        Plataforma.lista.clear()

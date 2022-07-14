@@ -10,7 +10,8 @@ class BossPiano(BossClasseMae):
         "summoner_playing": Sprite("Assets/boss_piano/boss_basic.png", 25),
         "basic_playing": Sprite("Assets/boss_piano/boss_aprendiz_playing.png", 25),
         "summoner_arriving": Sprite("Assets/boss_piano/summoner_arriving.png", 2),
-        "basic_arriving": Sprite("Assets/boss_piano/skeleton_aprendiz_arriving.png", 2)
+        "basic_arriving": Sprite("Assets/boss_piano/skeleton_aprendiz_arriving.png", 2),
+        "explosion": Sprite("Assets/boss_piano/explosion.png", 19)
     }
     sprite_atual = sprites["basic_arriving"]
     hitbox = Sprite("Assets/boss_piano/hitbox.png")
@@ -18,6 +19,7 @@ class BossPiano(BossClasseMae):
     sprites['summoner_playing'].set_total_duration(1.3)
     sprites['basic_arriving'].set_total_duration(0.2)
     sprites['basic_playing'].set_total_duration(1.3)
+    sprites['explosion'].set_total_duration(600)
 
     cooldown_value = 2
     cooldown_atual = 0
@@ -46,55 +48,57 @@ class BossPiano(BossClasseMae):
         self.cooldown_atual += self.janela.delta_time()
         Skeleton.set_player_e_janela(self.player, self.janela)
         Skeleton.update_esqueletos()
-
         self.last_position = self.hitbox.x, self.hitbox.y
-        if self.is_arriving:
-            self.hitbox.y -= 50 * self.janela.delta_time()
-            if not self.is_underground:
-                self.cronometro_still += self.janela.delta_time()
-                if self.cronometro_still > 2:
-                    self.cronometro_still = 0
-                    self.is_playing = True
-                    self.sprite_atual = self.sprites['basic_playing']
-                    self.is_arriving = False
-            return
+        if not self.is_finished and not self.is_dying:
+            if self.is_arriving:
+                self.hitbox.y -= 50 * self.janela.delta_time()
+                if not self.is_underground:
+                    self.cronometro_still += self.janela.delta_time()
+                    if self.cronometro_still > 2:
+                        self.cronometro_still = 0
+                        self.is_playing = True
+                        self.sprite_atual = self.sprites['basic_playing']
+                        self.is_arriving = False
+                return
 
-        if self.is_playing and self.sprite_atual is self.sprites['basic_playing']:
-            if self.cooldown_atual >= self.cooldown_value and len(Skeleton.lista_inimigos) < 8:
-                self.spawn_esqueletos()
+            if self.is_playing and self.sprite_atual is self.sprites['basic_playing']:
+                if self.cooldown_atual >= self.cooldown_value and len(Skeleton.lista_inimigos) < 8:
+                    self.spawn_esqueletos()
 
-            if self.health_ratio <= 0.66 and not self.is_mini_game_on and not self.is_mini_game_done:
-                Skeleton.kill_all()
-                self.hitbox.y = -9999
-                self.sprite_atual = self.sprites['summoner_playing']
-                self.is_mini_game_on = True
-                self.gaiola = Gaiola(self.player)
-                self.mini_game = MiniGameTeclas(self.gaiola)
+                if self.health_ratio <= 0.66 and not self.is_mini_game_on and not self.is_mini_game_done:
+                    Skeleton.kill_all()
+                    self.hitbox.y = -9999
+                    self.sprite_atual = self.sprites['summoner_playing']
+                    self.is_mini_game_on = True
+                    self.gaiola = Gaiola(self.player)
+                    self.mini_game = MiniGameTeclas(self.gaiola)
 
-        elif self.is_playing and self.is_mini_game_on and not self.is_mini_game_done:
-            self.gaiola.cronometro_cair = 4
-            self.engaiolar_player()
-            self.mini_game.colisao_player_teclas()
-            self.is_mini_game_done = self.health_ratio <= 0.33
-            self.is_mini_game_on = not self.is_mini_game_done
-            if self.is_mini_game_done and not self.is_mini_game_on:
-                self.spawn_obeliscos()
+            elif self.is_playing and self.is_mini_game_on and not self.is_mini_game_done:
+                self.gaiola.cronometro_cair = 4
+                self.engaiolar_player()
+                self.mini_game.colisao_player_teclas()
+                self.is_mini_game_done = self.health_ratio <= 0.33
+                self.is_mini_game_on = not self.is_mini_game_done
+                if self.is_mini_game_done and not self.is_mini_game_on:
+                    self.spawn_obeliscos()
 
-        elif self.is_playing and not self.is_mini_game_on and self.is_mini_game_done:
-            self.obeliscos = Obelisco.lista
-            self.is_imune = len(self.obeliscos) > 0
-            if self.cooldown_atual >= self.cooldown_value and len(Skeleton.lista_inimigos) < 8:
-                self.spawn_esqueletos()
-            if self.is_imune:
-                self.levar_dano(-1000 * self.janela.delta_time())
-                if self.health_ratio > 1:
-                    self.health_ratio = 1
-                    self.health_atual = self.max_health
-                self.health_color = (255, 0, 255)
-            Obelisco.update()
-            if self.health_ratio <= 0:
-                self.is_mini_game_done = True
-                self.is_finished = True
+            elif self.is_playing and not self.is_mini_game_on and self.is_mini_game_done:
+                self.obeliscos = Obelisco.lista
+                self.is_imune = len(self.obeliscos) > 0
+                if self.cooldown_atual >= self.cooldown_value and len(Skeleton.lista_inimigos) < 8:
+                    self.spawn_esqueletos()
+                if self.is_imune and not self.is_dying:
+                    self.levar_dano(-1000 * self.janela.delta_time())
+                    if self.health_ratio > 1:
+                        self.health_ratio = 1
+                        self.health_atual = self.max_health
+                    self.health_color = (255, 0, 255)
+                Obelisco.update()
+                if self.health_ratio <= 0:
+                    self.is_dying = True
+                    self.is_mini_game_done = True
+                    Skeleton.kill_all()
+                    self.cronometro_animacao = 0
         self.feel_gravity()
         self.apply_motion()
 

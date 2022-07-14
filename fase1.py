@@ -42,4 +42,5 @@ class Fase1:
         self.plataformas = Plataforma.lista
 
     def limpar_plataformas(self):
-        self.plataformas = []
+        self.plataformas.clear()
+        Plataforma.lista.clear()
