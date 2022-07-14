@@ -15,6 +15,7 @@ class BossClasseMae:
         BossClasseMae.janela = janela
         if player:
             self.player = player
+        self.health_color = (255, 0, 0)
         self.teclado = janela.get_keyboard()
         self.max_health = max_health
         self.health_atual = starting_health
@@ -88,7 +89,7 @@ class BossClasseMae:
 
     def draw_healthbar(self):
         self.mostrar_dano_levado()
-        drawrect(self.janela.screen, (255, 0, 0), (self.healthbar_sprite.x + 2, self.healthbar_sprite.y + 8,
+        drawrect(self.janela.screen, self.health_color, (self.healthbar_sprite.x + 2, self.healthbar_sprite.y + 8,
                                                    (self.healthbar_sprite.width - 5) * self.health_ratio,
                                                    self.healthbar_sprite.height - 15))
         self.healthbar_sprite.draw()

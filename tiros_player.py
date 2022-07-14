@@ -76,9 +76,8 @@ class Tiro(Sprite):
                 tiro.y -= cls.velocidades[instrumento] * tiro.direcao[1] * janela.delta_time()
                 tiro.time_lived += janela.delta_time()
                 for inimigo in lista_inimigos:
-                    colisao = tiro.collided_perfect(inimigo.sprite_atual)
                     if not inimigo.is_dying and not inimigo.is_imune:
-                        if colisao:
+                        if tiro.collided_perfect(inimigo.sprite_atual):
                             inimigo.levar_dano(cls.danos[instrumento])
                             cls.tiros[instrumento].pop(i)
                             break

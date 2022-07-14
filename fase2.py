@@ -1,5 +1,6 @@
 from PPlay.gameimage import *
 from chao import Chao
+from obeliscos import Obelisco
 from plataforma import Plataforma
 from player import Player
 from skeletons import Skeleton
@@ -21,13 +22,18 @@ class Fase2:
         self.background.draw()
         if self.boss.is_arriving:
             self.boss.sprite_atual.draw()
+        Obelisco.draw_obeliscos()
         self.floor.draw()
 
     def inicializar_plataformas(self):
+        self.boss.plataformas_obeliscos = []
         for i in range(1, int(self.janela.width // (Plataforma.width1x4 * 1.5))):
             y_relativo_a_chao = Player.hitboxes["desmontado"].height
             y_relativo_a_chao *= 4 if i % 2 == 0 else 2
-            Plataforma(i * Plataforma.width1x4 * 1.5 + abs(self.boss_x_start), self.floor.y - y_relativo_a_chao, "1x4")
+            plataforma = Plataforma(i * Plataforma.width1x4 * 1.5 + abs(self.boss_x_start),
+                                    self.floor.y - y_relativo_a_chao, "1x4")
+            if i in (2, 4):
+                self.boss.plataformas_obeliscos.append(plataforma)
         self.plataformas = Plataforma.lista
 
     def try_landing_boss(self):
@@ -37,4 +43,5 @@ class Fase2:
             self.boss.vely = 0
             self.boss.is_falling = False
             self.boss.is_underground = False
+
         Skeleton.try_landing_esqueletos(self.floor, self.plataformas)

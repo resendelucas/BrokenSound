@@ -4,6 +4,7 @@ from fase1 import Fase1
 from menu import Menu
 from piano_boss import BossPiano
 from guitar_boss import BossGuitarra
+from obeliscos import Obelisco
 from plataforma import Plataforma
 from player import Player
 from skeletons import Skeleton
@@ -50,8 +51,9 @@ while True:
             boss_atual.velx = 0
             boss_atual.y = 0
         if teclado.key_pressed("v"):
-            boss_atual.vely = 0
-            boss_atual.hitbox.x += 1000 * janela.delta_time()
+            player.healthbar.mana_atual = 100
+            '''boss_atual.vely = 0
+            boss_atual.hitbox.x += 1000 * janela.delta_time()'''
         if teclado.key_pressed("b"):
             boss_atual.vely = 0
             boss_atual.hitbox.x -= 1000 * janela.delta_time()
@@ -63,11 +65,11 @@ while True:
                 menu.playing = False
         # updates
         listaobjetos = [mapa_atual.background, mapa_atual.floor] + Plataforma.lista \
-                       + Tiro.get_every_tiro() + [boss_atual.hitbox] + Skeleton.get_hitboxes()
+                       + Tiro.get_every_tiro() + [boss_atual.hitbox] + Skeleton.get_hitboxes() + Obelisco.lista
         if player.caixa_de_som:
             listaobjetos.append(player.caixa_de_som)
         player.apply_motion()
-        Tiro.update_tiros(janela, [boss_atual] + Skeleton.lista_inimigos)
+        Tiro.update_tiros(janela, [boss_atual] + Skeleton.lista_inimigos + Obelisco.lista)
         player.feel_gravity()
         player.check_camera(listaobjetos, mapa_atual)
         mapa_atual.floor.try_landing_player(player)

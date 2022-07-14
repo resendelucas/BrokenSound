@@ -12,7 +12,6 @@ class Skeleton:
     jumpspeed = 1200
     gravity = 4500
     is_imune = False
-
     def __init__(self):
         self.lista_inimigos.append(self)
         self.sprites = {

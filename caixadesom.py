@@ -4,6 +4,15 @@ from PPlay.sprite import Sprite
 from PPlay.window import Window
 
 
+def draw_healthbar(self):
+    drawrect(self.janela.screen, (0, 0, 0), (self.x - self.width / 2 - 2, self.y - 6 - self.health_height + 2,
+                                             self.width * 2 + 4, self.health_height - 4))
+    drawrect(self.janela.screen, (255, 255, 255), (self.x - self.width / 2, self.y - 6 - self.health_height,
+                                                   self.width * 2 * self.old_health_ratio, self.health_height))
+    drawrect(self.janela.screen, (255, 0, 0), (self.x - self.width / 2, self.y - 6 - self.health_height,
+                                               self.width * 2 * self.health_ratio, self.health_height))
+
+
 class CaixaDeSom(Sprite):
     Window(1365, 768)
     caminho_sprites = dict()
@@ -42,12 +51,7 @@ class CaixaDeSom(Sprite):
         self.cronometro += self.janela.delta_time()
 
     def draw_healthbar(self):
-        drawrect(self.janela.screen, (0, 0, 0), (self.x - self.width / 2 - 2, self.y - 6 - self.health_height + 2,
-                                                 self.width * 2 + 4, self.health_height - 4))
-        drawrect(self.janela.screen, (255, 255, 255), (self.x - self.width / 2, self.y - 6 - self.health_height,
-                                                       self.width * 2 * self.old_health_ratio, self.health_height))
-        drawrect(self.janela.screen, (255, 0, 0), (self.x - self.width / 2, self.y - 6 - self.health_height,
-                                                   self.width * 2 * self.health_ratio, self.health_height))
+        draw_healthbar(self)
 
     def draw_sprite_and_healthbar(self):
         self.draw()
