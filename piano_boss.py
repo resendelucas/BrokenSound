@@ -77,6 +77,9 @@ class BossPiano(BossClasseMae):
             self.gaiola.cronometro_cair = 4
             self.engaiolar_player()
             self.mini_game.colisao_player_teclas()
+            if self.health_ratio <= 0:
+                self.is_mini_game_done = True
+                self.is_finished = True
         self.feel_gravity()
         self.apply_motion()
 

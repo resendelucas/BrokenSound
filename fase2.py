@@ -38,3 +38,6 @@ class Fase2:
             self.boss.is_falling = False
             self.boss.is_underground = False
         Skeleton.try_landing_esqueletos(self.floor, self.plataformas)
+
+    def limpar_plataformas(self):
+        self.plataformas = []
