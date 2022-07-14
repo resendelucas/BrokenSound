@@ -10,6 +10,7 @@ from player import Player
 from skeletons import Skeleton
 from teleguiados import TiroTeleguiado
 from tiros_player import Tiro
+from fase_tutorial import FaseTutorial
 
 frames_acumulados = 0
 tempo_acumulado = 0
@@ -17,6 +18,7 @@ fps = None
 # janela = Window(1365, 768)
 janela = Window(1365, 768)
 boss_atual = BossPiano(janela)
+tutorial = FaseTutorial(janela)
 # mapa_atual = Fase1x(janela, boss_atual)
 mapa_atual = Fase2(janela, boss_atual)
 # mapa_atual.inicializar_plataformas()
@@ -29,6 +31,7 @@ teclado = janela.get_keyboard()
 janela.update()
 
 while True:
+    tutorial.run_tutorial()
     # print(boss_atual.sprites["summoner_arriving"] == boss_atual.sprite_atual)
     frames_acumulados += 1
     tempo_acumulado += janela.delta_time()
