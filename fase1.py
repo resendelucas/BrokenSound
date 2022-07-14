@@ -40,3 +40,6 @@ class Fase1:
             y_relativo_a_chao *= 4 if i % 2 == 0 else 2
             Plataforma(i * Plataforma.width1x4 * 1.5 + abs(self.boss_x_start), self.floor.y - y_relativo_a_chao, "1x4")
         self.plataformas = Plataforma.lista
+
+    def limpar_plataformas(self):
+        self.plataformas = []

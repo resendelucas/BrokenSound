@@ -92,7 +92,9 @@ class BossPiano(BossClasseMae):
                     self.health_atual = self.max_health
                 self.health_color = (255, 0, 255)
             Obelisco.update()
-
+            if self.health_ratio <= 0:
+                self.is_mini_game_done = True
+                self.is_finished = True
         self.feel_gravity()
         self.apply_motion()
 

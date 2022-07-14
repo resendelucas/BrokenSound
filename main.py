@@ -19,7 +19,7 @@ janela = Window(1365, 768)
 boss_atual = BossPiano(janela)
 # mapa_atual = Fase1x(janela, boss_atual)
 mapa_atual = Fase2(janela, boss_atual)
-mapa_atual.inicializar_plataformas()
+# mapa_atual.inicializar_plataformas()
 player = Player(janela, mapa_atual, 'piano')
 boss_atual.set_player(player)
 player.hitbox.vely = 0
@@ -98,4 +98,13 @@ while True:
         if player.healthbar.health_atual <= 0:
             menu.you_died_screen()
         player.draw_hud()
+
+        # Troca de fase
+        if boss_atual.is_finished:
+            if player.hitbox.x > janela.width - 50:
+                mapa_atual.limpar_plataformas()
+                boss_atual = BossGuitarra(janela)
+                mapa_atual = Fase1(janela, boss_atual)
+                player = Player(janela, mapa_atual, 'violao')
+                boss_atual.set_player(player)
     janela.draw_text(f'{fps:.2f}', janela.width * 1 / 10, janela.height * 1 / 12, 30, (255, 255, 0))
