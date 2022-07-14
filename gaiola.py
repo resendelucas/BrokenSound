@@ -27,6 +27,10 @@ class Gaiola(Sprite):
                 self.player.hitbox.x = self.x + 1
             elif self.player.hitbox.x + self.player.hitbox.width >= self.x + self.width:
                 self.player.hitbox.x = self.x + self.width - 1 - self.player.hitbox.width
+
+            if self.player.hitbox.y < self.y + 14:
+                self.player.hitbox.y = self.y + 14
+                self.player.vely = 0
         else:
             self.x = self.player.hitbox.x + self.player.hitbox.width/2 - self.width/2
         self.cronometro_cair += self.janela.delta_time()
