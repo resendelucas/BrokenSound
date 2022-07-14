@@ -8,12 +8,6 @@ from tiros_player import Tiro
 class Player:
     # sprites visuais:
     Window(1365, 768)
-    gravity = 4500
-    key_pressed_past = {"x": False,
-                        "q": False,
-                        "w": False,
-                        "e": False,
-                        "r": False, }
     instrumento = 'violao'
     proximo_instrumento = {'violao': 'piano',
                            'piano': 'violao'}
@@ -40,7 +34,7 @@ class Player:
     hitboxes = {'desmontado': Sprite("Assets/character/player_hitbox.png"),
                 'montado': Sprite("Assets/character/player_hitbox_piano.png")}
     sprite_atual = sprites["violao"]["walk_right"]
-    # cooldown tiros:  
+    # cooldown tiros:
     cooldown_value = 0.3
     walkspeed_padrao = 200
 
@@ -50,8 +44,22 @@ class Player:
     hud_instrumento_violao.set_position(72, 60)
     hud_instrumento_piano = Sprite("Assets/hud/hud-instrumento-piano.png")
     hud_instrumento_piano.set_position(72, 60)
+    gravity = 4500
+    key_pressed_past = {"x": False,
+                        "q": False,
+                        "w": False,
+                        "e": False,
+                        "r": False, }
 
     def __init__(self, janela: Window, mapa, instrumento: str):
+        self.reset_instance()
+
+        self.hud_instrumento_frame = Sprite("Assets/hud/hud-instrumento-frame.png")
+        self.hud_instrumento_frame.set_position(40, 40)
+        self.hud_instrumento_violao = Sprite("Assets/hud/hud-instrumento-violao.png")
+        self.hud_instrumento_violao.set_position(72, 60)
+        self.hud_instrumento_piano = Sprite("Assets/hud/hud-instrumento-piano.png")
+        self.hud_instrumento_piano.set_position(72, 60)
         self.janela = janela
         self.mapa = mapa
         self.teclado = janela.get_keyboard()
@@ -81,6 +89,39 @@ class Player:
         self.imune_cronometro = 0
         self.healthbar = PlayerHealthBar(5, 5, self.janela)
         self.caixa_de_som = None
+
+    def reset_instance(self):
+        self.instrumento = 'violao'
+        self.proximo_instrumento = {'violao': 'piano',
+                                    'piano': 'violao'}
+        self.sprites = {'violao': {"walk_right": Sprite(f"Assets/character/violao/walking/walk_right.png", 6),
+                                   'walk_left': Sprite(f"Assets/character/violao/walking/walk_left.png", 6),
+                                   'walk_attack_right': Sprite(f"Assets/character/violao/walking/walk_attack_right.png",
+                                                               6),
+                                   'walk_attack_left': Sprite(f"Assets/character/violao/walking/walk_attack_left.png",
+                                                              6),
+                                   'playing_right': Sprite(f"Assets/character/violao/parado/attack_right.png", 4),
+                                   'playing_left': Sprite(f"Assets/character/violao/parado/attack_left.png", 4),
+                                   'still_right': Sprite(f"Assets/character/violao/parado/player_still_right.png"),
+                                   'still_left': Sprite(f"Assets/character/violao/parado/player_still_left.png")},
+                        'piano': {"walk_right": Sprite(f"Assets/character/piano/walking/walk_right.png", 6),
+                                  'walk_left': Sprite(f"Assets/character/piano/walking/walk_left.png", 6),
+                                  'playing_right': Sprite(f"Assets/character/piano/parado/attack_right.png", 2),
+                                  'playing_left': Sprite(f"Assets/character/piano/parado/attack_left.png", 2),
+                                  'still_right': Sprite(f"Assets/character/piano/parado/player_still_right.png", 4),
+                                  'still_left': Sprite(f"Assets/character/piano/parado/player_still_left.png", 4),
+                                  'charging_left': Sprite(f"Assets/character/piano/parado/charging_left.png", 6),
+                                  'charging_right': Sprite(f"Assets/character/piano/parado/charging_right.png", 6),
+                                  'piano_left': Sprite(f"Assets/character/piano/piano_left.png"),
+                                  'piano_right': Sprite(f"Assets/character/piano/piano_right.png"), },
+                        'changing': Sprite(f'Assets/character/changing.png', 10)}
+        # sprites usadas no backend:
+        self.hitboxes = {'desmontado': Sprite("Assets/character/player_hitbox.png"),
+                         'montado': Sprite("Assets/character/player_hitbox_piano.png")}
+        self.sprite_atual = self.sprites["violao"]["walk_right"]
+        # cooldown tiros:
+        self.cooldown_value = 0.3
+        self.walkspeed_padrao = 200
 
     def check_hit_boss(self, boss, inimigos):
         if not self.is_imune and not boss.is_dying:
@@ -130,10 +171,10 @@ class Player:
                 duracao = self.caixa_de_som.get_total_duration()
                 qtdframes = self.caixa_de_som.get_final_frame()
                 intervalo = duracao / qtdframes
-                self.caixa_de_som.set_curr_frame((self.caixa_de_som.cronometro // intervalo) % qtdframes)
+                self.caixa_de_som.set_curr_frame((self.caixa_de_som.cronometro_global // intervalo) % qtdframes)
             else:
                 self.caixa_de_som.set_curr_frame(0)
-                self.caixa_de_som.cronometro = 0
+                self.caixa_de_som.cronometro_global = 0
             if self.caixa_de_som.health_ratio == 0:
                 self.caixa_de_som = None
 
