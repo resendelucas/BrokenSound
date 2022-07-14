@@ -19,6 +19,7 @@ class FaseTutorial:
                                 'sob o mundo, e todos os que não detinham excepcional poder musical',
                                 'se tornaram incapazes de ouvir e tocar qualquer nota musical.'], self.bethoven)
         dialogo.set_player(self.player)
+        self.player.sprite_atual = self.player.sprites['violao']['still_right']
         while True:
             self.janela.update()
             self.janela.set_background_color((0, 0, 0))
