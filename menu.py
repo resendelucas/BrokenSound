@@ -15,14 +15,10 @@ class Menu:
         self.player_selection = False
         self.options_menu = False
         self.play_button = Sprite("Assets/menu/jogar.png", 2)
-        self.play_button.set_position(300, 240)
-        self.player_button = Sprite("Assets/menu/jogador.png", 2)
-        self.player_button.set_position(300, 340)
-        self.options_button = Sprite("Assets/menu/opções.png", 2)
-        self.options_button.set_position(300, 440)
+        self.play_button.set_position(650, 370)
         self.leave_button = Sprite("Assets/menu/sair.png", 2)
-        self.leave_button.set_position(320, 540)
-        self.background = GameImage("Assets/menu/menu_bg.jpg")
+        self.leave_button.set_position(650, 470)
+        self.background = GameImage("Assets/menu/metal.png")
 
     def check_click(self):
         if self.click_cooldown < 0.2:
@@ -35,34 +31,18 @@ class Menu:
     def check_events(self):
         if self.main_menu:
             if self.mouse.is_over_object(self.play_button):
-                self.play_button.set_curr_frame(1)
+                self.play_button.set_curr_frame(0)
                 if self.check_click():
                     self.playing = True
             else:
-                self.play_button.set_curr_frame(0)
-
-            if self.mouse.is_over_object(self.player_button):
-                self.player_button.set_curr_frame(1)
-                if self.check_click():
-                    self.player_selection = True
-                    self.main_menu = False
-            else:
-                self.player_button.set_curr_frame(0)
-
-            if self.mouse.is_over_object(self.options_button):
-                self.options_button.set_curr_frame(1)
-                if self.check_click():
-                    self.options_menu = True
-                    self.main_menu = False
-            else:
-                self.options_button.set_curr_frame(0)
+                self.play_button.set_curr_frame(1)
 
             if self.mouse.is_over_object(self.leave_button):
-                self.leave_button.set_curr_frame(1)
+                self.leave_button.set_curr_frame(0)
                 if self.check_click():
                     self.janela.close()
             else:
-                self.leave_button.set_curr_frame(0)
+                self.leave_button.set_curr_frame(1)
 
         if self.keyboard.key_pressed("ESC"):
             self.playing = False
@@ -74,8 +54,6 @@ class Menu:
         if self.main_menu:
             self.background.draw()
             self.play_button.draw()
-            self.player_button.draw()
-            self.options_button.draw()
             self.leave_button.draw()
 
     def you_died_screen(self):

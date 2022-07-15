@@ -13,6 +13,7 @@ from tiros_player import Tiro
 from fase_tutorial import FaseTutorial
 from PPlay.sprite import *
 
+
 frames_acumulados = 0
 tempo_acumulado = 0
 fps = None
@@ -33,6 +34,8 @@ janela.update()
 tutorial_done = True
 setinha = Sprite("Assets/imagens/arrow.png")
 setinha.set_position(janela.width - 60, janela.height - 150)
+
+
 while True:
     # print(boss_atual.sprites["summoner_arriving"] == boss_atual.sprite_atual)
     frames_acumulados += 1
@@ -70,6 +73,11 @@ while True:
             player.check_events()
         else:
             if player.healthbar.old_health_ratio == 0:
+                boss_atual = BossGuitarra(janela)
+                tutorial = FaseTutorial(janela)
+                mapa_atual = Fase1(janela, boss_atual)
+                player = Player(janela, mapa_atual, 'piano')
+                boss_atual.set_player(player)
                 menu.playing = False
         # updates
         listaobjetos = [mapa_atual.background, mapa_atual.floor] + Plataforma.lista \
