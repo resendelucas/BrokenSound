@@ -10,7 +10,7 @@ class Fase2:
     def __init__(self, janela, boss):
         self.janela = janela
         self.background = GameImage("Assets/imagens/Skies/igreja-fundo.png")
-        self.floor = Chao("floor.png")
+        self.floor = Chao("igreja-chao2.png")
         self.floor.y = self.janela.height - self.floor.height
         self.boss_x_start = -700
         self.boss = boss
@@ -30,8 +30,8 @@ class Fase2:
         for i in range(1, int(self.janela.width // (Plataforma.width1x4 * 1.5))):
             y_relativo_a_chao = Player.hitboxes["desmontado"].height
             y_relativo_a_chao *= 4 if i % 2 == 0 else 2
-            plataforma = Plataforma(i * Plataforma.width1x4 * 1.5 + abs(self.boss_x_start),
-                                    self.floor.y - y_relativo_a_chao, "1x4")
+            plataforma = Plataforma(i * Plataforma.width1x4 * 1.5 + abs(self.boss_x_start) - 140,
+                                    self.floor.y - y_relativo_a_chao, "igreja_1x4")
             if i in (2, 4):
                 self.boss.plataformas_obeliscos.append(plataforma)
         self.plataformas = Plataforma.lista

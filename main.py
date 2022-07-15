@@ -35,7 +35,7 @@ while True:
     player.hitbox.vely = 0
     menu = Menu(janela)
     menu.playing = False
-    tutorial.is_done = True
+    # tutorial.is_done = True
     teclado = janela.get_keyboard()
     janela.update()
     setinha = Sprite("Assets/imagens/arrow.png")
