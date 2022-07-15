@@ -16,7 +16,23 @@ class MiniGame:
         'blue': [],
     }
     background = Sprite("Assets/mini-game/linhas.png")
-    
+
+    @classmethod
+    def reset_class(cls):
+        cls.sprites = {
+            'button-green': Sprite("Assets/mini-game/q-green.png"),
+            'button-red': Sprite("Assets/mini-game/w-red.png"),
+            'button-yellow': Sprite("Assets/mini-game/e-yellow.png"),
+            'button-blue': Sprite("Assets/mini-game/r-blue.png")
+        }
+        cls.notes = {
+            'green': [],
+            'red': [],
+            'yellow': [],
+            'blue': [],
+        }
+        cls.background = Sprite("Assets/mini-game/linhas.png")
+
     def __init__(self, janela, player, boss):
         self.janela = janela
         self.player = player
@@ -39,10 +55,12 @@ class MiniGame:
 
     def check_events(self):
         for key, values in self.notes.items():
+            for notes in values:
+                notes.y += self.vel_notes * self.janela.delta_time()
+        for key, values in self.notes.items():
             if values:
                 note = values[0]
             # Faz as bolinhas descerem
-                note.y += self.vel_notes * self.janela.delta_time()
 
                 # Verifica se colidiu e o player apertou a tecla certa
                 if key == 'green':
@@ -57,7 +75,7 @@ class MiniGame:
                     if self.teclado.key_pressed("w") and not self.player.key_pressed_past["w"]:
                         if note.collided(self.sprites['button-red']):
                             values.remove(note)
-                            self.boss.levar_dano(self.boss.max_health * 0.2 / self.total)
+                            self.boss.levar_dano(self.boss.max_health * 0.1 / self.total)
                         else:
                             values.remove(note)
                             self.player.levar_dano(0.25)
@@ -65,7 +83,7 @@ class MiniGame:
                     if self.teclado.key_pressed("e") and not self.player.key_pressed_past["e"]:
                         if note.collided(self.sprites['button-yellow']):
                             values.remove(note)
-                            self.boss.levar_dano(self.boss.max_health * 0.2 / self.total)
+                            self.boss.levar_dano(self.boss.max_health * 0.1 / self.total)
                         else:
                             values.remove(note)
                             self.player.levar_dano(0.25)
@@ -73,7 +91,7 @@ class MiniGame:
                     if self.teclado.key_pressed("r") and not self.player.key_pressed_past["r"]:
                         if note.collided(self.sprites['button-blue']):
                             values.remove(note)
-                            self.boss.levar_dano(self.boss.max_health * 0.2 / self.total)
+                            self.boss.levar_dano(self.boss.max_health * 0.1 / self.total)
                         else:
                             values.remove(note)
                             self.player.levar_dano(0.25)

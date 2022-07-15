@@ -38,6 +38,40 @@ class Tiro(Sprite):
              "flauta": 50
              }
 
+    @classmethod
+    def reset_class(cls):
+        cls.path_tiros = f'{getcwd()}\\Assets\\projeteis'
+
+        cls.tiros = {"violao": [],
+                 "caixa_de_som": [],
+                 "flauta": [],
+                 "piano": []
+                 }
+        cls.velocidades = {"violao": 600,
+                       "caixa_de_som": 300,
+                       "flauta": 600,
+                       "piano": 600
+                       }
+        cls.max_lifetimes = {"violao": 1.5,
+                         "caixa_de_som": 3,
+                         "flauta": 1.5,
+                         "piano": 1.5
+                         }
+        cls.direcoes = {(1, 0): "right",
+                    (-1, 0): "left",
+                    (0, 1): "up",
+                    (0, -1): "down"
+                    }
+        cls.direcoes_string = {"right": (1, 0),
+                           "left": (-1, 0),
+                           "up": (0, 1),
+                           "down": (0, -1)
+                           }
+        cls.danos = {"violao": 50,
+                 "caixa_de_som": 35,
+                 "piano": 25,
+                 "flauta": 50
+                 }
     def __init__(self, tipo_tiro: str, direcao: tuple, player: Sprite):
         """
         Direção: uma tupla que indica o sinal da velocidade X e velocidade Y que o tiro terá. Idealmente -1, 0 ou 1.
@@ -67,17 +101,22 @@ class Tiro(Sprite):
 
     @classmethod
     def update_tiros(cls, janela: Window, lista_inimigos=None, player=None):
+        if not lista_inimigos:
+            lista_inimigos = []
         for instrumento, lista_tiros in cls.tiros.items():
-            for inimigo in lista_inimigos:
-                for i, tiro in enumerate(lista_tiros):
-                    tiro.x += cls.velocidades[instrumento] * tiro.direcao[0] * janela.delta_time()
-                    tiro.y -= cls.velocidades[instrumento] * tiro.direcao[1] * janela.delta_time()
-                    tiro.time_lived += janela.delta_time()
-                    colisao = tiro.collided_perfect(inimigo.sprite_atual)
-                    if colisao and not inimigo.is_imune:
-                        inimigo.levar_dano(cls.danos[instrumento])
-                    if tiro.time_lived >= cls.max_lifetimes[instrumento] or colisao:
-                        cls.tiros[instrumento].pop(i)
+            for i, tiro in enumerate(lista_tiros):
+                if tiro.time_lived >= cls.max_lifetimes[instrumento]:
+                    cls.tiros[instrumento].pop(i)
+                    break
+                tiro.x += cls.velocidades[instrumento] * tiro.direcao[0] * janela.delta_time()
+                tiro.y -= cls.velocidades[instrumento] * tiro.direcao[1] * janela.delta_time()
+                tiro.time_lived += janela.delta_time()
+                for inimigo in lista_inimigos:
+                    if not inimigo.is_dying and not inimigo.is_imune:
+                        if tiro.collided_perfect(inimigo.sprite_atual):
+                            inimigo.levar_dano(cls.danos[instrumento])
+                            cls.tiros[instrumento].pop(i)
+                            break
 
     @classmethod
     def draw_tiros(cls, janela: Window):

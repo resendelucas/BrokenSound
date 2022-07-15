@@ -13,22 +13,8 @@ class Chao(GameImage):
         self.x = 0
         self.buracos = buracos
 
-    def try_landing_boss(self, boss):
-        if boss.hitbox.y + boss.hitbox.height > self.y:
-            boss.hitbox.y = self.y - boss.hitbox.height
-            boss.vely = 0
-            boss.is_falling = False
-
-            if boss.is_arriving:
-                boss.is_arriving = False
-                boss.is_imune = False
-                boss.is_idle = True
-                boss.sprite_atual = boss.sprites["idle_left"]
-                boss.cronometro_animacao = 0
-                boss.sprite_atual.set_total_duration(1.7)
-
     def try_landing_player(self, player):
-        if player.hitbox.y + player.hitbox.height >= self.y:
+        if player.hitbox.y + player.hitbox.height > self.y:
             entity_no_buraco = False
             ''' # A ser implementado
             if self.buracos:

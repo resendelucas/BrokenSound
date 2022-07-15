@@ -11,6 +11,16 @@ class TiroTeleguiado(Sprite):
     aceleracao = 200
     lista_pequenas = []
 
+    @classmethod
+    def reset_class(cls):
+        cls.janela = Window(1365, 768)
+        cls.caminho_sprite = f'Assets/projeteis/esfera_teleguiada_pequena.png'
+
+        cls.velocidade_max_pequena = 700
+        cls.maxlifetime_pequena = 1000
+        cls.aceleracao = 200
+        cls.lista_pequenas = []
+
     def __init__(self, sprite_boss, player):
         super().__init__(self.caminho_sprite)
         self.x = sprite_boss.x + 115
@@ -28,12 +38,6 @@ class TiroTeleguiado(Sprite):
         soma_x_y = abs(deslocamento_y) + abs(deslocamento_x)
         ratio_x = deslocamento_x / soma_x_y
         ratio_y = deslocamento_y / soma_x_y
-        if abs(ratio_x) + abs(ratio_y) > 1.1:
-            print(f'ratios x y:{ratio_x:.2f}, {ratio_y:.2f}')
-            print(
-                f'meio do player: {self.player.hitbox.x + self.player.hitbox.width / 2:.2f},{self.player.hitbox.y + self.player.hitbox.height / 2} ')
-            print(f'meio do tiro: {self.x + self.width / 2:.2f}, {self.y + self.height / 2}')
-
         self.velx += self.aceleracao * ratio_x * self.janela.delta_time()
         self.vely += self.aceleracao * ratio_y * self.player.janela.delta_time()
 

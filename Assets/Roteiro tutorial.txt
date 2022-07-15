@@ -1,0 +1,87 @@
+*player aparece*
+
+Bethoven: Funcionou! Funcionou!!
+Graças aos céus!!
+
+*Player e sprite secundária viram para a direita*
+Player: ?
+*Player e sprite secundária viram para a esquerda*
+Player: ?
+
+Bethoven: perdão viajantes, permitam-me explicar.
+
+Bethoven: Eu lhes invoquei aqui para me ajudar em uma
+tarefa de extrema importância!
+
+Bethoven: Há muito tempo, a Bruxa Vermelha lançou um feitiço
+sob o mundo, e todos os que não detinham excepcional poder musical
+se tornaram incapazes de ouvir e tocar qualquer nota musical.
+
+Bethoven: Esta é a última fortaleza protegida das garras
+da Bruxa Vermelha, uma músicista extremamente poderosa.
+
+Bethoven: Vocês são os escolhidos da profecia da música suprema,
+os destinados a libertar o poder musical para o mundo novamente.
+
+Bethoven: Como o último dos 12 grandes músicos, é minha tarefa
+guiar vocês, os escolhidos.
+
+*Player retoma movimento*
+*Sprite secundária desaparece*
+[aparece tutorial escrito em cima da tela a partir de agora]
+
+Bethoven: Não se preocupem, tenho certeza que os escolhidos irão
+aprender surpreendentemente fácil as técnicas que ensinarei.
+
+Bethoven: Para se mexer para os lados, aperte (esquerda, direita)
+Para pular, aperte (espaço).
+
+Bethoven: Você está no modo violão, uma arma musical versátil e razoavelmente
+poderosa. 
+
+Bethoven: Aperte (z) para atirar.
+
+*espera player atirar e parar de atirar*
+
+Bethoven: Ótimo!
+
+Bethoven: Os tiros sairão na direção que você estiver olhando. 
+Você também pode apertar (cima) ou (baixo) para atirar para cima ou para baixo.
+Tente agora.
+
+*espera player atirar pra cima e pra baixo*
+
+Bethoven: Ótimo!
+
+Bethoven: Durante o modo violão, você tem a habilidade de posicionar uma caixa de som
+apertando X, aperte X.
+
+*espera caixa de som ser summonada*
+
+Bethoven: Ela dura 6 segundos, e enquanto estiver viva, todos os tiros do violão saem dela.
+
+*espera player atirar primeiro tiro*
+*após isso, o tempo da caixa de som começa a passar*
+
+Bethoven: Isso pode ser muito útil ou não em algumas situações. A depender da situação,
+se preferir, pode apertar X de novo para fazê-la desaparecer.
+
+Bethoven: Esta é a sua barra de mana. 
+*Aí a gente faz alguma coisa dele destacando a barra de mana de alguma forma*
+Bethoven: Ela enche com o tempo. 
+*fazemos ela encher rapidão só pra demonstração*
+
+Bethoven: Quando estiver cheia, você pode apertar (C) para ativar o especial do piano.
+
+*Player aperta C e muda de personagem (por enquanto deixamos ele invulneravel pra sempre)*
+
+Bethoven: Enquanto estiver no modo pianista, você estará invulnerável.
+* invoca um monte de tiro pra mostrar que ele não leva dano *
+
+Bethoven: Ao apertar (Z) ou segurar, você invoca e atira com seu piano
+
+Bethoven: O modo piano dura um máximo de 3 segundos, mas você pode sair antes apertando C de novo.
+
+Bethoven: Vocês estão prontos. Agora vão! 
+	Restaurem a música do mundo!!
+

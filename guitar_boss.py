@@ -1,6 +1,8 @@
 from PPlay.sprite import Sprite
 from boss_mae import BossClasseMae
+from mini_game import MiniGame
 from teleguiados import TiroTeleguiado
+from PPlay.sound import *
 
 
 class BossGuitarra(BossClasseMae):
@@ -25,7 +27,7 @@ class BossGuitarra(BossClasseMae):
         # morte
         "dying_right": Sprite("Assets/boss_guitar/dying_right.png", 2),
         "dying_left": Sprite("Assets/boss_guitar/dying_left.png", 2),
-        "explosion" : Sprite("Assets/boss_guitar/explosion.png", 19)
+        "explosion": Sprite("Assets/boss_guitar/explosion.png", 19)
     }
     sprites["arriving_left"].set_total_duration(0.05)
     sprites['playing_left'].set_total_duration(0.4)
@@ -42,39 +44,80 @@ class BossGuitarra(BossClasseMae):
     hitbox.set_position(-9999, -9999)
     gravity = 4500
     cooldown_tiro = 3
+    musica = Sound("Assets/boss_guitar/master-of-puppets.ogg")
+    musica.loop = True
+
+    @classmethod
+    def reset_class(cls):
+        cls.sprites = {
+            # parada
+            "idle_right": Sprite('Assets/boss_guitar/still_right.png', 20),
+            "idle_left": Sprite('Assets/boss_guitar/still_left.png', 20),
+            # invocando microfone
+            "swing_summon_right": Sprite("Assets/boss_guitar/summon_left.png", 6),
+            "swing_summon_left": Sprite("Assets/boss_guitar/summon_right.png", 6),
+            # girando microfone
+            "swinging_left": Sprite("Assets/boss_guitar/swinging_left.png", 11),
+            "swinging_right": Sprite("Assets/boss_guitar/swinging_right.png", 11),
+            # tocando pra cima (ataque meteoro)
+            "meteoro_right": Sprite("Assets/boss_guitar/meteoro_right.png", 4),
+            "meteoro_left": Sprite("Assets/boss_guitar/meteoro_left.png", 4),
+            # tocando agachada
+            "playing_right": Sprite("Assets/boss_guitar/playing_right.png", 6),
+            "playing_left": Sprite("Assets/boss_guitar/playing_left.png", 6),
+            # arriving
+            "arriving_left": Sprite("Assets/boss_guitar/falling.png", 2),
+            # morte
+            "dying_right": Sprite("Assets/boss_guitar/dying_right.png", 2),
+            "dying_left": Sprite("Assets/boss_guitar/dying_left.png", 2),
+            "explosion": Sprite("Assets/boss_guitar/explosion.png", 19)
+        }
+        cls.sprites["arriving_left"].set_total_duration(0.05)
+        cls.sprites['playing_left'].set_total_duration(0.4)
+        cls.sprites['swing_summon_left'].set_total_duration(2)
+        cls.sprites['swing_summon_left'].loop = False
+        cls.sprites['swinging_left'].set_total_duration(0.7)
+        cls.sprites['swinging_right'].set_total_duration(0.7)
+        cls.sprites['meteoro_left'].set_total_duration(0.3)
+        cls.sprites['dying_left'].set_total_duration(0.3)
+        cls.sprites['explosion'].set_total_duration(1000)
+        cls.sprites['explosion'].loop = False
+        cls.hitbox = Sprite("Assets/boss_guitar/hitbox.png")
+        # hitbox_microfone = Sprite("Assets/boss_guitar/hitbox_microfone.png")
+        cls.hitbox.set_position(-9999, -9999)
+        cls.gravity = 4500
+        cls.cooldown_tiro = 3
+        cls.musica = Sound("Assets/boss_guitar/master-of-puppets.ogg")
+        cls.musica.loop = True
+        cls.musica.stop()
 
     def __init__(self, janela, player=None):
-        super().__init__(10000, 10000)
+        super().__init__(janela, player)
         self.sprite_atual = self.sprites["arriving_left"]
-        self.janela = janela
-        self.teclado = janela.get_keyboard()
         self.is_imune = True
         self.is_arriving = False
         self.sprite_atual.play()
-        self.vely = self.velx = 0
-        self.aceleracao_x = 0
         self.direction = -1
         self.is_falling = False
-        self.player = player
-        self.cronometro_animacao = 0
+
         self.is_idle = False
         self.is_playing = False
         self.is_summoning = False
         self.is_swinging = False
         self.is_raining = False
         self.is_dying = False
-        self.is_mini_game_on = False
-        self.is_mini_game_done = False
         self.mini_game_finished = False
+
         self.looking_direction = 'left'
         self.cronometro_still = 0
         self.last_position = (self.hitbox.x, self.hitbox.y)
         self.m_pressed_past = False
-        self.is_finished = False
         self.cronometro_tiro = 2
         self.lista_tiros = []
         self.max_teleguiados = 5
 
+        self.mini_game = None
+        self.boss_final = True
     def spawn(self):
         self.reset()
         self.health_atual = self.max_health
@@ -92,7 +135,7 @@ class BossGuitarra(BossClasseMae):
         self.is_finished = False
 
     def reset(self):
-        super().__init__(10000, 10000)
+        super().__init__(self.janela, self.player)
         self.sprite_atual = self.sprites["arriving_left"]
         self.is_imune = True
         self.is_arriving = False
@@ -113,29 +156,28 @@ class BossGuitarra(BossClasseMae):
         self.cronometro_still = 0
         self.last_position = (self.hitbox.x, self.hitbox.y)
 
-    def feel_gravity(self):
-        if self.is_falling is True:
-            self.vely -= self.gravity * self.janela.delta_time()
-
-    def apply_motion(self):
-        self.last_position = (self.hitbox.x, self.hitbox.y)
-        self.hitbox.y -= self.vely * self.janela.delta_time()
-        self.hitbox.x += self.velx * self.direction * self.janela.delta_time()
-
     def update(self):
+        if self.player.healthbar.health_atual <= 0:
+            self.musica.fadeout(800)
         self.cheat_hit()
         # print(f"{self.vely}")
         if self.is_arriving:
             self.hitbox.x -= 1000 * self.janela.delta_time()
         self.feel_gravity()
         self.apply_motion()
-
+        if not self.mini_game and self.player:
+            self.mini_game = MiniGame(self.janela, self.player, self)
+        if self.is_mini_game_on:
+            self.mini_game.config()
+            self.mini_game.draw_elements()
+            self.mini_game.check_events()
         # Parada
         if self.is_idle:
             self.cronometro_still += self.janela.delta_time()
             if self.cronometro_still >= 2:
                 self.is_idle = False
                 self.is_playing = True
+                self.musica.play()
                 self.cronometro_still = 0
                 self.cronometro_animacao = 0
                 self.sprite_atual = self.sprites['playing_left']
@@ -160,6 +202,7 @@ class BossGuitarra(BossClasseMae):
                 TiroTeleguiado.lista_pequenas = []
                 self.is_playing = False
                 self.is_dying = True
+                self.musica.fadeout(2000)
                 self.cronometro_animacao = 0
             self.lista_tiros = TiroTeleguiado.lista_pequenas
 
@@ -206,21 +249,7 @@ class BossGuitarra(BossClasseMae):
             self.cooldown_tiro = 1.5
             self.is_mini_game_done = False
             self.mini_game_finished = True
-       
-    def update_frame(self):
-        if self.is_started:
-            duracao = self.sprite_atual.get_total_duration()
-            qtdframes = self.sprite_atual.get_final_frame()
-            intervalo = duracao / qtdframes
-            # print(f'Duracao: {duracao:.2f}, qtdframes: {qtdframes}, cronometro: {self.cronometro_animacao:.2f}')
-            self.cronometro_animacao += self.janela.delta_time()
-            self.sprite_atual.set_curr_frame((self.cronometro_animacao // intervalo) % qtdframes)
-            if self.sprite_atual == self.sprites["meteoro_left"]:
-                print(f'sprite: meteoro_left, duracao: {duracao:.2f}, qtdframes: {qtdframes}')
-            if self.sprite_atual.loop is False and \
-                    self.cronometro_animacao // intervalo >= self.sprite_atual.get_final_frame():
-                self.sprite_atual.set_curr_frame(self.sprite_atual.get_final_frame() - 1)
-            
+
     def calibrar_posicao_sprite(self):
         if not self.is_swinging:
             diferenca_hitbox_y = abs(self.hitbox.height - self.sprite_atual.height)
@@ -233,32 +262,3 @@ class BossGuitarra(BossClasseMae):
             else:
                 self.sprite_atual.x = self.hitbox.x - 180
             self.sprite_atual.y = self.hitbox.y - 120
-
-    def draw_boss(self):
-        # print(self.hitbox.x, self.hitbox.y, self.vely)
-        if self.is_started and not self.is_finished:
-            self.janela.draw_text(f'{self.health_atual}', self.janela.width * 5 / 10, self.janela.height * 1 / 12, 30,
-                                  (255, 255, 80))
-            self.calibrar_posicao_sprite()
-            self.update_frame()
-            self.sprite_atual.draw()
-            self.draw_healthbar()
-
-        if self.is_dying:
-            if self.hitbox.y > 200:
-                self.hitbox.y -= 50 * self.janela.delta_time()
-            else:
-                if self.is_started:
-                    self.sprites['explosion'].set_position(self.sprite_atual.x - 80 , self.sprite_atual.y - 80)
-                    self.sprites['explosion'].update()
-                    self.sprites['explosion'].draw()
-                    if self.sprites['explosion'].get_curr_frame() == 4:
-                        self.is_finished = True
-                    elif self.sprites['explosion'].get_final_frame() - 1\
-                            == self.sprites['explosion'].get_curr_frame():
-                            self.is_started = False
-
-    def cheat_hit(self):
-        if not self.teclado.key_pressed('m') and self.m_pressed_past and not self.is_imune:
-            self.levar_dano(self.max_health * 0.05)
-        self.m_pressed_past = self.teclado.key_pressed('m')
