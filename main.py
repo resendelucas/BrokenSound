@@ -25,10 +25,10 @@ while True:
     fps = None
     # janela = Window(1365, 768)
     janela = Window(1365, 768)
-    boss_atual = BossPiano(janela)
+    boss_atual = BossGuitarra(janela)
     tutorial = FaseTutorial(janela)
     # mapa_atual = Fase1x(janela, boss_atual)
-    mapa_atual = Fase2(janela, boss_atual)
+    mapa_atual = Fase1(janela, boss_atual)
     # mapa_atual.inicializar_plataformas()
     player = Player(janela, mapa_atual, 'piano')
     boss_atual.set_player(player)
@@ -40,7 +40,7 @@ while True:
     janela.update()
     setinha = Sprite("Assets/imagens/arrow.png")
     setinha.set_position(janela.width - 60, janela.height - 150)
-
+    tutorial.is_done = True
     while not menu.playing:
         janela.update()
         menu.check_events()
@@ -88,10 +88,12 @@ while True:
         # draws
         player.hitbox.draw()  # draw visualmente inútil, já que é antes do mapa, mas importante pro c. perfect funcionar
         mapa_atual.draw_elements()
-        player.draw_player()
+        if not mapa_atual.over:
+            player.draw_player()
         if player.caixa_de_som:
             player.caixa_de_som.draw_sprite_and_healthbar()
-        Plataforma.draw_plataformas(janela)
+        if not mapa_atual.over:
+            Plataforma.draw_plataformas(janela)
         boss_atual.draw_boss()
         player.check_hit_boss(boss_atual, Skeleton.lista_inimigos)
         Tiro.draw_tiros(janela)
@@ -106,7 +108,8 @@ while True:
         if player.healthbar.health_atual <= 0:
             menu.you_died_screen()
 
-        player.draw_hud()
+        if not mapa_atual.over:
+            player.draw_hud()
 
         # Troca de fase
         if boss_atual.is_finished and not boss_atual.boss_final:

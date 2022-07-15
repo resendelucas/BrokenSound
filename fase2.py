@@ -16,6 +16,7 @@ class Fase2:
         self.boss = boss
         self.plataformas = []
         self.Plataforma_classe = Plataforma
+        self.over = False
         self.inicializar_plataformas()
 
     def draw_elements(self):

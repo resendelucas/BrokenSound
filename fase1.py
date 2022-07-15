@@ -15,6 +15,7 @@ class Fase1:
         self.boss = boss
         self.plataformas = []
         self.Plataforma_classe = Plataforma
+        self.over = False
         self.inicializar_plataformas()
 
     def draw_elements(self):
@@ -23,8 +24,10 @@ class Fase1:
                 self.background.x += 50 * self.janela.delta_time()
             if self.background.y < 0:
                 self.background.y += 50 * self.janela.delta_time()
+            self.over = True
         self.background.draw()
-        self.floor.draw()
+        if not self.over:
+            self.floor.draw()
 
     def try_landing_boss(self):
         if self.boss.hitbox.y + self.boss.hitbox.height > self.floor.y and self.boss.is_falling:
