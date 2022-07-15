@@ -25,10 +25,10 @@ while True:
     fps = None
     # janela = Window(1365, 768)
     janela = Window(1365, 768)
-    boss_atual = BossGuitarra(janela)
+    boss_atual = BossPiano(janela)
     tutorial = FaseTutorial(janela)
     # mapa_atual = Fase1x(janela, boss_atual)
-    mapa_atual = Fase1(janela, boss_atual)
+    mapa_atual = Fase2(janela, boss_atual)
     # mapa_atual.inicializar_plataformas()
     player = Player(janela, mapa_atual, 'piano')
     boss_atual.set_player(player)
@@ -40,7 +40,7 @@ while True:
     janela.update()
     setinha = Sprite("Assets/imagens/arrow.png")
     setinha.set_position(janela.width - 60, janela.height - 150)
-    tutorial.is_done = True
+
     while not menu.playing:
         janela.update()
         menu.check_events()
