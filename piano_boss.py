@@ -132,6 +132,13 @@ class BossPiano(BossClasseMae):
                     self.is_mini_game_done = True
                     Skeleton.kill_all()
                     self.cronometro_animacao = 0
+
+            if self.player.healthbar.health_atual <= 0:
+                if self.musica1.is_playing():
+                    self.musica1.fadeout(800)
+                if self.musica2.is_playing:
+                    self.musica2.fadeout(800)
+
         self.feel_gravity()
         self.apply_motion()
 
