@@ -11,16 +11,17 @@ from skeletons import Skeleton
 from teleguiados import TiroTeleguiado
 from tiros_player import Tiro
 from fase_tutorial import FaseTutorial
+from PPlay.sprite import *
 
 frames_acumulados = 0
 tempo_acumulado = 0
 fps = None
 # janela = Window(1365, 768)
 janela = Window(1365, 768)
-boss_atual = BossPiano(janela)
+boss_atual = BossGuitarra(janela)
 tutorial = FaseTutorial(janela)
 # mapa_atual = Fase1x(janela, boss_atual)
-mapa_atual = Fase2(janela, boss_atual)
+mapa_atual = Fase1(janela, boss_atual)
 # mapa_atual.inicializar_plataformas()
 player = Player(janela, mapa_atual, 'piano')
 boss_atual.set_player(player)
@@ -29,9 +30,10 @@ menu = Menu(janela)
 menu.playing = False
 teclado = janela.get_keyboard()
 janela.update()
-
+tutorial_done = True
+setinha = Sprite("Assets/imagens/arrow.png")
+setinha.set_position(janela.width - 60, janela.height - 150)
 while True:
-    tutorial.run_tutorial()
     # print(boss_atual.sprites["summoner_arriving"] == boss_atual.sprite_atual)
     frames_acumulados += 1
     tempo_acumulado += janela.delta_time()
@@ -46,6 +48,9 @@ while True:
         menu.check_events()
         menu.draw_menu()
     else:
+        if not tutorial_done:
+            tutorial.run_tutorial()
+        tutorial_done = True
         # inputs
         boss_atual.cheat_hit()
         if teclado.key_pressed("f"):
@@ -103,7 +108,8 @@ while True:
         player.draw_hud()
 
         # Troca de fase
-        if boss_atual.is_finished:
+        if boss_atual.is_finished and not boss_atual.boss_final:
+            setinha.draw()
             if player.hitbox.x > janela.width - 50:
                 mapa_atual.limpar_plataformas()
                 boss_atual = BossGuitarra(janela)

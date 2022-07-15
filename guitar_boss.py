@@ -2,6 +2,7 @@ from PPlay.sprite import Sprite
 from boss_mae import BossClasseMae
 from mini_game import MiniGame
 from teleguiados import TiroTeleguiado
+from PPlay.sound import *
 
 
 class BossGuitarra(BossClasseMae):
@@ -43,6 +44,9 @@ class BossGuitarra(BossClasseMae):
     hitbox.set_position(-9999, -9999)
     gravity = 4500
     cooldown_tiro = 3
+    musica = Sound("Assets/boss_guitar/master-of-puppets.ogg")
+    musica.loop = True
+
 
     def __init__(self, janela, player=None):
         super().__init__(janela, player)
@@ -70,7 +74,7 @@ class BossGuitarra(BossClasseMae):
         self.max_teleguiados = 5
 
         self.mini_game = None
-
+        self.boss_final = True
     def spawn(self):
         self.reset()
         self.health_atual = self.max_health
@@ -128,6 +132,7 @@ class BossGuitarra(BossClasseMae):
             if self.cronometro_still >= 2:
                 self.is_idle = False
                 self.is_playing = True
+                self.musica.play()
                 self.cronometro_still = 0
                 self.cronometro_animacao = 0
                 self.sprite_atual = self.sprites['playing_left']
@@ -152,6 +157,7 @@ class BossGuitarra(BossClasseMae):
                 TiroTeleguiado.lista_pequenas = []
                 self.is_playing = False
                 self.is_dying = True
+                self.musica.fadeout(2000)
                 self.cronometro_animacao = 0
             self.lista_tiros = TiroTeleguiado.lista_pequenas
 

@@ -14,7 +14,7 @@ class Chao(GameImage):
         self.buracos = buracos
 
     def try_landing_player(self, player):
-        if player.hitbox.y + player.hitbox.height >= self.y:
+        if player.hitbox.y + player.hitbox.height > self.y:
             entity_no_buraco = False
             ''' # A ser implementado
             if self.buracos:

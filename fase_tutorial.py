@@ -23,9 +23,10 @@ class FaseTutorial:
 
     def __init__(self, janela: Window):
         self.janela = janela
-        self.floor = Chao('floor.png')
-        self.floor.y = janela.height-18
-        self.bethoven.set_position(196, 675)
+        self.floor = Chao('floorcasa.png')
+        self.floor.y = janela.height - self.floor.height
+        print('chao:',self.floor.y)
+        self.bethoven.set_position(209, 590)
         self.player = Player(janela, self, 'violao')
         self.player2 = Player(janela, self, 'piano')
         self.player.hitbox.set_position(278, 400)
@@ -39,6 +40,7 @@ class FaseTutorial:
         self.player_can_shoot = False
         self.player_can_soltar_caixa = False
         self.draw_player_hud = False
+        self.player_can_leave = False
         # self.can_change
 
     def passar_dialogos(self, dialogos: dict, numero_dialogo: int):
@@ -121,6 +123,7 @@ class FaseTutorial:
         while self.is_running:
             # draws fundo
             self.janela.update()
+            self.floor.draw()
             self.janela.set_background_color((0, 0, 0))
             self.fundo.draw()
             # updates basicos
@@ -129,16 +132,14 @@ class FaseTutorial:
             # updates específicos à parte do tutorial
             if self.is_player_spawning:
                 dialogos_introducao['dialogo1'].aparecer()
-                # print(f'{self.player.hitbox.y}, {self.janela.height}, {260}, {self.player.hitbox.height}')
-                # print(self.player.hitbox.y, self.player.hitbox.y < self.janela.height - 260 - self.player.hitbox.height)
                 # fazendo cairem devagar
                 # se player2 não pisou no chao
-                if self.player2.hitbox.y < self.janela.height - 18 - self.player2.hitbox.height:
+                if self.player2.hitbox.y < self.janela.height - self.floor.height - self.player2.hitbox.height:
                     self.player2.hitbox.y -= -50 * self.janela.delta_time()
                     self.player2.changecharacter('piano')
                     self.player2.sprite_atual = self.player2.sprites['piano']['still_right']
                 # se player não pisou no chão
-                if self.player.hitbox.y < self.janela.height - 18 - self.player.hitbox.height:
+                if self.player.hitbox.y < self.janela.height - self.floor.height - self.player.hitbox.height:
                     self.player.changecharacter('violao')
                     self.player.hitbox.y -= -50 * self.janela.delta_time()
                     self.player.sprite_atual = self.player.sprites['violao']['still_left']
@@ -229,6 +230,9 @@ class FaseTutorial:
                     if self.player.instrumento == 'piano' and self.teclado.key_pressed('c'):
                         dialogos_tutorial['dialogo13'].desaparecer()
                         dialogos_tutorial['dialogo14'].aparecer()
+                if dialogos_tutorial['dialogo14'].is_finished:
+                    self.player_can_leave = True
+                    
 
                 # gravidade
                 self.player.feel_gravity()
@@ -245,15 +249,17 @@ class FaseTutorial:
                         self.player.caixa_de_som = None
                     Tiro.update_tiros(self.janela)
 
-                # equivalente ao try landing
-                if self.player.hitbox.y > self.janela.height - 18 - self.player.hitbox.height:
-                    self.player.hitbox.y = self.janela.height - 18 - self.player.hitbox.height
-                    self.player.is_falling = False
-                    self.player.can_jump = True
-
+            # equivalente ao try landing
+            print(self.player.hitbox.y + self.player.hitbox.height,'a')
+            self.floor.try_landing_player(self.player)
+            print(self.player.hitbox.y + self.player.hitbox.height, 'b')
             for key in self.pressed_past.keys():
                 self.pressed_past[key] = self.teclado.key_pressed(key)
-
+            if self.player.hitbox.x + self.player.hitbox.width >= self.fundo.x + self.fundo.width:
+                if self.player_can_leave:
+                    return
+                else:
+                    self.player.hitbox.x = self.player.last_position[0]
             if self.player.caixa_de_som and self.player_can_soltar_caixa:
                 self.player.caixa_de_som.draw_sprite_and_healthbar()
             self.bethoven.draw()

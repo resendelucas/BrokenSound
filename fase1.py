@@ -7,10 +7,10 @@ from player import Player
 class Fase1:
     def __init__(self, janela, boss):
         self.janela = janela
-        self.background = GameImage("Assets/imagens/Skies/background-2.png")
+        self.background = GameImage("Assets/imagens/Skies/arvore_teste.png")
         self.floor = Chao("floor.png")
         self.floor.y = self.janela.height - self.floor.height
-        self.boss_x_start = -700
+        self.boss_x_start = -450
         self.boss = boss
         self.plataformas = []
         self.Plataforma_classe = Plataforma

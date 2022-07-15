@@ -4,7 +4,7 @@ from skeletons import Skeleton
 from gaiola import Gaiola
 from minigame_teclas import MiniGameTeclas
 from obeliscos import Obelisco
-
+from PPlay.sound import *
 class BossPiano(BossClasseMae):
     sprites = {
         "summoner_playing": Sprite("Assets/boss_piano/boss_basic.png", 25),
@@ -23,6 +23,11 @@ class BossPiano(BossClasseMae):
 
     cooldown_value = 2
     cooldown_atual = 0
+    musica1 = Sound("Assets/boss_piano/spooky.ogg")
+    musica1.loop = True
+    musica2 = Sound("Assets/boss_piano/musica-boss-equeleto2.ogg")
+    musica2.loop = True
+
 
     def __init__(self, janela):
         super().__init__(janela)
@@ -35,6 +40,7 @@ class BossPiano(BossClasseMae):
         self.mini_game = None
         self.obeliscos = []
         self.plataformas_obeliscos = None
+        self.boss_final = False
 
     def spawn(self):
         self.is_started = True
@@ -57,6 +63,7 @@ class BossPiano(BossClasseMae):
                     if self.cronometro_still > 2:
                         self.cronometro_still = 0
                         self.is_playing = True
+                        self.musica1.play()
                         self.sprite_atual = self.sprites['basic_playing']
                         self.is_arriving = False
                 return
@@ -70,6 +77,8 @@ class BossPiano(BossClasseMae):
                     self.hitbox.y = -9999
                     self.sprite_atual = self.sprites['summoner_playing']
                     self.is_mini_game_on = True
+                    self.musica1.fadeout(600)
+                    self.musica2.play()
                     self.gaiola = Gaiola(self.player)
                     self.mini_game = MiniGameTeclas(self.gaiola)
 
@@ -89,13 +98,14 @@ class BossPiano(BossClasseMae):
                     self.spawn_esqueletos()
                 if self.is_imune and not self.is_dying:
                     self.levar_dano(-1000 * self.janela.delta_time())
-                    if self.health_ratio > 1:
+                    if self.health_ratio > 0.5:
                         self.health_ratio = 1
-                        self.health_atual = self.max_health
+                        self.health_atual = self.max_health * 0.5
                     self.health_color = (255, 0, 255)
                 Obelisco.update()
                 if self.health_ratio <= 0:
                     self.is_dying = True
+                    self.musica2.fadeout(2000)
                     self.is_mini_game_done = True
                     Skeleton.kill_all()
                     self.cronometro_animacao = 0

@@ -9,7 +9,7 @@ from skeletons import Skeleton
 class Fase2:
     def __init__(self, janela, boss):
         self.janela = janela
-        self.background = GameImage("Assets/imagens/Skies/background-1.png")
+        self.background = GameImage("Assets/imagens/Skies/igreja-fundo.png")
         self.floor = Chao("floor.png")
         self.floor.y = self.janela.height - self.floor.height
         self.boss_x_start = -700

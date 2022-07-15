@@ -22,7 +22,7 @@ class Menu:
         self.options_button.set_position(300, 440)
         self.leave_button = Sprite("Assets/menu/sair.png", 2)
         self.leave_button.set_position(320, 540)
-        self.background = GameImage("Assets/menu/menu_bg.png")
+        self.background = GameImage("Assets/menu/menu_bg.jpg")
 
     def check_click(self):
         if self.click_cooldown < 0.2:
