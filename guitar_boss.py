@@ -157,6 +157,8 @@ class BossGuitarra(BossClasseMae):
         self.last_position = (self.hitbox.x, self.hitbox.y)
 
     def update(self):
+        if self.player.healthbar.health_atual <= 0:
+            self.musica.fadeout(800)
         self.cheat_hit()
         # print(f"{self.vely}")
         if self.is_arriving:

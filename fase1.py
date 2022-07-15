@@ -7,7 +7,8 @@ from player import Player
 class Fase1:
     def __init__(self, janela, boss):
         self.janela = janela
-        self.background = GameImage("Assets/imagens/Skies/arvore_teste.png")
+        self.background = GameImage("Assets/imagens/Skies/arvore-final.png")
+        self.background.set_position(0,-620)
         self.floor = Chao("floor.png")
         self.floor.y = self.janela.height - self.floor.height
         self.boss_x_start = -450
@@ -17,6 +18,11 @@ class Fase1:
         self.inicializar_plataformas()
 
     def draw_elements(self):
+        if self.boss.is_finished:
+            if self.background.x < 0:
+                self.background.x += 50 * self.janela.delta_time()
+            if self.background.y < 0:
+                self.background.y += 50 * self.janela.delta_time()
         self.background.draw()
         self.floor.draw()
 

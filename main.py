@@ -105,6 +105,7 @@ while True:
 
         if player.healthbar.health_atual <= 0:
             menu.you_died_screen()
+
         player.draw_hud()
 
         # Troca de fase
