@@ -1,6 +1,8 @@
+from random import randint
+
 from PPlay.sprite import Sprite
 from gaiola import Gaiola
-from random import randint
+
 
 class MiniGameTeclas:
     player = None
@@ -8,6 +10,14 @@ class MiniGameTeclas:
     gravity = 50
     teclas = []
     cronometro_cair_value = 2
+
+    @classmethod
+    def reset_class(cls):
+        cls.player = None
+        cls.caminho = 'Assets/boss_piano/gaiola/tecla_'
+        cls.gravity = 50
+        cls.teclas = []
+        cls.cronometro_cair_value = 2
 
     def __init__(self, gaiola: Gaiola):
         self.gaiola = gaiola
@@ -52,7 +62,7 @@ class MiniGameTeclas:
                 tecla.is_falling = True
             return
         while len(self.teclas_restantes) != 2:
-            i = randint(0, len(self.teclas_restantes)-1)
+            i = randint(0, len(self.teclas_restantes) - 1)
 
             self.teclas_restantes[i].is_falling = True
             self.teclas_restantes[i].vely = 0
@@ -104,4 +114,3 @@ class MiniGameTeclas:
         self.update_teclas()
         if self.gaiola.y < 676 - self.gaiola.height:
             self.posicionar_teclas_x()
-

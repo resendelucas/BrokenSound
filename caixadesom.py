@@ -19,6 +19,13 @@ class CaixaDeSom(Sprite):
     caminho_sprites["right"] = 'Assets/caixadesom/sprite_right.png'
     caminho_sprites["left"] = 'Assets/caixadesom/sprite_left.png'
 
+    @classmethod
+    def reset_class(cls):
+        Window(1365, 768)
+        cls.caminho_sprites = dict()
+        cls.caminho_sprites["right"] = 'Assets/caixadesom/sprite_right.png'
+        cls.caminho_sprites["left"] = 'Assets/caixadesom/sprite_left.png'
+
     def __init__(self, direction: str, player_hitbox: Sprite, janela: Window, lifetime: int = 6, max_lifetime: int = 6):
         super().__init__(self.caminho_sprites[direction], 3)
         self.set_position(player_hitbox.x, player_hitbox.y)

@@ -11,6 +11,16 @@ class TiroTeleguiado(Sprite):
     aceleracao = 200
     lista_pequenas = []
 
+    @classmethod
+    def reset_class(cls):
+        cls.janela = Window(1365, 768)
+        cls.caminho_sprite = f'Assets/projeteis/esfera_teleguiada_pequena.png'
+
+        cls.velocidade_max_pequena = 700
+        cls.maxlifetime_pequena = 1000
+        cls.aceleracao = 200
+        cls.lista_pequenas = []
+
     def __init__(self, sprite_boss, player):
         super().__init__(self.caminho_sprite)
         self.x = sprite_boss.x + 115

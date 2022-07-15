@@ -51,6 +51,55 @@ class Player:
                         "e": False,
                         "r": False, }
 
+    @classmethod
+    def reset_class(cls):
+        # sprites visuais:
+        Window(1365, 768)
+        cls.instrumento = 'violao'
+        cls.proximo_instrumento = {'violao': 'piano',
+                                   'piano': 'violao'}
+        cls.sprites = {'violao': {"walk_right": Sprite(f"Assets/character/violao/walking/walk_right.png", 6),
+                                  'walk_left': Sprite(f"Assets/character/violao/walking/walk_left.png", 6),
+                                  'walk_attack_right': Sprite(f"Assets/character/violao/walking/walk_attack_right.png",
+                                                              6),
+                                  'walk_attack_left': Sprite(f"Assets/character/violao/walking/walk_attack_left.png",
+                                                             6),
+                                  'playing_right': Sprite(f"Assets/character/violao/parado/attack_right.png", 4),
+                                  'playing_left': Sprite(f"Assets/character/violao/parado/attack_left.png", 4),
+                                  'still_right': Sprite(f"Assets/character/violao/parado/player_still_right.png"),
+                                  'still_left': Sprite(f"Assets/character/violao/parado/player_still_left.png")},
+                       'piano': {"walk_right": Sprite(f"Assets/character/piano/walking/walk_right.png", 6),
+                                 'walk_left': Sprite(f"Assets/character/piano/walking/walk_left.png", 6),
+                                 'playing_right': Sprite(f"Assets/character/piano/parado/attack_right.png", 2),
+                                 'playing_left': Sprite(f"Assets/character/piano/parado/attack_left.png", 2),
+                                 'still_right': Sprite(f"Assets/character/piano/parado/player_still_right.png", 4),
+                                 'still_left': Sprite(f"Assets/character/piano/parado/player_still_left.png", 4),
+                                 'charging_left': Sprite(f"Assets/character/piano/parado/charging_left.png", 6),
+                                 'charging_right': Sprite(f"Assets/character/piano/parado/charging_right.png", 6),
+                                 'piano_left': Sprite(f"Assets/character/piano/piano_left.png"),
+                                 'piano_right': Sprite(f"Assets/character/piano/piano_right.png"), },
+                       'changing': Sprite(f'Assets/character/changing.png', 10)}
+        # sprites usadas no backend:
+        cls.hitboxes = {'desmontado': Sprite("Assets/character/player_hitbox.png"),
+                        'montado': Sprite("Assets/character/player_hitbox_piano.png")}
+        cls.sprite_atual = cls.sprites["violao"]["walk_right"]
+        # cooldown tiros:
+        cls.cooldown_value = 0.3
+        cls.walkspeed_padrao = 200
+
+        cls.hud_instrumento_frame = Sprite("Assets/hud/hud-instrumento-frame.png")
+        cls.hud_instrumento_frame.set_position(40, 40)
+        cls.hud_instrumento_violao = Sprite("Assets/hud/hud-instrumento-violao.png")
+        cls.hud_instrumento_violao.set_position(72, 60)
+        cls.hud_instrumento_piano = Sprite("Assets/hud/hud-instrumento-piano.png")
+        cls.hud_instrumento_piano.set_position(72, 60)
+        cls.gravity = 4500
+        cls.key_pressed_past = {"x": False,
+                                "q": False,
+                                "w": False,
+                                "e": False,
+                                "r": False, }
+
     def __init__(self, janela: Window, mapa, instrumento: str):
         self.reset_instance()
 
@@ -243,13 +292,13 @@ class Player:
                 self.healthbar.perder_mana(100)
                 self.is_imune = True
                 self.cooldown_value = 0.05
-                print(self.instrumento)
+                #print(self.instrumento)
             elif self.instrumento != 'violao':
                 self.changecharacter('violao')
                 self.cooldown_value = 0.3
         if self.instrumento == 'piano' and not self.is_imune:
             self.changecharacter('violao')
-            print("Z")
+            #print("Z")
             self.cooldown_value = 0.3
 
         self.c_pressed_past = self.teclado.key_pressed('c')
@@ -322,9 +371,6 @@ class Player:
                 self.imune_cronometro = 0
         else:
             self.imune_cronometro = 0
-        if inicio != self.instrumento:
-            print(f'check events inicio :{inicio}')
-            print(f'check events fim :{self.instrumento}')
 
     def update_frame(self, sprite, ms: float = None):
         if ms:

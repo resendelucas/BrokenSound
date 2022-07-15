@@ -28,6 +28,29 @@ class BossPiano(BossClasseMae):
     musica2 = Sound("Assets/boss_piano/musica-boss-equeleto2.ogg")
     musica2.loop = True
 
+    @classmethod
+    def reset_class(cls):
+        cls.sprites = {
+            "summoner_playing": Sprite("Assets/boss_piano/boss_basic.png", 25),
+            "basic_playing": Sprite("Assets/boss_piano/boss_aprendiz_playing.png", 25),
+            "summoner_arriving": Sprite("Assets/boss_piano/summoner_arriving.png", 2),
+            "basic_arriving": Sprite("Assets/boss_piano/skeleton_aprendiz_arriving.png", 2),
+            "explosion": Sprite("Assets/boss_piano/explosion.png", 19)
+        }
+        cls.sprite_atual = cls.sprites["basic_arriving"]
+        cls.hitbox = Sprite("Assets/boss_piano/hitbox.png")
+        cls.sprites['summoner_arriving'].set_total_duration(0.2)
+        cls.sprites['summoner_playing'].set_total_duration(1.3)
+        cls.sprites['basic_arriving'].set_total_duration(0.2)
+        cls.sprites['basic_playing'].set_total_duration(1.3)
+        cls.sprites['explosion'].set_total_duration(600)
+
+        cls.cooldown_value = 2
+        cls.cooldown_atual = 0
+        cls.musica1 = Sound("Assets/boss_piano/spooky.ogg")
+        cls.musica1.loop = True
+        cls.musica2 = Sound("Assets/boss_piano/musica-boss-equeleto2.ogg")
+        cls.musica2.loop = True
 
     def __init__(self, janela):
         super().__init__(janela)
@@ -97,9 +120,9 @@ class BossPiano(BossClasseMae):
                 if self.cooldown_atual >= self.cooldown_value and len(Skeleton.lista_inimigos) < 8:
                     self.spawn_esqueletos()
                 if self.is_imune and not self.is_dying:
-                    self.levar_dano(-1000 * self.janela.delta_time())
+                    self.levar_dano(-50 * self.janela.delta_time())
                     if self.health_ratio > 0.5:
-                        self.health_ratio = 1
+                        self.health_ratio = 0.5
                         self.health_atual = self.max_health * 0.5
                     self.health_color = (255, 0, 255)
                 Obelisco.update()

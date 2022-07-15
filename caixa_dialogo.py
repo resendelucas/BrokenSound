@@ -45,7 +45,7 @@ class CaixaDialogo:
     def desaparecer(self):
         if self in self.dialogos_ativos:
             self.dialogos_ativos.remove(self)
-            print(self.lista_linhas)
+            #print(self.lista_linhas)
             self.is_finished = True
             self.is_desativado = True
 

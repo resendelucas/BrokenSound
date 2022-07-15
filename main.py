@@ -12,62 +12,54 @@ from teleguiados import TiroTeleguiado
 from tiros_player import Tiro
 from fase_tutorial import FaseTutorial
 from PPlay.sprite import *
-
-
-frames_acumulados = 0
-tempo_acumulado = 0
-fps = None
-# janela = Window(1365, 768)
-janela = Window(1365, 768)
-boss_atual = BossGuitarra(janela)
-tutorial = FaseTutorial(janela)
-# mapa_atual = Fase1x(janela, boss_atual)
-mapa_atual = Fase1(janela, boss_atual)
-# mapa_atual.inicializar_plataformas()
-player = Player(janela, mapa_atual, 'piano')
-boss_atual.set_player(player)
-player.hitbox.vely = 0
-menu = Menu(janela)
-menu.playing = False
-teclado = janela.get_keyboard()
-janela.update()
-tutorial_done = True
-setinha = Sprite("Assets/imagens/arrow.png")
-setinha.set_position(janela.width - 60, janela.height - 150)
+from boss_mae import BossClasseMae
+from gaiola import Gaiola
+from mini_game import MiniGame
+from minigame_teclas import MiniGameTeclas
+from playerhealthbar import PlayerHealthBar
 
 
 while True:
-    # print(boss_atual.sprites["summoner_arriving"] == boss_atual.sprite_atual)
-    frames_acumulados += 1
-    tempo_acumulado += janela.delta_time()
-    if tempo_acumulado > 0.3:
-        fps = frames_acumulados / tempo_acumulado
-        tempo_acumulado = frames_acumulados = 0
+    frames_acumulados = 0
+    tempo_acumulado = 0
+    fps = None
+    # janela = Window(1365, 768)
+    janela = Window(1365, 768)
+    boss_atual = BossGuitarra(janela)
+    tutorial = FaseTutorial(janela)
+    # mapa_atual = Fase1x(janela, boss_atual)
+    mapa_atual = Fase1(janela, boss_atual)
+    # mapa_atual.inicializar_plataformas()
+    player = Player(janela, mapa_atual, 'piano')
+    boss_atual.set_player(player)
+    player.hitbox.vely = 0
+    menu = Menu(janela)
+    menu.playing = False
+    tutorial.is_done = True
+    teclado = janela.get_keyboard()
     janela.update()
-    # if janela.delta_time() > 0.005:
-    #     # evita bugs de física
-    #     continue
-    if not menu.playing:
+    setinha = Sprite("Assets/imagens/arrow.png")
+    setinha.set_position(janela.width - 60, janela.height - 150)
+
+    while not menu.playing:
+        janela.update()
         menu.check_events()
         menu.draw_menu()
-    else:
-        if not tutorial_done:
+    while menu.playing:
+        # print(boss_atual.sprites["summoner_arriving"] == boss_atual.sprite_atual)
+        frames_acumulados += 1
+        tempo_acumulado += janela.delta_time()
+        if tempo_acumulado > 0.3:
+            fps = frames_acumulados / tempo_acumulado
+            tempo_acumulado = frames_acumulados = 0
+        janela.update()
+        # if janela.delta_time() > 0.005:
+        #     # evita bugs de física
+        #     continue
+        if not tutorial.is_done:
             tutorial.run_tutorial()
-        tutorial_done = True
         # inputs
         boss_atual.cheat_hit()
-        if teclado.key_pressed("f"):
-            player.vely = 50
-            boss_atual.spawn()
-            boss_atual.velx = 0
-            boss_atual.y = 0
-        if teclado.key_pressed("v"):
-            player.healthbar.mana_atual = 100
-            '''boss_atual.vely = 0
-            boss_atual.hitbox.x += 1000 * janela.delta_time()'''
-        if teclado.key_pressed("b"):
-            boss_atual.vely = 0
-            boss_atual.hitbox.x -= 1000 * janela.delta_time()
         Plataforma.colisao_cima(player)
         if player.healthbar.health_atual > 0:
             player.check_events()
@@ -124,4 +116,19 @@ while True:
                 mapa_atual = Fase1(janela, boss_atual)
                 player = Player(janela, mapa_atual, 'violao')
                 boss_atual.set_player(player)
-    janela.draw_text(f'{fps:.2f}', janela.width * 1 / 10, janela.height * 1 / 12, 30, (255, 255, 0))
+        if player.teclado.key_pressed('j'):
+            break
+    Player.reset_class()
+    BossGuitarra.reset_class()
+    BossClasseMae.reset_class()
+    Gaiola.reset_class()
+    BossPiano.reset_class()
+    Tiro.reset_class()
+    MiniGameTeclas.reset_class()
+    MiniGame.reset_class()
+    PlayerHealthBar.reset_class()
+    Obelisco.reset_class()
+    Plataforma.reset_class()
+    Player.reset_class()
+    Skeleton.reset_class()
+    TiroTeleguiado.reset_class()

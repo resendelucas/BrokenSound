@@ -12,6 +12,17 @@ class Skeleton:
     jumpspeed = 1200
     gravity = 4500
     is_imune = False
+
+    @classmethod
+    def reset_class(cls):
+        cls.janela = Window(1365, 768)
+        cls.player = None
+        cls.lista_inimigos = []
+        cls.walkspeed = 75
+        cls.jumpspeed = 1200
+        cls.gravity = 4500
+        cls.is_imune = False
+
     def __init__(self):
         self.lista_inimigos.append(self)
         self.sprites = {

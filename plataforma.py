@@ -9,6 +9,10 @@ class Plataforma(Sprite):
     width1x4 = 128
     lista = []
 
+    @classmethod
+    def reset_class(cls):
+        cls.lista = []
+
     def __init__(self, x: float, y: float, tipo_plataforma: str):
         """
         tipo_plataforma: tipos implementados : 1x4

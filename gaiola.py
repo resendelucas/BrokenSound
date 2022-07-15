@@ -7,6 +7,13 @@ class Gaiola(Sprite):
     cronometro_cair_value = 2.5
     gravidade = 900
 
+    @classmethod
+    def reset_class(cls):
+        cls.caminho_sprite = 'Assets/boss_piano/gaiola/gaiola.png'
+        cls.cronometro_cair = 0
+        cls.cronometro_cair_value = 2.5
+        cls.gravidade = 900
+
     def __init__(self, player):
         super().__init__(self.caminho_sprite)
         self.player = player

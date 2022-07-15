@@ -47,6 +47,49 @@ class BossGuitarra(BossClasseMae):
     musica = Sound("Assets/boss_guitar/master-of-puppets.ogg")
     musica.loop = True
 
+    @classmethod
+    def reset_class(cls):
+        cls.sprites = {
+            # parada
+            "idle_right": Sprite('Assets/boss_guitar/still_right.png', 20),
+            "idle_left": Sprite('Assets/boss_guitar/still_left.png', 20),
+            # invocando microfone
+            "swing_summon_right": Sprite("Assets/boss_guitar/summon_left.png", 6),
+            "swing_summon_left": Sprite("Assets/boss_guitar/summon_right.png", 6),
+            # girando microfone
+            "swinging_left": Sprite("Assets/boss_guitar/swinging_left.png", 11),
+            "swinging_right": Sprite("Assets/boss_guitar/swinging_right.png", 11),
+            # tocando pra cima (ataque meteoro)
+            "meteoro_right": Sprite("Assets/boss_guitar/meteoro_right.png", 4),
+            "meteoro_left": Sprite("Assets/boss_guitar/meteoro_left.png", 4),
+            # tocando agachada
+            "playing_right": Sprite("Assets/boss_guitar/playing_right.png", 6),
+            "playing_left": Sprite("Assets/boss_guitar/playing_left.png", 6),
+            # arriving
+            "arriving_left": Sprite("Assets/boss_guitar/falling.png", 2),
+            # morte
+            "dying_right": Sprite("Assets/boss_guitar/dying_right.png", 2),
+            "dying_left": Sprite("Assets/boss_guitar/dying_left.png", 2),
+            "explosion": Sprite("Assets/boss_guitar/explosion.png", 19)
+        }
+        cls.sprites["arriving_left"].set_total_duration(0.05)
+        cls.sprites['playing_left'].set_total_duration(0.4)
+        cls.sprites['swing_summon_left'].set_total_duration(2)
+        cls.sprites['swing_summon_left'].loop = False
+        cls.sprites['swinging_left'].set_total_duration(0.7)
+        cls.sprites['swinging_right'].set_total_duration(0.7)
+        cls.sprites['meteoro_left'].set_total_duration(0.3)
+        cls.sprites['dying_left'].set_total_duration(0.3)
+        cls.sprites['explosion'].set_total_duration(1000)
+        cls.sprites['explosion'].loop = False
+        cls.hitbox = Sprite("Assets/boss_guitar/hitbox.png")
+        # hitbox_microfone = Sprite("Assets/boss_guitar/hitbox_microfone.png")
+        cls.hitbox.set_position(-9999, -9999)
+        cls.gravity = 4500
+        cls.cooldown_tiro = 3
+        cls.musica = Sound("Assets/boss_guitar/master-of-puppets.ogg")
+        cls.musica.loop = True
+        cls.musica.stop()
 
     def __init__(self, janela, player=None):
         super().__init__(janela, player)

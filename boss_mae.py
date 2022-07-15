@@ -11,6 +11,14 @@ class BossClasseMae:
     healthbar_sprite.x = janela.width / 2 - healthbar_sprite.width / 2
     healthbar_sprite.y = 675
 
+    @classmethod
+    def reset_class(cls):
+        cls.janela = Window(1365, 768)
+        cls.player = None
+        cls.healthbar_sprite = Sprite("Assets/hud/boss-healthbar.png")
+        cls.healthbar_sprite.x = cls.janela.width / 2 - cls.healthbar_sprite.width / 2
+        cls.healthbar_sprite.y = 675
+
     def __init__(self, janela, player=None, starting_health=10000, max_health=10000):
         BossClasseMae.janela = janela
         if player:
@@ -55,8 +63,8 @@ class BossClasseMae:
     def draw_boss(self):
         # print(self.hitbox.x, self.hitbox.y, self.vely)
         if self.is_started and not self.is_finished:
-            self.janela.draw_text(f'{self.health_atual}', self.janela.width * 5 / 10, self.janela.height * 1 / 12, 30,
-                                  (255, 255, 80))
+            #self.janela.draw_text(f'{self.health_atual}', self.janela.width * 5 / 10, self.janela.height * 1 / 12, 30,
+            #                      (255, 255, 80))
             self.calibrar_posicao_sprite()
             self.update_frame()
             self.draw_healthbar()

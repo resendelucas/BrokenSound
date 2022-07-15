@@ -20,12 +20,13 @@ class FaseTutorial:
                     'up': False,
                     'down': False}
     sprites_teclas = {}
+    is_done = False
 
     def __init__(self, janela: Window):
         self.janela = janela
         self.floor = Chao('floorcasa.png')
         self.floor.y = janela.height - self.floor.height
-        print('chao:',self.floor.y)
+        #print('chao:',self.floor.y)
         self.bethoven.set_position(209, 590)
         self.player = Player(janela, self, 'violao')
         self.player2 = Player(janela, self, 'piano')
@@ -232,7 +233,7 @@ class FaseTutorial:
                         dialogos_tutorial['dialogo14'].aparecer()
                 if dialogos_tutorial['dialogo14'].is_finished:
                     self.player_can_leave = True
-                    
+
 
                 # gravidade
                 self.player.feel_gravity()
@@ -250,13 +251,14 @@ class FaseTutorial:
                     Tiro.update_tiros(self.janela)
 
             # equivalente ao try landing
-            print(self.player.hitbox.y + self.player.hitbox.height,'a')
+            #print(self.player.hitbox.y + self.player.hitbox.height,'a')
             self.floor.try_landing_player(self.player)
-            print(self.player.hitbox.y + self.player.hitbox.height, 'b')
+            #print(self.player.hitbox.y + self.player.hitbox.height, 'b')
             for key in self.pressed_past.keys():
                 self.pressed_past[key] = self.teclado.key_pressed(key)
             if self.player.hitbox.x + self.player.hitbox.width >= self.fundo.x + self.fundo.width:
                 if self.player_can_leave:
+                    FaseTutorial.is_done = True
                     return
                 else:
                     self.player.hitbox.x = self.player.last_position[0]

@@ -38,6 +38,40 @@ class Tiro(Sprite):
              "flauta": 50
              }
 
+    @classmethod
+    def reset_class(cls):
+        cls.path_tiros = f'{getcwd()}\\Assets\\projeteis'
+
+        cls.tiros = {"violao": [],
+                 "caixa_de_som": [],
+                 "flauta": [],
+                 "piano": []
+                 }
+        cls.velocidades = {"violao": 600,
+                       "caixa_de_som": 300,
+                       "flauta": 600,
+                       "piano": 600
+                       }
+        cls.max_lifetimes = {"violao": 1.5,
+                         "caixa_de_som": 3,
+                         "flauta": 1.5,
+                         "piano": 1.5
+                         }
+        cls.direcoes = {(1, 0): "right",
+                    (-1, 0): "left",
+                    (0, 1): "up",
+                    (0, -1): "down"
+                    }
+        cls.direcoes_string = {"right": (1, 0),
+                           "left": (-1, 0),
+                           "up": (0, 1),
+                           "down": (0, -1)
+                           }
+        cls.danos = {"violao": 50,
+                 "caixa_de_som": 35,
+                 "piano": 25,
+                 "flauta": 50
+                 }
     def __init__(self, tipo_tiro: str, direcao: tuple, player: Sprite):
         """
         Direção: uma tupla que indica o sinal da velocidade X e velocidade Y que o tiro terá. Idealmente -1, 0 ou 1.

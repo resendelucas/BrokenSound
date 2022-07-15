@@ -10,6 +10,15 @@ class Obelisco(Sprite):
     is_spawning = False
     is_dying = False
 
+    @classmethod
+    def reset_class(cls):
+        cls.caminho = 'Assets/boss_piano/obelisco.png'
+        cls.caminho_hitbox = 'Assets/boss_piano/obelisco_hitbox.png'
+        cls.lista = []
+        cls.is_imune = False
+        cls.is_spawning = False
+        cls.is_dying = False
+
     def __init__(self, plataforma: Sprite, janela):
         super().__init__(self.caminho, 10)
         self.hitbox = Sprite(self.caminho_hitbox)
