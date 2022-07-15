@@ -67,6 +67,8 @@ class Tiro(Sprite):
 
     @classmethod
     def update_tiros(cls, janela: Window, lista_inimigos=None, player=None):
+        if not lista_inimigos:
+            lista_inimigos = []
         for instrumento, lista_tiros in cls.tiros.items():
             for i, tiro in enumerate(lista_tiros):
                 if tiro.time_lived >= cls.max_lifetimes[instrumento]:

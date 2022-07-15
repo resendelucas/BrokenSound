@@ -13,7 +13,7 @@ class CaixaDialogo:
     width_letra = 9
     height_letra = 17
 
-    def __init__(self, lista_linhas, sprite_falando, pos_vida: float=0, direcao: str = 'right'):
+    def __init__(self, lista_linhas, sprite_falando, pos_vida: float=0, direcao: str = 'right', rabinho=True):
         self.pos_vida = pos_vida
         self.sprite_falando = sprite_falando
         self.direcao = direcao
@@ -23,7 +23,9 @@ class CaixaDialogo:
         self.total_caracteres = 0
         self.is_desativado = False
         self.is_finished = False
+        self.rabinho = rabinho
         self.cronometro_finished = 0
+
         for linha in lista_linhas:
             self.total_caracteres += len(linha)
         self.string_atual = ''
@@ -43,6 +45,8 @@ class CaixaDialogo:
     def desaparecer(self):
         if self in self.dialogos_ativos:
             self.dialogos_ativos.remove(self)
+            print(self.lista_linhas)
+            self.is_finished = True
             self.is_desativado = True
 
     def aparecer(self, pos_vida=999999):
@@ -98,40 +102,41 @@ class CaixaDialogo:
         drawrect(self.janela.screen, self.black, (self.x_base - 7, self.y_base - 7,
                                                   (self.max_chars() + 1) * self.width_letra * 1.00 + 14,
                                                   len(self.lista_linhas) * self.height_letra * 1.2 + 14))
-        # quadrado preto do rabinho 1
-        drawrect(self.janela.screen, self.black, (self.x_base + variavel_logx5 * self.width_letra,
-                                                  self.y_base + 9 + len(self.lista_linhas) * self.height_letra * 1.2,
-                                                  variavel_logx3 * self.width_letra * 3 / 10,
-                                                  variavel_logx3 * self.width_letra * 3 / 10))
-        # quadrado preto do rabinho 2
-        drawrect(self.janela.screen, self.black, (self.x_base + variavel_logx5 * self.width_letra - 5,
-                                                  self.y_base + 15 + len(
-                                                      self.lista_linhas) * self.height_letra * 1.2 + 5,
-                                                  variavel_logx3 * self.width_letra * 3 / 10,
-                                                  variavel_logx3 * self.width_letra * 2.5 / 10))
-        # quadrado preto do rabinho 3
-        drawrect(self.janela.screen, self.black, (self.x_base + variavel_logx5 * self.width_letra - 1.5,
-                                                  self.y_base + 15 + len(self.lista_linhas) * self.height_letra * 1.2,
-                                                  variavel_logx3 * self.width_letra * 3 / 10,
-                                                  variavel_logx3 * self.width_letra * 3 / 10))
+        if self.rabinho:
+            # quadrado preto do rabinho 1
+            drawrect(self.janela.screen, self.black, (self.x_base + variavel_logx5 * self.width_letra,
+                                                      self.y_base + 9 + len(self.lista_linhas) * self.height_letra * 1.2,
+                                                      variavel_logx3 * self.width_letra * 3 / 10,
+                                                      variavel_logx3 * self.width_letra * 3 / 10))
+            # quadrado preto do rabinho 2
+            drawrect(self.janela.screen, self.black, (self.x_base + variavel_logx5 * self.width_letra - 5,
+                                                      self.y_base + 15 + len(
+                                                          self.lista_linhas) * self.height_letra * 1.2 + 5,
+                                                      variavel_logx3 * self.width_letra * 3 / 10,
+                                                      variavel_logx3 * self.width_letra * 2.5 / 10))
+            # quadrado preto do rabinho 3
+            drawrect(self.janela.screen, self.black, (self.x_base + variavel_logx5 * self.width_letra - 1.5,
+                                                      self.y_base + 15 + len(self.lista_linhas) * self.height_letra * 1.2,
+                                                      variavel_logx3 * self.width_letra * 3 / 10,
+                                                      variavel_logx3 * self.width_letra * 3 / 10))
 
-        # quadrado branco do rabinho 1
-        drawrect(self.janela.screen, self.white, (self.x_base + variavel_logx5 * self.width_letra + 2,
-                                                  self.y_base + 9 + len(
-                                                      self.lista_linhas) * self.height_letra * 1.2 - 2,
-                                                  variavel_logx3 * self.width_letra * 3 / 10 - 4,
-                                                  variavel_logx3 * self.width_letra * 3 / 10))
-        # quadrado branco do rabinho 2
-        drawrect(self.janela.screen, self.white, (self.x_base + variavel_logx5 * self.width_letra - 3,
-                                                  self.y_base + 15 + len(
-                                                      self.lista_linhas) * self.height_letra * 1.2 + 5,
-                                                  variavel_logx3 * self.width_letra * 3 / 10 - 4,
-                                                  variavel_logx3 * self.width_letra * 3 / 10 - 4))
-        # quadrado branco do rabinho 3
-        drawrect(self.janela.screen, self.white, (self.x_base + variavel_logx5 * self.width_letra,
-                                                  self.y_base + 14 + len(self.lista_linhas) * self.height_letra * 1.2,
-                                                  variavel_logx3 * self.width_letra * 2.3 / 10 - 2,
-                                                  variavel_logx3 * self.width_letra * 3 / 10 - 2))
+            # quadrado branco do rabinho 1
+            drawrect(self.janela.screen, self.white, (self.x_base + variavel_logx5 * self.width_letra + 2,
+                                                      self.y_base + 9 + len(
+                                                          self.lista_linhas) * self.height_letra * 1.2 - 2,
+                                                      variavel_logx3 * self.width_letra * 3 / 10 - 4,
+                                                      variavel_logx3 * self.width_letra * 3 / 10))
+            # quadrado branco do rabinho 2
+            drawrect(self.janela.screen, self.white, (self.x_base + variavel_logx5 * self.width_letra - 3,
+                                                      self.y_base + 15 + len(
+                                                          self.lista_linhas) * self.height_letra * 1.2 + 5,
+                                                      variavel_logx3 * self.width_letra * 3 / 10 - 4,
+                                                      variavel_logx3 * self.width_letra * 3 / 10 - 4))
+            # quadrado branco do rabinho 3
+            drawrect(self.janela.screen, self.white, (self.x_base + variavel_logx5 * self.width_letra,
+                                                      self.y_base + 14 + len(self.lista_linhas) * self.height_letra * 1.2,
+                                                      variavel_logx3 * self.width_letra * 2.3 / 10 - 2,
+                                                      variavel_logx3 * self.width_letra * 3 / 10 - 2))
         # retangulo branco mais largo horizontalmente
         drawrect(self.janela.screen, self.white, (self.x_base - 7, self.y_base - 3,
                                                   (self.max_chars() + 1) * self.width_letra * 1.00 + 14,

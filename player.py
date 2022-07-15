@@ -162,23 +162,26 @@ class Player:
 
     def update_caixa_de_som(self, mapa):
         if self.caixa_de_som:
+            self.caixa_de_som.is_falling = True
             self.caixa_de_som.feel_gravity(self.gravity)
             self.caixa_de_som.apply_motion()
             self.caixa_de_som.tick_time()
             mapa.floor.try_landing_sprite(self.caixa_de_som)
-            mapa.Plataforma_classe.colisao_cima_sprite(self.caixa_de_som)
+            if hasattr(mapa, 'Plataforma_classe'):
+                mapa.Plataforma_classe.colisao_cima_sprite(self.caixa_de_som)
             if self.is_playing and self.instrumento == 'violao':
                 duracao = self.caixa_de_som.get_total_duration()
                 qtdframes = self.caixa_de_som.get_final_frame()
                 intervalo = duracao / qtdframes
-                self.caixa_de_som.set_curr_frame((self.caixa_de_som.cronometro_global // intervalo) % qtdframes)
+                self.caixa_de_som.set_curr_frame((self.caixa_de_som.cronometro // intervalo) % qtdframes)
             else:
                 self.caixa_de_som.set_curr_frame(0)
-                self.caixa_de_som.cronometro_global = 0
+                self.caixa_de_som.cronometro = 0
             if self.caixa_de_som.health_ratio == 0:
                 self.caixa_de_som = None
 
     def check_events(self) -> None:
+        inicio = self.instrumento
         """Checa inputs do player e muda as variáveis de estado de acordo."""
         # checar se está tocando música
         self.last_position[0], self.last_position[1] = self.hitbox.x, self.hitbox.y
@@ -240,11 +243,13 @@ class Player:
                 self.healthbar.perder_mana(100)
                 self.is_imune = True
                 self.cooldown_value = 0.05
+                print(self.instrumento)
             elif self.instrumento != 'violao':
                 self.changecharacter('violao')
                 self.cooldown_value = 0.3
         if self.instrumento == 'piano' and not self.is_imune:
             self.changecharacter('violao')
+            print("Z")
             self.cooldown_value = 0.3
 
         self.c_pressed_past = self.teclado.key_pressed('c')
@@ -317,6 +322,9 @@ class Player:
                 self.imune_cronometro = 0
         else:
             self.imune_cronometro = 0
+        if inicio != self.instrumento:
+            print(f'check events inicio :{inicio}')
+            print(f'check events fim :{self.instrumento}')
 
     def update_frame(self, sprite, ms: float = None):
         if ms:
@@ -327,8 +335,9 @@ class Player:
 
     def changecharacter(self, instrumento: str):
         self.changing_character = True
-        self.sprites['changing'].set_curr_frame(0)
         self.instrumento = instrumento
+        self.sprites['changing'].set_curr_frame(0)
+        self.sprite_atual = self.sprites[instrumento][f'still_{self.last_direction}']
         self.sprites['changing'].set_position(self.hitbox.x, self.hitbox.y)
         # resetando estados
         self.piano_charge = 0
@@ -353,7 +362,6 @@ class Player:
             self.update_frame(self.sprite_atual, 600)
         else:
             self.update_frame(self.sprite_atual, 800)
-        self.healthbar.draw()
         if self.changing_character and self.sprites['changing'].get_curr_frame() != 9:
             self.update_frame(self.sprites['changing'], 350)
 
@@ -378,6 +386,7 @@ class Player:
                 mapa.boss.spawn()
 
     def draw_hud(self):
+        self.healthbar.draw()
         if self.instrumento == 'violao':
             self.hud_instrumento_violao.draw()
         elif self.instrumento == 'piano':
