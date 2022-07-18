@@ -51,6 +51,8 @@ class BossGuitarra(BossClasseMae):
     musica = Sound("Assets/boss_guitar/master-of-puppets.ogg")
     musica.loop = True
 
+
+
     @classmethod
     def reset_class(cls):
         cls.sprites = {
@@ -94,6 +96,7 @@ class BossGuitarra(BossClasseMae):
         cls.musica = Sound("Assets/boss_guitar/master-of-puppets.ogg")
         cls.musica.loop = True
         cls.musica.stop()
+
         cls.sprites_individuais = {"swinging_right": [Sprite(f"Assets/boss_guitar/swinging_individuais/right_{s}.png") for s in
                                       range(1, 12)],
                    "swinging_left": [Sprite(f"Assets/boss_guitar/swinging_individuais/left_{s}.png") for s in

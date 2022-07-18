@@ -2,9 +2,10 @@ from PPlay.gameimage import *
 from chao import Chao
 from plataforma import Plataforma
 from player import Player
-
+from PPlay.sound import Sound
 
 class Fase1:
+
     def __init__(self, janela, boss):
         self.janela = janela
         self.background = GameImage("Assets/imagens/Skies/arvore-final.png")
@@ -17,6 +18,7 @@ class Fase1:
         self.Plataforma_classe = Plataforma
         self.over = False
         self.inicializar_plataformas()
+
 
     def draw_elements(self):
         if self.boss.is_finished:

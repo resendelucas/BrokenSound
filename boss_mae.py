@@ -2,7 +2,7 @@ from pygame.draw import rect as drawrect
 
 from PPlay.sprite import Sprite
 from PPlay.window import Window
-
+from PPlay.sound import Sound
 
 class BossClasseMae:
     janela = Window(1365, 768)
@@ -10,6 +10,9 @@ class BossClasseMae:
     healthbar_sprite = Sprite("Assets/hud/boss-healthbar.png")
     healthbar_sprite.x = janela.width / 2 - healthbar_sprite.width / 2
     healthbar_sprite.y = 675
+    musicafim = Sound("Assets/musicafim.ogg")
+    musicafim.loop = False
+    musicafim.set_volume(60)
 
     @classmethod
     def reset_class(cls):
@@ -18,6 +21,8 @@ class BossClasseMae:
         cls.healthbar_sprite = Sprite("Assets/hud/boss-healthbar.png")
         cls.healthbar_sprite.x = cls.janela.width / 2 - cls.healthbar_sprite.width / 2
         cls.healthbar_sprite.y = 675
+        cls.musicafim = Sound("Assets/musicafim.ogg")
+        cls.musicafim.loop = False
 
     def __init__(self, janela, player=None, starting_health=10000, max_health=10000):
         BossClasseMae.janela = janela
@@ -76,6 +81,8 @@ class BossClasseMae:
                 self.lista_sprite_atual[indice_atual].set_position(self.sprite_atual.x, self.sprite_atual.y)
                 self.lista_sprite_atual[indice_atual].draw()
         if self.is_dying:
+            if self.musicafim.is_playing() is False:
+                self.musicafim.play()
             if self.hitbox.y > 200:
                 self.hitbox.y -= 50 * self.janela.delta_time()
             else:
