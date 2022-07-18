@@ -380,6 +380,9 @@ class Player:
         sprite.update()
 
     def changecharacter(self, instrumento: str):
+        if instrumento == 'piano':
+            self.is_imune = True
+            self.imune_cronometro = 0
         self.changing_character = True
         self.instrumento = instrumento
         self.sprites['changing'].set_curr_frame(0)
