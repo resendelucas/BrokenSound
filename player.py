@@ -298,13 +298,11 @@ class Player:
                 self.healthbar.perder_mana(100)
                 self.is_imune = True
                 self.cooldown_value = 0.05
-                # print(self.instrumento)
             elif self.instrumento != 'violao':
                 self.changecharacter('violao')
                 self.cooldown_value = 0.3
         if self.instrumento == 'piano' and not self.is_imune:
             self.changecharacter('violao')
-            # print("Z")
             self.cooldown_value = 0.3
 
         self.c_pressed_past = self.teclado.key_pressed('c')

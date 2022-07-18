@@ -91,18 +91,17 @@ while True:
         mapa_atual.draw_elements()
         if not mapa_atual.over:
             player.draw_player()
-        if player.caixa_de_som:
-            player.caixa_de_som.draw_sprite_and_healthbar()
-        if not mapa_atual.over:
+            if player.caixa_de_som:
+                player.caixa_de_som.draw_sprite_and_healthbar()
             Plataforma.draw_plataformas(janela)
-        boss_atual.draw_boss()
-        player.check_hit_boss(boss_atual, Skeleton.lista_inimigos)
-        Tiro.draw_tiros(janela)
-        Skeleton.draw_esqueletos()
-        # boss_atual.hitbox.draw()
-        # print(player.hitbox.x, player.hitbox.y)
-        # print(Plataforma.lista[0].y)
-        TiroTeleguiado.draw_tiros_teleguiados()
+            boss_atual.draw_boss()
+            player.check_hit_boss(boss_atual, Skeleton.lista_inimigos)
+            Tiro.draw_tiros(janela)
+            Skeleton.draw_esqueletos()
+            # boss_atual.hitbox.draw()
+            # print(player.hitbox.x, player.hitbox.y)
+            # print(Plataforma.lista[0].y)
+            TiroTeleguiado.draw_tiros_teleguiados()
         if boss_atual.is_mini_game_on and not boss_atual.is_mini_game_done:
             boss_atual.mini_game.draw_elements()
 
