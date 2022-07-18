@@ -51,9 +51,10 @@ class BossClasseMae:
         self.boss_name = ''
 
     def cheat_hit(self):
-        if not self.teclado.key_pressed('m') and self.m_pressed_past and not self.is_imune:
+        '''if not self.teclado.key_pressed('m') and self.m_pressed_past and not self.is_imune:
             self.levar_dano(self.max_health * 0.05)
-        self.m_pressed_past = self.teclado.key_pressed('m')
+        self.m_pressed_past = self.teclado.key_pressed('m')'''
+        pass
 
     def update_frame(self):
         if self.is_started:

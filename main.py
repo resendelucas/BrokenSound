@@ -115,7 +115,7 @@ while True:
                 mapa_atual = Fase1(janela, boss_atual)
                 player = Player(janela, mapa_atual, 'violao')
                 boss_atual.set_player(player)
-        if player.teclado.key_pressed('j'):
+        if player.teclado.key_pressed('esc'):
             break
     Player.reset_class()
     BossGuitarra.reset_class()
