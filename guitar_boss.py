@@ -131,6 +131,9 @@ class BossGuitarra(BossClasseMae):
         self.mini_game = None
         self.boss_final = True
 
+        self.boss_name = 'guitarra'
+        print(self.boss_name)
+
     def spawn(self):
         self.reset()
         self.health_atual = self.max_health
@@ -146,6 +149,8 @@ class BossGuitarra(BossClasseMae):
         self.cronometro_animacao = 0
         self.cronometro_still = 0
         self.is_finished = False
+        self.boss_name = 'guitarra'
+
 
     def reset(self):
         super().__init__(self.janela, self.player)

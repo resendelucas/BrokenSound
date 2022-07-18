@@ -12,7 +12,7 @@ class BossClasseMae:
     healthbar_sprite.y = 675
     musicafim = Sound("Assets/musicafim.ogg")
     musicafim.loop = False
-    musicafim.set_volume(60)
+    musicafim.set_volume(35)
 
     @classmethod
     def reset_class(cls):
@@ -48,6 +48,7 @@ class BossClasseMae:
         self.is_mini_game_on = False
         self.is_mini_game_done = False
         self.is_sprites_individuais = False
+        self.boss_name = ''
 
     def cheat_hit(self):
         if not self.teclado.key_pressed('m') and self.m_pressed_past and not self.is_imune:
@@ -81,8 +82,10 @@ class BossClasseMae:
                 self.lista_sprite_atual[indice_atual].set_position(self.sprite_atual.x, self.sprite_atual.y)
                 self.lista_sprite_atual[indice_atual].draw()
         if self.is_dying:
-            if self.musicafim.is_playing() is False:
+            if self.musicafim.is_playing() is False and self.boss_name == 'guitarra':
                 self.musicafim.play()
+            else:
+                print(self.boss_name)
             if self.hitbox.y > 200:
                 self.hitbox.y -= 50 * self.janela.delta_time()
             else:

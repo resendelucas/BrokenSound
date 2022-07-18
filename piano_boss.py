@@ -65,6 +65,8 @@ class BossPiano(BossClasseMae):
         self.plataformas_obeliscos = None
         self.boss_final = False
 
+        self.boss_name = 'piano'
+
     def spawn(self):
         self.is_started = True
         self.hitbox.x = self.janela.width / 2 - self.hitbox.width / 2

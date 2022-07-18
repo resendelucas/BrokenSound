@@ -258,7 +258,7 @@ class FaseTutorial:
                 self.pressed_past[key] = self.teclado.key_pressed(key)
             if self.player.hitbox.x + self.player.hitbox.width >= self.fundo.x + self.fundo.width:
                 if self.player_can_leave:
-                    FaseTutorial.is_done = True
+                    self.is_done = True
                     return
                 else:
                     self.player.hitbox.x = self.player.last_position[0]

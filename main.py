@@ -24,28 +24,24 @@ while True:
     fps = None
     # janela = Window(1365, 768)
     janela = Window(1365, 768)
-    # boss_atual = BossPiano(janela)
-    boss_atual = BossGuitarra(janela)
-    tutorial = FaseTutorial(janela)
-    mapa_atual = Fase1(janela, boss_atual)
-    # mapa_atual = Fase2(janela, boss_atual)
-    # mapa_atual.inicializar_plataformas()
-    player = Player(janela, mapa_atual, 'piano')
-    boss_atual.set_player(player)
-    player.hitbox.vely = 0
     menu = Menu(janela)
     menu.playing = False
-    tutorial.is_done = True
     teclado = janela.get_keyboard()
     janela.update()
     setinha = Sprite("Assets/imagens/arrow.png")
     setinha.set_position(janela.width - 60, janela.height - 150)
-
+    tutorial = FaseTutorial(janela)
     while not menu.playing:
         janela.update()
         menu.check_events()
         menu.draw_menu()
+    tutorial.is_done = False if menu.fase_inicial == 'tutorial' else True
+    boss_atual = BossPiano(janela) if menu.fase_inicial != 'bruxa vermelha' else BossGuitarra(janela)
+    mapa_atual = Fase2(janela, boss_atual) if menu.fase_inicial != 'bruxa vermelha' else Fase1(janela, boss_atual)
+    player = Player(janela, mapa_atual, 'violao')
+    boss_atual.set_player(player)
     while menu.playing:
+        print(boss_atual.boss_name)
         # print(boss_atual.sprites["summoner_arriving"] == boss_atual.sprite_atual)
         frames_acumulados += 1
         tempo_acumulado += janela.delta_time()
