@@ -1,8 +1,8 @@
+from PPlay.sound import *
 from PPlay.sprite import Sprite
 from boss_mae import BossClasseMae
 from mini_game import MiniGame
 from teleguiados import TiroTeleguiado
-from PPlay.sound import *
 
 
 class BossGuitarra(BossClasseMae):
@@ -29,6 +29,10 @@ class BossGuitarra(BossClasseMae):
         "dying_left": Sprite("Assets/boss_guitar/dying_left.png", 2),
         "explosion": Sprite("Assets/boss_guitar/explosion.png", 19)
     }
+    sprites_individuais = {"swinging_right": [Sprite(f"Assets/boss_guitar/swinging_individuais/right_{s}.png") for s in
+                                      range(1, 12)],
+                   "swinging_left": [Sprite(f"Assets/boss_guitar/swinging_individuais/left_{s}.png") for s in
+                                     range(1, 12)]}
     sprites["arriving_left"].set_total_duration(0.05)
     sprites['playing_left'].set_total_duration(0.4)
     sprites['swing_summon_left'].set_total_duration(2)
@@ -90,10 +94,15 @@ class BossGuitarra(BossClasseMae):
         cls.musica = Sound("Assets/boss_guitar/master-of-puppets.ogg")
         cls.musica.loop = True
         cls.musica.stop()
+        cls.sprites_individuais = {"swinging_right": [Sprite(f"Assets/boss_guitar/swinging_individuais/right_{s}.png") for s in
+                                      range(1, 12)],
+                   "swinging_left": [Sprite(f"Assets/boss_guitar/swinging_individuais/left_{s}.png") for s in
+                                     range(1, 12)]}
 
     def __init__(self, janela, player=None):
         super().__init__(janela, player)
         self.sprite_atual = self.sprites["arriving_left"]
+        self.lista_sprite_atual = self.sprites_individuais["swinging_right"]
         self.is_imune = True
         self.is_arriving = False
         self.sprite_atual.play()
@@ -118,6 +127,7 @@ class BossGuitarra(BossClasseMae):
 
         self.mini_game = None
         self.boss_final = True
+
     def spawn(self):
         self.reset()
         self.health_atual = self.max_health
@@ -215,6 +225,8 @@ class BossGuitarra(BossClasseMae):
                 self.is_imune = False
                 self.cronometro_animacao = 0
                 self.sprite_atual = self.sprites["swinging_right"]
+                self.lista_sprite_atual = self.sprites_individuais["swinging_right"]
+                self.is_sprites_individuais = True
                 self.direction *= -1
 
         # Gira o microfone andando para esquerda ou direita
@@ -222,13 +234,16 @@ class BossGuitarra(BossClasseMae):
             if self.velx < 600:
                 self.velx += 50 * self.janela.delta_time()
             else:
-                self.velx = 600
+                from random import uniform as random_uniform
+                self.velx = 600 * random_uniform(0.75, 1)
             if self.hitbox.x + self.hitbox.width >= self.janela.width:
                 self.sprite_atual = self.sprites['swinging_left']
+                self.lista_sprite_atual = self.sprites_individuais["swinging_left"]
                 self.direction *= -1
                 self.hitbox.set_position(self.last_position[0], self.last_position[1])
             elif self.hitbox.x <= 0:
                 self.sprite_atual = self.sprites['swinging_right']
+                self.lista_sprite_atual = self.sprites_individuais["swinging_right"]
                 self.direction *= -1
                 self.hitbox.set_position(self.last_position[0], self.last_position[1])
             if self.health_atual < 0.5 * self.max_health:
@@ -236,6 +251,7 @@ class BossGuitarra(BossClasseMae):
                 self.is_imune = True
                 self.is_mini_game_on = True
                 self.cronometro_animacao = 0
+                self.is_sprites_individuais = False
                 self.sprite_atual = self.sprites['meteoro_left']
                 self.velx = 0
 

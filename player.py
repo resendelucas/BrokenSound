@@ -174,7 +174,13 @@ class Player:
 
     def check_hit_boss(self, boss, inimigos):
         if not self.is_imune and not boss.is_dying:
-            if boss.sprite_atual.collided_perfect(self.sprite_atual):
+            if boss.is_sprites_individuais:
+                indice_frame = int(boss.sprite_atual.get_curr_frame())
+                print(indice_frame)
+                colisao_boss = boss.lista_sprite_atual[indice_frame].collided_perfect(self.sprite_atual)
+            else:
+                colisao_boss = boss.sprite_atual.collided_perfect(self.sprite_atual)
+            if colisao_boss:
                 self.levar_dano(1)
                 return
             for tiro in boss.lista_tiros:
@@ -182,7 +188,7 @@ class Player:
                     self.levar_dano(1)
                     return
             for inimigo in inimigos:
-                if inimigo.sprite_atual.collided(self.sprite_atual) and not inimigo.is_dying and not\
+                if inimigo.sprite_atual.collided(self.sprite_atual) and not inimigo.is_dying and not \
                         inimigo.is_spawning:
                     self.levar_dano(1)
                     return
@@ -292,13 +298,13 @@ class Player:
                 self.healthbar.perder_mana(100)
                 self.is_imune = True
                 self.cooldown_value = 0.05
-                #print(self.instrumento)
+                # print(self.instrumento)
             elif self.instrumento != 'violao':
                 self.changecharacter('violao')
                 self.cooldown_value = 0.3
         if self.instrumento == 'piano' and not self.is_imune:
             self.changecharacter('violao')
-            #print("Z")
+            # print("Z")
             self.cooldown_value = 0.3
 
         self.c_pressed_past = self.teclado.key_pressed('c')

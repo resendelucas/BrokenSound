@@ -42,6 +42,7 @@ class BossClasseMae:
         self.m_pressed_past = False
         self.is_mini_game_on = False
         self.is_mini_game_done = False
+        self.is_sprites_individuais = False
 
     def cheat_hit(self):
         if not self.teclado.key_pressed('m') and self.m_pressed_past and not self.is_imune:
@@ -58,7 +59,7 @@ class BossClasseMae:
             self.sprite_atual.set_curr_frame((self.cronometro_animacao // intervalo) % qtdframes)
             if self.sprite_atual.loop is False and \
                     self.cronometro_animacao // intervalo >= self.sprite_atual.get_final_frame():
-                self.sprite_atual.set_curr_frame(self.sprite_atual.get_final_frame() - 1)
+                    self.sprite_atual.set_curr_frame(self.sprite_atual.get_final_frame() - 1)
 
     def draw_boss(self):
         # print(self.hitbox.x, self.hitbox.y, self.vely)
@@ -70,7 +71,10 @@ class BossClasseMae:
             self.draw_healthbar()
             if not self.is_underground:
                 self.sprite_atual.draw()
-
+            if self.is_sprites_individuais:
+                indice_atual = int(self.sprite_atual.get_curr_frame())
+                self.lista_sprite_atual[indice_atual].set_position(self.sprite_atual.x, self.sprite_atual.y)
+                self.lista_sprite_atual[indice_atual].draw()
         if self.is_dying:
             if self.hitbox.y > 200:
                 self.hitbox.y -= 50 * self.janela.delta_time()
