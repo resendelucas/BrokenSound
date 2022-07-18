@@ -188,6 +188,7 @@ class BossGuitarra(BossClasseMae):
                 self.is_idle = False
                 self.is_playing = True
                 self.musica.play()
+                self.musica.set_volume(25)
                 self.cronometro_still = 0
                 self.cronometro_animacao = 0
                 self.sprite_atual = self.sprites['playing_left']

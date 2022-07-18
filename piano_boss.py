@@ -87,6 +87,7 @@ class BossPiano(BossClasseMae):
                         self.cronometro_still = 0
                         self.is_playing = True
                         self.musica1.play()
+                        self.musica1.set_volume(25)
                         self.sprite_atual = self.sprites['basic_playing']
                         self.is_arriving = False
                 return
@@ -102,6 +103,7 @@ class BossPiano(BossClasseMae):
                     self.is_mini_game_on = True
                     self.musica1.fadeout(600)
                     self.musica2.play()
+                    self.musica2.set_volume(25)
                     self.gaiola = Gaiola(self.player)
                     self.mini_game = MiniGameTeclas(self.gaiola)
 
