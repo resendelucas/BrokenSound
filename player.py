@@ -176,7 +176,7 @@ class Player:
         if not self.is_imune and not boss.is_dying:
             if boss.is_sprites_individuais:
                 indice_frame = int(boss.sprite_atual.get_curr_frame())
-                print(indice_frame)
+                # print(indice_frame)
                 colisao_boss = boss.lista_sprite_atual[indice_frame].collided_perfect(self.sprite_atual)
             else:
                 colisao_boss = boss.sprite_atual.collided_perfect(self.sprite_atual)
@@ -194,8 +194,9 @@ class Player:
                     return
 
     def levar_dano(self, qtd_dano):
-        self.healthbar.levar_dano(qtd_dano)
-        self.is_imune = True
+        if not self.is_imune and self.instrumento == 'violao':
+            self.healthbar.levar_dano(qtd_dano)
+            self.is_imune = True
 
     def spawn_caixa_de_som(self):
         self.caixa_de_som = CaixaDeSom(self.last_direction, self.hitbox, self.janela)
@@ -375,6 +376,7 @@ class Player:
                 self.imune_cronometro = 0
         else:
             self.imune_cronometro = 0
+            self.playing_piano = False
 
     def update_frame(self, sprite, ms: float = None):
         if ms:

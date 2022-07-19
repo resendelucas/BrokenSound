@@ -41,7 +41,7 @@ while True:
     player = Player(janela, mapa_atual, 'violao')
     boss_atual.set_player(player)
     while menu.playing:
-        print(boss_atual.boss_name)
+        # print(boss_atual.boss_name)
         # print(boss_atual.sprites["summoner_arriving"] == boss_atual.sprite_atual)
         frames_acumulados += 1
         tempo_acumulado += janela.delta_time()

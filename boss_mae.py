@@ -85,8 +85,6 @@ class BossClasseMae:
         if self.is_dying:
             if self.musicafim.is_playing() is False and self.boss_name == 'guitarra':
                 self.musicafim.play()
-            else:
-                print(self.boss_name)
             if self.hitbox.y > 200:
                 self.hitbox.y -= 50 * self.janela.delta_time()
             else:
